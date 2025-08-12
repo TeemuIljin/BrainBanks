@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Game Shop</title>
+    <style>
+        body {
+            background-color: #0a0a40;
+            color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        /* Top bar with View Profile and Sign In */
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 30px;
+            gap: 15px;
+            background-color: #070735;
+            border-bottom: 1px solid #444;
+        }
+
+        .top-bar a {
+            color: #f0f0f0;
+            text-decoration: none;
+            border: 2px solid #f0f0f0;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .top-bar a:hover {
+            background-color: #f0f0f0;
+            color: #0a0a40;
+        }
+
+        main {
+            flex: 1;
+            padding: 40px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+        }
+
+        p.points {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        nav {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        nav a {
+            color: #f0f0f0;
+            text-decoration: none;
+            border: 2px solid #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #f0f0f0;
+            color: #0a0a40;
+        }
+
+        .shop-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .shop-item {
+            background-color: #1a1a50;
+            border: 2px solid #2a3b4c;
+            border-radius: 10px;
+            padding: 15px 20px;
+            width: 180px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: border-color 0.3s ease;
+        }
+
+        .shop-item:hover {
+            border-color: #405060;
+        }
+
+        .shop-item h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .shop-item p {
+            font-size: 0.9rem;
+            margin: 5px 0;
+            flex-grow: 1;
+        }
+
+        .shop-item form {
+            margin-top: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .shop-item button {
+            background-color: #2a3b4c;
+            color: #f0f0f0;
+            border: 2px solid #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .shop-item button:hover {
+            background-color: #405060;
+            color: #0a0a40;
+            border-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="{% url 'view_profile' request.user.username %}">View Profile</a>
+        <a href="{% url 'sign_in' %}">Sign In</a> <!-- Corrected to match the URL name -->
+    </div>
+
+    <main>
+        <h1>🛒 Game Shop</h1>
+        <p class="points">Your Points: <strong>{{ player_profile.points }}</strong></p>
+
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'course_list' %}">Courses</a>
+            <a href="{% url 'leaderboard' %}">View Leaderboard</a>
+        </nav>
+
+        <div class="shop-container">
+            {% for item in shop_items %}
+            <div class="shop-item">
+                <h2>{{ item.icon }} {{ item.name }}</h2>
+                <p>{{ item.description }}</p>
+                <p><strong>Cost: {{ item.price }} pts</strong></p>
+                <form method="post" action="{% url 'buy_item' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Buy</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+</body>
+</html>

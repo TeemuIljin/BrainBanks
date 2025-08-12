@@ -1,0 +1,9 @@
+Django==5.2.5
+django-allauth==65.10.0
+pillow==11.3.0
+python-decouple==3.8
+requests==2.32.4
+djangorestframework==3.16.1
+gunicorn==23.0.0
+whitenoise==6.9.0
+dj_database_url==3.0.1

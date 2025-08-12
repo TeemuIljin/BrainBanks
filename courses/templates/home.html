@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Home Page</title>
+    <style>
+        body {
+            background-color: #0a0a40;
+            color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top bar with View Profile and Sign In */
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 30px;
+            gap: 15px;
+            background-color: #070735;
+            border-bottom: 1px solid #444;
+        }
+
+        .top-bar a {
+            color: #f0f0f0;
+            text-decoration: none;
+            border: 2px solid #f0f0f0;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .top-bar a:hover {
+            background-color: #f0f0f0;
+            color: #0a0a40;
+        }
+
+        /* Main content - centered vertically and horizontally */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 700px;
+        }
+
+        .button-group a {
+            color: #f0f0f0;
+            text-decoration: none;
+            border: 2px solid #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .button-group a:hover {
+            background-color: #f0f0f0;
+            color: #0a0a40;
+        }
+
+        /* Footer with fun fact or events info */
+        footer {
+            background-color: #070735;
+            padding: 15px 30px;
+            text-align: center;
+            font-style: italic;
+            font-size: 1rem;
+            border-top: 1px solid #444;
+            color: #a0a0ff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        {% if user.is_authenticated %}
+    <a href="{% url 'view_profile' user.username %}">View Profile</a>
+
+{% else %}
+    <a href="{% url 'sign_in' %}">Sign In</a>
+{% endif %}
+    </div>
+
+    <div class="main-content">
+        <h1>Welcome to the BrainBank</h1>
+        <p>Explore our courses and learn new skills for free!</p>
+
+        <div class="button-group">
+            <a href="{% url 'create_profile' %}">Create Profile</a>
+            <a href="{% url 'shop' %}">Visit the Shop</a>
+            <a href="{% url 'course_list' %}">View All Courses</a>
+            <a href="{% url 'sign_in' %}">Sign in</a>
+            <a href="{% url 'leaderboard' %}">Leaderboard</a>
+            <a href="{% url 'course_search' %}">Search for Courses</a>
+            {% for course in courses %}
+                <a href="{% url 'quiz' course.id 1 %}">Start {{ course.title }} Quiz</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <footer>
+        💡 Fun Fact: Did you know BrainBank is constantly evolving? Stay tuned for exciting events like 2x points and special promotions coming soon!
+    </footer>
+
+</body>
+</html>

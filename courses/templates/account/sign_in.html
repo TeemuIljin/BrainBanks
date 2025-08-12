@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In</title>
+    <style>
+        body {
+            background-color: #0a0a40;
+            color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 30px;
+            gap: 15px;
+            background-color: #070735;
+            border-bottom: 1px solid #444;
+        }
+
+        .top-bar a {
+            color: #f0f0f0;
+            text-decoration: none;
+            border: 2px solid #f0f0f0;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .top-bar a:hover {
+            background-color: #f0f0f0;
+            color: #0a0a40;
+        }
+
+        main {
+            flex: 1;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+        }
+
+        form {
+            background-color: #1a1a5c;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: left;
+        }
+
+        form p {
+            margin: 0;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        button[type="submit"] {
+            background-color: #f0f0f0;
+            color: #0a0a40;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #dcdcdc;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .messages p {
+            color: #ff6b6b;
+            font-size: 1rem;
+            margin: 0 0 10px 0;
+        }
+
+        .return-home {
+            margin-top: 30px;
+        }
+
+        .return-home a {
+            color: #f0f0f0;
+            text-decoration: none;
+            border: 2px solid #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .return-home a:hover {
+            background-color: #f0f0f0;
+            color: #0a0a40;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="{% url 'home' %}">Home</a>
+    </div>
+
+    <main>
+        <h2>Sign In</h2>
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Sign In</button>
+        </form>
+
+        <div class="return-home">
+            <a href="{% url 'home' %}">Return to Home</a>
+        </div>
+    </main>
+
+</body>
+</html>

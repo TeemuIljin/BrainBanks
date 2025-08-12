@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Search</title>
+    <style>
+        body {
+            background-color: #0a0a40;
+            color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        form {
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            background-color: #1a1a50;
+            color: #f0f0f0;
+            font-size: 1rem;
+            width: 250px;
+        }
+
+        input[type="text"]::placeholder {
+            color: #cccccc;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            background-color: #2a3b4c;
+            color: #f0f0f0;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #405060;
+            border-color: #ddd;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            text-align: left;
+        }
+
+        li {
+            margin: 12px 0;
+            font-size: 1.1rem;
+        }
+
+        a {
+            color: #f0f0f0;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffffff;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            border: 2px solid #f0f0f0;
+            background-color: #2a3b4c;
+            border-radius: 8px;
+            color: #f0f0f0;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background-color: #405060;
+            border-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Search Results for "{{ query }}"</h1>
+
+    <form method="get" action="{% url 'course_search' %}">
+        <label>
+            <input type="text" name="q" value="{{ query }}" placeholder="Search for courses...">
+        </label>
+        <button type="submit">Search</button>
+    </form>
+
+    <ul>
+        {% for course in courses %}
+            <li>
+                <a href="{% url 'course_detail' course.pk %}">{{ course.title }}</a> — {{ course.duration }} months
+            </li>
+        {% empty %}
+            <li>No courses found.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'course_list' %}" class="back-link">Back to Course List</a>
+</body>
+</html>

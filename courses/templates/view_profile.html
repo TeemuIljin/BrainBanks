@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user_profile.username }}'s Profile</title>
+    <style>
+        body {
+            background-color: #0a0a40;
+            color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+
+        a {
+            color: #f0f0f0;
+            text-decoration: none;
+            border: 2px solid #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 30px;
+        }
+
+        a:hover {
+            background-color: #f0f0f0;
+            color: #0a0a40;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ user_profile.username }}'s Profile</h1>
+    <h2>Points: {{ player_profile.points }}</h2>
+
+    <h2>Inventory:</h2>
+    {% if purchases %}
+        <ul>
+            {% for purchase in purchases %}
+                <li>{{ purchase.item.name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No items purchased yet.</p>
+    {% endif %}
+
+    <a href="{% url 'home' %}">Return to Home</a>
+</body>
+</html>

@@ -1,1 +1,1 @@
-web: gunicorn BrainBanks.wsgi
+web: gunicorn BrainBank.wsgi

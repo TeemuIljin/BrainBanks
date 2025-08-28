@@ -24,11 +24,16 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-# Allowed hosts configuration
+# Hosts etc.
 if 'RAILWAY_ENVIRONMENT' in os.environ:
-    ALLOWED_HOSTS = ['*']  # Railway handles domain routing
+    ALLOWED_HOSTS = [
+        '.railway.app',              # all Railway subdomains
+        'brainbanks-production.up.railway.app',
+        'yourcustomdomain.com',
+    ]
 else:
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
 
 # Application definition
 INSTALLED_APPS = [

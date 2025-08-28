@@ -7,6 +7,6 @@ djangorestframework==3.16.1
 gunicorn==23.0.0
 whitenoise==6.9.0
 dj_database_url==3.0.1
-psycopg2-binary==2.9.7
+psycopg2-binary==2.9.10
 dj-database-url==3.0.1
 

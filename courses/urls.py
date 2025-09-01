@@ -16,7 +16,7 @@ router.register(r'completed-quizzes', views.CompletedQuizViewSet)
 router.register(r'leaderboard-entries', views.LeaderboardEntryViewSet)
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    # Home path is now handled by main URLs
     path('courses/', views.course_list, name='course_list'),
     path('courses/<int:pk>/', views.course_detail, name='course_detail'),
     path('search/', views.course_search, name='course_search'),
@@ -25,9 +25,9 @@ urlpatterns = [
     path('create-profile/', views.create_profile, name='create_profile'),
     path('profile/<str:username>/', views.view_profile, name='view_profile'),
     path('quiz/<int:course_id>/<int:question_number>/', views.quiz_view, name='quiz'),
-    path('login/', views.sign_in_view, name='sign_in'),  # Ensure login URL is named correctly
+    path('login/', views.sign_in_view, name='sign_in'),
     path('complete-course/', views.complete_course, name='complete_course'),
     path('leaderboard/', views.leaderboard, name='leaderboard'),
-    path('not_signed_in/', views.not_signed_in, name='not_signed_in'),  # Ensure this is available
+    path('not_signed_in/', views.not_signed_in, name='not_signed_in'),
 ]
 

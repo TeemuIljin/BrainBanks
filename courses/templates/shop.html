@@ -150,8 +150,11 @@
 <body>
 
     <div class="top-bar">
-        <a href="{% url 'view_profile' request.user.username %}">View Profile</a>
-        <a href="{% url 'sign_in' %}">Sign In</a> <!-- Corrected to match the URL name -->
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'view_profile' request.user.username %}">View Profile</a>
+        {% else %}
+            <a href="{% url 'sign_in' %}">Sign In</a>
+        {% endif %}
     </div>
 
     <main>

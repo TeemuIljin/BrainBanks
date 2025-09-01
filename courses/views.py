@@ -59,7 +59,7 @@ def course_search(request):
     return render(request, 'course_search.html', {'courses': courses, 'query': query})
 
 
-@login_required(login_url='/accounts/login/')  # Explicitly specify the login URL
+@login_required(login_url='/login/')  # Use the correct login URL
 def shop(request):
     player_profile, created = PlayerProfile.objects.get_or_create(user=request.user)
     shop_items = ShopItem.objects.all()

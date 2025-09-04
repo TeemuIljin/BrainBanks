@@ -161,6 +161,9 @@
         </div>
         <div class="auth-actions">
             {% if user.is_authenticated %}
+                {% if player_profile %}
+                    <span title="Current streak" class="btn" style="cursor:default;">🔥 {{ player_profile.current_streak }} day streak</span>
+                {% endif %}
                 <a class="btn btn-primary" href="{% url 'view_profile' user.username %}">View Profile</a>
             {% else %}
                 <a class="btn" href="{% url 'sign_in' %}">Sign In</a>
@@ -180,9 +183,6 @@
                 <a class="btn" href="{% url 'sign_in' %}">Sign in</a>
                 <a class="btn" href="{% url 'leaderboard' %}">Leaderboard</a>
                 <a class="btn" href="{% url 'course_search' %}">Search for Courses</a>
-                {% for course in courses %}
-                    <a class="btn" href="{% url 'quiz' course.id 1 %}">Start {{ course.title }} Quiz</a>
-                {% endfor %}
             </div>
         </div>
     </div>

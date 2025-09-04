@@ -45,6 +45,9 @@
             {% endif %}
 
             <div class="button-group">
+                {% if player_profile %}
+                    <span class="btn" style="cursor:default;">🔥 Streak: {{ player_profile.current_streak }} (Best {{ player_profile.longest_streak }})</span>
+                {% endif %}
                 <a class="btn" href="{% url 'home' %}">Return to Home</a>
                 <a class="btn" href="{% url 'course_list' %}">View All Courses</a>
                 <a class="btn btn-primary" href="{% url 'quiz' course.id 1 %}">Retake Quiz</a>

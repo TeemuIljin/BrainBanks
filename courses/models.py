@@ -33,6 +33,9 @@ class Course(models.Model):
 class PlayerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
+    current_streak = models.IntegerField(default=0)
+    longest_streak = models.IntegerField(default=0)
+    last_activity_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.username}'s Player Profile"

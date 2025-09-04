@@ -7,6 +7,7 @@ from .models import (
     Profile, Course, Quiz, ShopItem, PlayerProfile, Purchase,
     CompletedQuiz, LeaderboardEntry, Question, Option
 )
+from datetime import date, timedelta
 from .forms import SignInForm
 
 # DRF API ViewSetit
@@ -28,10 +29,10 @@ def home(request):
         player_profile = PlayerProfile.objects.get(user=request.user)
         completed_courses = Course.objects.filter(completedquiz__player=player_profile)
 
-    return render(request, 'home.html', {
-        'courses': courses,
-        'completed_courses': completed_courses
-    })
+    context = {'courses': courses, 'completed_courses': completed_courses}
+    if request.user.is_authenticated:
+        context['player_profile'] = player_profile
+    return render(request, 'home.html', context)
 
 
 def course_list(request):
@@ -42,21 +43,33 @@ def course_list(request):
         player_profile = PlayerProfile.objects.get(user=request.user)
         completed_course_ids = CompletedQuiz.objects.filter(player=player_profile).values_list('course_id', flat=True)
 
-    return render(request, 'course_list.html', {
-        'courses': courses,
-        'completed_course_ids': completed_course_ids,
-    })
+    context = {'courses': courses, 'completed_course_ids': completed_course_ids}
+    if request.user.is_authenticated:
+        context['player_profile'] = player_profile
+    return render(request, 'course_list.html', context)
 
 
 def course_detail(request, pk):
     course = get_object_or_404(Course, pk=pk)
-    return render(request, 'course_detail.html', {'course': course})
+    context = {'course': course}
+    if request.user.is_authenticated:
+        try:
+            context['player_profile'] = PlayerProfile.objects.get(user=request.user)
+        except PlayerProfile.DoesNotExist:
+            pass
+    return render(request, 'course_detail.html', context)
 
 
 def course_search(request):
     query = request.GET.get('q')
     courses = Course.objects.filter(title__icontains=query) if query else Course.objects.all()
-    return render(request, 'course_search.html', {'courses': courses, 'query': query})
+    context = {'courses': courses, 'query': query}
+    if request.user.is_authenticated:
+        try:
+            context['player_profile'] = PlayerProfile.objects.get(user=request.user)
+        except PlayerProfile.DoesNotExist:
+            pass
+    return render(request, 'course_search.html', context)
 
 
 @login_required(login_url='/login/')  # Use the correct login URL
@@ -103,11 +116,23 @@ def quiz_view(request, course_id, question_number=1):
         player_profile = PlayerProfile.objects.get(user=request.user)
         CompletedQuiz.objects.get_or_create(player=player_profile, course=course)
 
+        # Streak handling: increment if last activity was yesterday or today; reset otherwise
+        today = date.today()
+        if player_profile.last_activity_date in (today, today - timedelta(days=1)):
+            player_profile.current_streak = (player_profile.current_streak or 0) + 1
+        else:
+            player_profile.current_streak = 1
+        if player_profile.current_streak > (player_profile.longest_streak or 0):
+            player_profile.longest_streak = player_profile.current_streak
+        player_profile.last_activity_date = today
+        player_profile.save()
+
         return render(request, 'quiz_complete.html', {
             'course': course,
             'score': score,
             'total_questions': total_questions,
             'gained_points': gained_points,
+            'player_profile': player_profile,
         })
 
     question = questions[question_number - 1]
@@ -130,6 +155,7 @@ def quiz_view(request, course_id, question_number=1):
         'question': question,
         'current_question_number': question_number,
         'total_questions': total_questions,
+        'player_profile': PlayerProfile.objects.get(user=request.user),
     })
 
 

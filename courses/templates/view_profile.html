@@ -36,6 +36,7 @@
         <div class="card">
             <h1>{{ user_profile.username }}'s Profile</h1>
             <h2>Points: {{ player_profile.points }}</h2>
+            <p class="meta">🔥 Current streak: {{ player_profile.current_streak }} · 🏆 Longest: {{ player_profile.longest_streak }}</p>
             <h2>Inventory</h2>
             {% if purchases %}
                 <ul>

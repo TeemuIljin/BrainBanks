@@ -4,161 +4,71 @@
     <meta charset="UTF-8" />
     <title>Leaderboard</title>
     <style>
-        body {
-            background-color: #0a0a40;
-            color: #f0f0f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Top bar with View Profile and Sign In */
-        .top-bar {
-            display: flex;
-            justify-content: flex-end;
-            padding: 15px 30px;
-            gap: 15px;
-            background-color: #070735;
-            border-bottom: 1px solid #444;
-        }
-
-        .top-bar a {
-            color: #f0f0f0;
-            text-decoration: none;
-            border: 2px solid #f0f0f0;
-            padding: 6px 16px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .top-bar a:hover {
-            background-color: #f0f0f0;
-            color: #0a0a40;
-        }
-
-        /* Main content */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            text-align: center;
-            padding: 40px 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 40px;
-        }
-
-        thead {
-            background-color: #070735;
-        }
-
-        th, td {
-            border: 1px solid #444;
-            padding: 12px 15px;
-            font-size: 1.1rem;
-        }
-
-        th {
-            color: #a0a0ff;
-            text-align: left;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #1a1a50;
-        }
-
-        tbody tr:hover {
-            background-color: #2a2a7a;
-        }
-
-        /* Back button */
-        .back-button {
-            align-self: center;
-            color: #f0f0f0;
-            text-decoration: none;
-            border: 2px solid #f0f0f0;
-            padding: 10px 25px;
-            border-radius: 8px;
-            font-size: 1.2rem;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .back-button:hover {
-            background-color: #f0f0f0;
-            color: #0a0a40;
-            border-color: #0a0a40;
-        }
-
-        /* Footer */
-        footer {
-            background-color: #070735;
-            padding: 15px 30px;
-            text-align: center;
-            font-style: italic;
-            font-size: 1rem;
-            border-top: 1px solid #444;
-            color: #a0a0ff;
-        }
+        :root { --bg-start:#0a0a40; --bg-end:#161658; --card-bg:rgba(255,255,255,0.06); --text:#f5f7ff; --muted:#c6c9ff; --accent:#7aa2ff; --accent-2:#62e0d9; --border:rgba(255,255,255,0.12); --shadow:rgba(0,0,0,0.35); }
+        body { background: radial-gradient(1000px 600px at 20% 0%, var(--bg-end), transparent 60%), radial-gradient(900px 600px at 80% 0%, #0f2a80, transparent 55%), linear-gradient(180deg, var(--bg-start), #0b0b2e 65%); color: var(--text); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column; }
+        .top-bar { display:flex; justify-content:space-between; align-items:center; padding:16px 28px; background:rgba(7,7,53,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
+        .brand { display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:0.4px; }
+        .brand-badge { width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 6px 14px var(--shadow); }
+        .auth-actions { display:flex; gap:12px; }
+        .btn { appearance:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 16px; border-radius:10px; border:1px solid var(--border); color:var(--text); text-decoration:none; font-size:0.95rem; line-height:1; transition:transform .1s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); box-shadow:0 6px 14px -8px var(--shadow); }
+        .btn:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.25); }
+        .btn-primary { background:linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)); border-color:rgba(122,162,255,0.35); }
+        .main-content { flex:1; display:flex; flex-direction:column; align-items:center; padding:48px 20px 56px; max-width:920px; margin:0 auto; }
+        .card { width:100%; background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:26px 24px; box-shadow:0 18px 40px -22px var(--shadow); }
+        h1 { font-size:clamp(2rem,3.6vw,3rem); margin:0 0 16px; text-align:center; }
+        table { width:100%; border-collapse:collapse; overflow:hidden; border-radius:12px; }
+        thead th { background:rgba(7,7,53,0.75); color:var(--muted); }
+        th, td { border:1px solid var(--border); padding:12px 15px; font-size:1.05rem; }
+        tbody tr:nth-child(even) { background:rgba(255,255,255,0.04); }
     </style>
 </head>
 <body>
 
     <div class="top-bar">
-        {% if user.is_authenticated %}
-            <a href="{% url 'view_profile' user.username %}">View Profile</a>
-        {% else %}
-            <a href="{% url 'sign_in' %}">Sign In</a>
-        {% endif %}
+        <div class="brand"><div class="brand-badge"></div>BrainBank</div>
+        <div class="auth-actions">
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'view_profile' user.username %}">View Profile</a>
+            {% else %}
+                <a class="btn" href="{% url 'sign_in' %}">Sign In</a>
+            {% endif %}
+        </div>
     </div>
 
     <div class="main-content">
-        <h1>Leaderboard</h1>
+        <div class="card">
+            <h1>Leaderboard</h1>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>User Name</th>
-                    <th>Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for entry in leaderboard %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ entry.name }}</td>
-                    <td>{{ entry.score }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="3">No leaderboard entries yet.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>User Name</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in leaderboard %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ entry.name }}</td>
+                        <td>{{ entry.score }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">No leaderboard entries yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-        <a href="{% url 'home' %}" class="back-button">Back to Home</a>
+            <div style="display:flex; justify-content:center;">
+                <a href="{% url 'home' %}" class="btn">Back to Home</a>
+            </div>
+        </div>
     </div>
 
-    <footer>
+    <footer style="background:rgba(7,7,53,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); padding:16px 28px; text-align:center; font-style:italic; font-size:0.98rem; border-top:1px solid var(--border); color:var(--muted);">
         💡 Fun Fact: Did you know BrainBank is constantly evolving? Stay tuned for exciting events like 2x points and special promotions coming soon!
     </footer>
 

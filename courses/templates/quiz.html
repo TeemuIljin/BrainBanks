@@ -5,208 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ course.title }} Quiz</title>
     <style>
-        body {
-            background-color: #0a0a40;
-            color: #f0f0f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            text-align: center;
-        }
-
-        /* Top bar with View Profile and Sign In */
-        .top-bar {
-            display: flex;
-            justify-content: flex-end;
-            padding: 15px 30px;
-            gap: 15px;
-            background-color: #070735;
-            border-bottom: 1px solid #444;
-        }
-
-        .top-bar a {
-            color: #f0f0f0;
-            text-decoration: none;
-            border: 2px solid #f0f0f0;
-            padding: 6px 16px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .top-bar a:hover {
-            background-color: #f0f0f0;
-            color: #0a0a40;
-        }
-
-        main {
-            flex: 1;
-            max-width: 700px;
-            margin: 40px auto;
-            padding: 0 20px;
-            text-align: left;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 30px;
-            text-align: center;
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-        }
-
-        form {
-            background-color: #1a1a5c;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .question h2 {
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-            color: #e0e0ff;
-        }
-
-        /* Hide native radio buttons */
-        input[type="radio"] {
-            display: none;
-        }
-
-        /* Custom box for radio */
-        label {
-            display: flex;
-            align-items: center;
-            margin: 12px 0;
-            cursor: pointer;
-            font-size: 1.1rem;
-            color: #f0f0f0;
-            user-select: none;
-            padding-left: 40px; /* space for the box */
-            position: relative;
-        }
-
-        /* Create the custom box */
-        label::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 25px;
-            height: 25px;
-            border: 2px solid #f0f0f0;
-            border-radius: 6px;
-            background-color: transparent;
-            box-sizing: border-box;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-
-        /* Show checked state */
-        input[type="radio"]:checked + label::before {
-            background-color: #f0f0f0;
-            border-color: #f0f0f0;
-        }
-
-        button[type="submit"] {
-            background-color: #f0f0f0;
-            color: #0a0a40;
-            border: none;
-            padding: 12px 25px;
-            font-size: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 30px;
-            align-self: center;
-            width: 40%;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        button[type="submit"]:hover {
-            background-color: #dcdcdc;
-        }
-
-        .progress {
-            margin-top: 30px;
-            font-size: 1.1rem;
-            text-align: center;
-            color: #ccccff;
-        }
-
-        .score {
-            margin-top: 20px;
-            font-size: 1.3rem;
-            font-weight: 600;
-            text-align: center;
-            color: #b0ffb0;
-        }
-
-        .return-home {
-            margin: 40px auto 0;
-            text-align: center;
-        }
-
-        .return-home a {
-            color: #f0f0f0;
-            text-decoration: none;
-            border: 2px solid #f0f0f0;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-
-        .return-home a:hover {
-            background-color: #f0f0f0;
-            color: #0a0a40;
-        }
+        :root { --bg-start:#0a0a40; --bg-end:#161658; --card-bg:rgba(255,255,255,0.06); --text:#f5f7ff; --muted:#c6c9ff; --accent:#7aa2ff; --accent-2:#62e0d9; --border:rgba(255,255,255,0.12); --shadow:rgba(0,0,0,0.35); }
+        body { background: radial-gradient(1000px 600px at 20% 0%, var(--bg-end), transparent 60%), radial-gradient(900px 600px at 80% 0%, #0f2a80, transparent 55%), linear-gradient(180deg, var(--bg-start), #0b0b2e 65%); color: var(--text); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column; }
+        .top-bar { display:flex; justify-content:space-between; align-items:center; padding:16px 28px; background:rgba(7,7,53,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
+        .brand { display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:0.4px; }
+        .brand-badge { width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 6px 14px var(--shadow); }
+        .auth-actions { display:flex; gap:12px; }
+        .btn { appearance:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 16px; border-radius:10px; border:1px solid var(--border); color:var(--text); text-decoration:none; font-size:0.95rem; line-height:1; transition:transform .1s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); box-shadow:0 6px 14px -8px var(--shadow); }
+        .btn:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.25); }
+        .btn-primary { background:linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)); border-color:rgba(122,162,255,0.35); }
+        main { flex:1; max-width: 820px; margin: 40px auto; padding: 0 20px; }
+        .card { background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:28px 24px; box-shadow:0 18px 40px -22px var(--shadow); }
+        h1 { font-size:clamp(2rem,3.6vw,3rem); margin:0 0 16px; text-align:center; }
+        form { background:transparent; padding:0; box-shadow:none; }
+        .question h2 { margin-bottom: 14px; font-size: 1.4rem; color: var(--text); }
+        input[type="radio"] { display:none; }
+        label { display:flex; align-items:center; margin:12px 0; cursor:pointer; font-size:1.05rem; color:var(--text); user-select:none; padding-left:40px; position:relative; }
+        label::before { content:""; position:absolute; left:0; top:50%; transform:translateY(-50%); width:22px; height:22px; border:1px solid var(--border); border-radius:6px; background-color:transparent; box-sizing:border-box; transition: background-color .2s ease, border-color .2s ease; }
+        input[type="radio"]:checked + label::before { background-color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.85); }
+        button[type="submit"] { margin-top: 18px; width: 100%; }
+        .progress { margin-top: 22px; font-size: 1rem; text-align: center; color: var(--muted); }
+        .score { margin-top: 16px; font-size: 1.1rem; font-weight: 600; text-align: center; color: #7CFC00; }
+        .return-home { margin: 24px auto 0; text-align: center; }
     </style>
 </head>
 <body>
 
     <div class="top-bar">
-        {% if user.is_authenticated %}
-            <a href="{% url 'view_profile' user.username %}">View Profile</a>
-        {% else %}
-            <a href="{% url 'sign_in' %}">Sign In</a>
-        {% endif %}
+        <div class="brand"><div class="brand-badge"></div>BrainBank</div>
+        <div class="auth-actions">
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'view_profile' user.username %}">View Profile</a>
+            {% else %}
+                <a class="btn" href="{% url 'sign_in' %}">Sign In</a>
+            {% endif %}
+        </div>
     </div>
 
     <main>
-        <h1>{{ course.title }} Quiz</h1>
+        <div class="card">
+            <h1>{{ course.title }} Quiz</h1>
 
-        <form method="post">
-            {% csrf_token %}
+            <form method="post">
+                {% csrf_token %}
 
-            <div class="question">
-                <h2>{{ question.text }}</h2>
-                {% for option in question.options.all %}
-                    <input type="radio" id="option{{ option.id }}" name="selected_option" value="{{ option.id }}">
-                    <label for="option{{ option.id }}">{{ option.text }}</label>
-                {% endfor %}
+                <div class="question">
+                    <h2>{{ question.text }}</h2>
+                    {% for option in question.options.all %}
+                        <input type="radio" id="option{{ option.id }}" name="selected_option" value="{{ option.id }}">
+                        <label for="option{{ option.id }}">{{ option.text }}</label>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit Answer</button>
+            </form>
+
+            <div class="progress">
+                Question {{ current_question_number }} of {{ total_questions }}
             </div>
 
-            <button type="submit">Submit Answer</button>
-        </form>
+            {% if score %}
+            <div class="score">Current Score: {{ score }}</div>
+            {% endif %}
 
-        <div class="progress">
-            Question {{ current_question_number }} of {{ total_questions }}
-        </div>
-
-        {% if score %}
-        <div class="score">
-            Current Score: {{ score }}
-        </div>
-        {% endif %}
-
-        <div class="return-home">
-            <a href="{% url 'home' %}">Return to Home</a>
+            <div class="return-home">
+                <a class="btn" href="{% url 'home' %}">Return to Home</a>
+            </div>
         </div>
     </main>
 

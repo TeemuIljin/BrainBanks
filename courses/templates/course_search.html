@@ -4,123 +4,63 @@
     <meta charset="UTF-8">
     <title>Course Search</title>
     <style>
-        body {
-            background-color: #0a0a40;
-            color: #f0f0f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-        }
-
-        form {
-            margin-bottom: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        input[type="text"] {
-            padding: 10px 15px;
-            border: 2px solid #f0f0f0;
-            border-radius: 8px;
-            background-color: #1a1a50;
-            color: #f0f0f0;
-            font-size: 1rem;
-            width: 250px;
-        }
-
-        input[type="text"]::placeholder {
-            color: #cccccc;
-        }
-
-        button {
-            padding: 10px 20px;
-            border: 2px solid #f0f0f0;
-            border-radius: 8px;
-            background-color: #2a3b4c;
-            color: #f0f0f0;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #405060;
-            border-color: #ddd;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            max-width: 600px;
-            margin: 0 auto 30px;
-            text-align: left;
-        }
-
-        li {
-            margin: 12px 0;
-            font-size: 1.1rem;
-        }
-
-        a {
-            color: #f0f0f0;
-            text-decoration: none;
-            border-bottom: 1px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        a:hover {
-            color: #ffffff;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 12px 25px;
-            border: 2px solid #f0f0f0;
-            background-color: #2a3b4c;
-            border-radius: 8px;
-            color: #f0f0f0;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .back-link:hover {
-            background-color: #405060;
-            border-color: #ddd;
-        }
+        :root { --bg-start:#0a0a40; --bg-end:#161658; --card-bg:rgba(255,255,255,0.06); --text:#f5f7ff; --muted:#c6c9ff; --accent:#7aa2ff; --accent-2:#62e0d9; --border:rgba(255,255,255,0.12); --shadow:rgba(0,0,0,0.35); }
+        body { background: radial-gradient(1000px 600px at 20% 0%, var(--bg-end), transparent 60%), radial-gradient(900px 600px at 80% 0%, #0f2a80, transparent 55%), linear-gradient(180deg, var(--bg-start), #0b0b2e 65%); color: var(--text); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column; }
+        .top-bar { display:flex; justify-content:space-between; align-items:center; padding:16px 28px; background:rgba(7,7,53,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
+        .brand { display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:0.4px; }
+        .brand-badge { width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 6px 14px var(--shadow); }
+        .auth-actions { display:flex; gap:12px; }
+        .btn { appearance:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 16px; border-radius:10px; border:1px solid var(--border); color:var(--text); text-decoration:none; font-size:0.95rem; line-height:1; transition:transform .1s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); box-shadow:0 6px 14px -8px var(--shadow); }
+        .btn:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.25); }
+        .btn-primary { background:linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)); border-color:rgba(122,162,255,0.35); }
+        main { flex:1; display:flex; justify-content:center; padding:48px 20px 56px; }
+        .card { width:min(900px,92%); background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:26px 24px; box-shadow:0 18px 40px -22px var(--shadow); }
+        h1 { font-size:clamp(2rem,3.2vw,2.6rem); margin:0 0 14px; text-align:center; }
+        .subtitle { color:var(--muted); text-align:center; margin:0 0 20px; }
+        form { margin:0 auto 22px; display:flex; gap:10px; justify-content:center; }
+        input[type="text"] { padding:10px 14px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid var(--border); color:var(--text); width:260px; }
+        input[type="text"]::placeholder { color:#bfc3ff; }
+        ul { list-style:none; padding:0; margin:0; max-width:720px; }
+        li { margin:10px 0; font-size:1.05rem; }
+        a { color:var(--text); text-decoration:none; border-bottom:1px solid transparent; }
+        a:hover { border-bottom:1px solid var(--text); }
     </style>
 </head>
 <body>
-    <h1>Search Results for "{{ query }}"</h1>
+    <div class="top-bar">
+        <div class="brand"><div class="brand-badge"></div>BrainBank</div>
+        <div class="auth-actions">
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'view_profile' user.username %}">View Profile</a>
+            {% else %}
+                <a class="btn" href="{% url 'sign_in' %}">Sign In</a>
+            {% endif %}
+        </div>
+    </div>
+    <main>
+        <div class="card">
+            <h1>Search Results for "{{ query }}"</h1>
+            <p class="subtitle">Find courses by title and explore details.</p>
 
-    <form method="get" action="{% url 'course_search' %}">
-        <label>
-            <input type="text" name="q" value="{{ query }}" placeholder="Search for courses...">
-        </label>
-        <button type="submit">Search</button>
-    </form>
+            <form method="get" action="{% url 'course_search' %}">
+                <input type="text" name="q" value="{{ query }}" placeholder="Search for courses...">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
 
-    <ul>
-        {% for course in courses %}
-            <li>
-                <a href="{% url 'course_detail' course.pk %}">{{ course.title }}</a> — {{ course.duration }} months
-            </li>
-        {% empty %}
-            <li>No courses found.</li>
-        {% endfor %}
-    </ul>
+            <ul>
+                {% for course in courses %}
+                    <li>
+                        <a href="{% url 'course_detail' course.pk %}">{{ course.title }}</a> — {{ course.duration }} months
+                    </li>
+                {% empty %}
+                    <li>No courses found.</li>
+                {% endfor %}
+            </ul>
 
-    <a href="{% url 'course_list' %}" class="back-link">Back to Course List</a>
+            <div style="display:flex; justify-content:center; margin-top:16px;">
+                <a href="{% url 'course_list' %}" class="btn">Back to Course List</a>
+            </div>
+        </div>
+    </main>
 </body>
 </html>

@@ -4,136 +4,55 @@
     <meta charset="UTF-8" />
     <title>{{ course.title }} Quiz Complete</title>
     <style>
-        body {
-            background-color: #0a0a40;
-            color: #f0f0f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: flex-end;
-            padding: 15px 30px;
-            gap: 15px;
-            background-color: #070735;
-            border-bottom: 1px solid #444;
-        }
-
-        .top-bar a {
-            color: #f0f0f0;
-            text-decoration: none;
-            border: 2px solid #f0f0f0;
-            padding: 6px 16px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .top-bar a:hover {
-            background-color: #f0f0f0;
-            color: #0a0a40;
-        }
-
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-        }
-
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-        }
-
-        .score {
-            font-size: 1.8rem;
-            margin: 20px 0;
-            color: #b0ffb0;
-        }
-
-        .points-earned {
-            font-size: 1.8rem;
-            margin: 20px 0;
-            color: #00ff00; /* bright green */
-            font-weight: bold;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 30px;
-        }
-
-        .button-group a {
-            color: #f0f0f0;
-            text-decoration: none;
-            border: 2px solid #f0f0f0;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .button-group a:hover {
-            background-color: #f0f0f0;
-            color: #0a0a40;
-        }
-
-        footer {
-            background-color: #070735;
-            padding: 15px 30px;
-            text-align: center;
-            font-style: italic;
-            font-size: 1rem;
-            border-top: 1px solid #444;
-            color: #a0aaff;
-        }
+        :root { --bg-start:#0a0a40; --bg-end:#161658; --card-bg:rgba(255,255,255,0.06); --text:#f5f7ff; --muted:#c6c9ff; --accent:#7aa2ff; --accent-2:#62e0d9; --border:rgba(255,255,255,0.12); --shadow:rgba(0,0,0,0.35); }
+        body { background: radial-gradient(1000px 600px at 20% 0%, var(--bg-end), transparent 60%), radial-gradient(900px 600px at 80% 0%, #0f2a80, transparent 55%), linear-gradient(180deg, var(--bg-start), #0b0b2e 65%); color: var(--text); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column; }
+        .top-bar { display:flex; justify-content:space-between; align-items:center; padding:16px 28px; background:rgba(7,7,53,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
+        .brand { display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:0.4px; }
+        .brand-badge { width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 6px 14px var(--shadow); }
+        .auth-actions { display:flex; gap:12px; }
+        .btn { appearance:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 16px; border-radius:10px; border:1px solid var(--border); color:var(--text); text-decoration:none; font-size:0.95rem; line-height:1; transition:transform .1s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); box-shadow:0 6px 14px -8px var(--shadow); }
+        .btn:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.25); }
+        .btn-primary { background:linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)); border-color:rgba(122,162,255,0.35); }
+        .main-content { flex:1; display:flex; align-items:center; justify-content:center; padding:48px 20px 56px; }
+        .card { width:min(900px,92%); background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:28px 24px; box-shadow:0 18px 40px -22px var(--shadow); text-align:center; }
+        h1 { font-size:clamp(2rem,3.6vw,3rem); margin:0 0 12px; }
+        .score, .points-earned { font-size:1.4rem; margin:14px 0; }
+        .points-earned { color:#7CFC00; font-weight:700; }
+        .button-group { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
     </style>
 </head>
 <body>
 
     <div class="top-bar">
-        {% if user.is_authenticated %}
-            <a href="{% url 'view_profile' user.username %}">View Profile</a>
-        {% else %}
-            <a href="{% url 'sign_in' %}">Sign In</a>
-        {% endif %}
-    </div>
-
-    <div class="main-content">
-        <h1>Quiz Complete!</h1>
-        <p>Well done — you’ve finished the quiz for <strong>{{ course.title }}</strong>.</p>
-
-        {% if score %}
-            <div class="score">Your final score: {{ score }} / {{ total_questions }}</div>
-            <div class="points-earned">Points earned: {{ gained_points }}</div>
-        {% endif %}
-
-        <div class="button-group">
-            <a href="{% url 'home' %}">Return to Home</a>
-            <a href="{% url 'course_list' %}">View All Courses</a>
-            <a href="{% url 'quiz' course.id 1 %}">Retake Quiz</a>
+        <div class="brand"><div class="brand-badge"></div>BrainBank</div>
+        <div class="auth-actions">
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'view_profile' user.username %}">View Profile</a>
+            {% else %}
+                <a class="btn" href="{% url 'sign_in' %}">Sign In</a>
+            {% endif %}
         </div>
     </div>
 
-    <footer>
+    <div class="main-content">
+        <div class="card">
+            <h1>Quiz Complete!</h1>
+            <p>Well done — you’ve finished the quiz for <strong>{{ course.title }}</strong>.</p>
+
+            {% if score %}
+                <div class="score">Your final score: {{ score }} / {{ total_questions }}</div>
+                <div class="points-earned">Points earned: {{ gained_points }}</div>
+            {% endif %}
+
+            <div class="button-group">
+                <a class="btn" href="{% url 'home' %}">Return to Home</a>
+                <a class="btn" href="{% url 'course_list' %}">View All Courses</a>
+                <a class="btn btn-primary" href="{% url 'quiz' course.id 1 %}">Retake Quiz</a>
+            </div>
+        </div>
+    </div>
+
+    <footer style="background:rgba(7,7,53,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); padding:16px 28px; text-align:center; font-style:italic; font-size:0.98rem; border-top:1px solid var(--border); color:var(--muted);">
         💡 Fun Fact: Did you know BrainBank is constantly evolving? New challenges and events are just around the corner!
     </footer>
 

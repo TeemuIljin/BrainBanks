@@ -34,7 +34,7 @@ class PlayerProfile(models.Model):
     current_streak = models.IntegerField(default=0)
     longest_streak = models.IntegerField(default=0)
     last_activity_date = models.DateField(blank=True, null=True)
-    
+
     # Special effects from shop items
     streak_freeze_count = models.IntegerField(default=0, help_text="Number of streak freeze items")
     fired_up_streak_until = models.DateTimeField(blank=True, null=True, help_text="Fired up streak active until")

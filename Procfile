@@ -1,1 +1,1 @@
-web: gunicorn BrainBank.wsgi
+web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn BrainBank.wsgi

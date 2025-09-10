@@ -34,8 +34,7 @@
     <main>
         <div class="card">
             <h1>{{ course.title }}</h1>
-            <p class="meta">Level: {{ course.level }} · Category: {{ course.category }} · Duration: {{ course.duration }} months</p>
-            <p class="meta">Price: {{ course.price }} USD</p>
+            <p class="meta">Level: {{ course.level }} · Category: {{ course.category }} · Duration: {{ course.duration }} minutes</p>
             <p style="margin: 16px 0 8px;">{{ course.description }}</p>
             <div class="content-block">{{ course.content|safe }}</div>
             <div style="margin-top:18px; display:flex; gap:10px; justify-content:center;">

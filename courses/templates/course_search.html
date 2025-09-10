@@ -50,7 +50,7 @@
             <ul>
                 {% for course in courses %}
                     <li>
-                        <a href="{% url 'course_detail' course.pk %}">{{ course.title }}</a> — {{ course.duration }} months
+                        <a href="{% url 'course_detail' course.pk %}">{{ course.title }}</a> — {{ course.duration }} minutes
                     </li>
                 {% empty %}
                     <li>No courses found.</li>

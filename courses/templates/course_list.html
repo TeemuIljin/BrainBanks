@@ -71,6 +71,9 @@
         li:last-child { border-bottom: none; }
         a.course-link { color: var(--text); text-decoration: none; font-weight: 600; }
         .completed-mark { font-size: 1.2rem; color: #7CFC00; user-select: none; }
+        .points-text { font-size: 0.9rem; font-weight: 600; margin-left: 8px; }
+        .points-earned { color: #ff4444; }
+        .points-available { color: var(--accent-2); }
 
         @media (max-width: 560px) { li { flex-direction: column; align-items: flex-start; gap: 10px; } }
     </style>
@@ -113,6 +116,9 @@
                         <a href="{% url 'quiz' course.pk 1 %}" class="btn">Start Quiz</a>
                         {% if course.pk in completed_course_ids %}
                             <span class="completed-mark" title="Quiz Completed">✅</span>
+                            <span class="points-text points-earned">Points already earned</span>
+                        {% else %}
+                            <span class="points-text points-available">Earn points</span>
                         {% endif %}
                     </div>
                 </li>

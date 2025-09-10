@@ -1,0 +1,800 @@
+[
+{
+  "model": "courses.course",
+  "pk": 1,
+  "fields": {
+    "title": "Chemistry 1 (Basic and safety)",
+    "description": "Chemistry 1 introduces basic chemical principles and essential laboratory safety practices to ensure safe and effective experimentation",
+    "duration": 5,
+    "level": "Beginner",
+    "content": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n<meta charset=\"UTF-8\" />\r\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\r\n<title>Chemistry 1.1: Introduction and Lab Safety</title>\r\n</head>\r\n<body>\r\n\r\n<h1>Chemistry 1: Introduction and Lab Safety</h1>\r\n\r\n<h2>Overview</h2>\r\n<p>This course introduces students to basic chemical concepts including atoms, molecules, and chemical reactions. It also emphasizes proper laboratory safety procedures and protocols.</p>\r\n\r\n<h2>Objectives</h2>\r\n<ul>\r\n  <li>Understand the structure of atoms and molecules.</li>\r\n  <li>Learn basic chemical reactions and measurements.</li>\r\n  <li>Recognize and follow standard lab safety rules.</li>\r\n</ul>\r\n\r\n<h2>Key Concepts</h2>\r\n<p><strong>Atom:</strong> The smallest unit of matter, consisting of protons, neutrons, and electrons.</p>\r\n<p><strong>Molecule:</strong> A group of atoms bonded together representing the smallest unit of a chemical compound.</p>\r\n<p><strong>Chemical Reactions:</strong> Processes in which substances are transformed into new substances.</p>\r\n\r\n<h2>Laboratory Safety Rules</h2>\r\n<ul>\r\n  <li>Always wear safety goggles and lab coats.</li>\r\n  <li>Never eat or drink in the lab.</li>\r\n  <li>Handle chemicals carefully and follow all instructions.</li>\r\n  <li>Know the location of safety equipment like fire extinguishers and eyewash stations.</li>\r\n  <li>Dispose of chemicals properly according to guidelines.</li>\r\n</ul>\r\n\r\n<h2>Quiz</h2>\r\n\r\n<form>\r\n  <p>1. What is the smallest unit of matter?</p>\r\n  <label><input type=\"radio\" name=\"q1\" value=\"a\"> Molecule</label>\r\n  <label><input type=\"radio\" name=\"q1\" value=\"b\"> Atom</label>\r\n  <label><input type=\"radio\" name=\"q1\" value=\"c\"> Compound</label>\r\n  <button type=\"button\" onclick=\"checkAnswer(1)\">Submit</button>\r\n  <div id=\"result1\"></div>\r\n</form>\r\n\r\n<form>\r\n  <p>2. What should you always wear in a chemistry lab?</p>\r\n  <label><input type=\"radio\" name=\"q2\" value=\"a\"> Gloves only</label>\r\n  <label><input type=\"radio\" name=\"q2\" value=\"b\"> Safety goggles and lab coat</label>\r\n  <label><input type=\"radio\" name=\"q2\" value=\"c\"> Open-toed shoes</label>\r\n  <button type=\"button\" onclick=\"checkAnswer(2)\">Submit</button>\r\n  <div id=\"result2\"></div>\r\n</form>\r\n\r\n<form>\r\n  <p>3. True or False: Eating in the lab is safe as long as you wash your hands afterwards.</p>\r\n  <label><input type=\"radio\" name=\"q3\" value=\"a\"> True</label>\r\n  <label><input type=\"radio\" name=\"q3\" value=\"b\"> False</label>\r\n  <button type=\"button\" onclick=\"checkAnswer(3)\">Submit</button>\r\n  <div id=\"result3\"></div>\r\n</form>\r\n\r\n<form>\r\n  <p>4. Fill in the blank: \"A chemical reaction transforms substances into ______.\"</p>\r\n  <input type=\"text\" id=\"q4-answer\" placeholder=\"Your answer\">\r\n  <button type=\"button\" onclick=\"checkAnswer(4)\">Submit</button>\r\n  <div id=\"result4\"></div>\r\n</form>\r\n\r\n<script>\r\nfunction checkAnswer(q){\r\n  const answers = {1:'b',2:'b',3:'b',4:'new substances'};\r\n  let resultDiv = document.getElementById(\"result\"+q);\r\n  let value;\r\n  if(q===4){\r\n    value = document.getElementById(\"q4-answer\").value.trim().toLowerCase();\r\n  } else {\r\n    const selected = document.querySelector('input[name=\"q'+q+'\"]:checked');\r\n    if(!selected){\r\n      resultDiv.textContent = \"Please select an answer.\";\r\n      return;\r\n    }\r\n    value = selected.value;\r\n  }\r\n  if(value===answers[q]){\r\n    resultDiv.textContent=\"Correct!\";\r\n  } else {\r\n    resultDiv.textContent=\"Incorrect, try again.\";\r\n  }\r\n}\r\n</script>\r\n\r\n</body>\r\n</html>"
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 2,
+  "fields": {
+    "title": "Physics 1 (Laws and forces)",
+    "description": "Physics 1 introduces gravity and Newton’s laws, explaining how forces govern motion and shape the universe",
+    "duration": 5,
+    "level": "Beginner",
+    "content": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n  <meta charset=\"UTF-8\" />\r\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\r\n  <title>Physics 1.1: Gravity and Basic Laws of the Universe</title>\r\n</head>\r\n<body>\r\n\r\n<h2>🌍 Physics 1.1: Gravity and Basic Laws of the Universe</h2>\r\n\r\n<h3>📖 Overview:</h3>\r\n<p>Physics 1.1 introduces the fundamental concepts of gravity and Newton’s Laws, explaining how forces govern motion and shape the universe.</p>\r\n\r\n<h3>📝 Objectives:</h3>\r\n<ul>\r\n  <li>Understand gravity and its role in the cosmos.</li>\r\n  <li>Learn Newton’s Three Laws of Motion.</li>\r\n  <li>Recognize the four fundamental forces of nature and their effects.</li>\r\n</ul>\r\n\r\n<h3>🧮 Key Concepts:</h3>\r\n<p><strong>Gravity:</strong> The force pulling objects toward each other, keeping planets in orbit.<br>\r\n<strong>Newton’s First Law:</strong> Objects remain at rest or move uniformly unless acted upon by a force.<br>\r\n<strong>Newton’s Second Law:</strong> Force equals mass times acceleration (F = ma).<br>\r\n<strong>Newton’s Third Law:</strong> Every action has an equal and opposite reaction.<br>\r\n<strong>Fundamental Forces:</strong> Gravity, electromagnetism, strong nuclear force, weak nuclear force.</p>\r\n\r\n<h3>✅ Quiz:</h3>\r\n\r\n<form id=\"quiz-form\">\r\n  <p><strong>1.</strong> What fundamental force keeps the planets orbiting the Sun?</p>\r\n  <input type=\"radio\" name=\"q1\" value=\"a\"> Electromagnetic force<br>\r\n  <input type=\"radio\" name=\"q1\" value=\"b\"> Gravitational force<br>\r\n  <input type=\"radio\" name=\"q1\" value=\"c\"> Weak nuclear force<br>\r\n\r\n  <p><strong>2.</strong> According to Newton's First Law, what happens to an object in motion if no external force acts upon it?</p>\r\n  <input type=\"radio\" name=\"q2\" value=\"a\"> It will eventually stop<br>\r\n  <input type=\"radio\" name=\"q2\" value=\"b\"> It will continue moving at the same speed and direction<br>\r\n  <input type=\"radio\" name=\"q2\" value=\"c\"> It will change direction spontaneously<br>\r\n\r\n  <p><strong>3.</strong> Which formula correctly expresses Newton’s Second Law?</p>\r\n  <input type=\"radio\" name=\"q3\" value=\"a\"> F = m / a<br>\r\n  <input type=\"radio\" name=\"q3\" value=\"b\"> F = ma<br>\r\n  <input type=\"radio\" name=\"q3\" value=\"c\"> F = m + a<br>\r\n\r\n  <p><strong>4.</strong> What does Newton’s Third Law state about forces?</p>\r\n  <input type=\"radio\" name=\"q4\" value=\"a\"> Forces act independently of each other<br>\r\n  <input type=\"radio\" name=\"q4\" value=\"b\"> Every action force has an equal and opposite reaction force<br>\r\n  <input type=\"radio\" name=\"q4\" value=\"c\"> Forces cancel each other out<br>\r\n\r\n  <p><strong>5.</strong> Which force is responsible for holding the nuclei of atoms together?</p>\r\n  <input type=\"radio\" name=\"q5\" value=\"a\"> Weak nuclear force<br>\r\n  <input type=\"radio\" name=\"q5\" value=\"b\"> Electromagnetic force<br>\r\n  <input type=\"radio\" name=\"q5\" value=\"c\"> Strong nuclear force<br>\r\n\r\n  <p><strong>6.</strong> What is one major role of gravity in the universe?</p>\r\n  <input type=\"radio\" name=\"q6\" value=\"a\"> To repel objects from each other<br>\r\n  <input type=\"radio\" name=\"q6\" value=\"b\"> To hold celestial bodies together and keep them in orbit<br>\r\n  <input type=\"radio\" name=\"q6\" value=\"c\"> To generate electromagnetic waves<br>\r\n\r\n  <p><strong>7.</strong> If you push an object with twice the force, what happens according to Newton’s Second Law?</p>\r\n  <input type=\"radio\" name=\"q7\" value=\"a\"> The object’s acceleration doubles<br>\r\n  <input type=\"radio\" name=\"q7\" value=\"b\"> The object’s mass doubles<br>\r\n  <input type=\"radio\" name=\"q7\" value=\"c\"> The object’s velocity stays the same<br>\r\n\r\n  <button type=\"button\" onclick=\"checkAnswers()\">Submit Quiz</button>\r\n</form>\r\n\r\n<p id=\"score\"></p>\r\n\r\n<script>\r\nfunction checkAnswers() {\r\n  let score = 0;\r\n  const answers = {q1: 'b', q2: 'b', q3: 'b', q4: 'b', q5: 'c', q6: 'b', q7: 'a'};\r\n  for (let q in answers) {\r\n    let selected = document.querySelector('input[name=\"' + q + '\"]:checked');\r\n    if (selected && selected.value === answers[q]) {\r\n      score++;\r\n    }\r\n  }\r\n  document.getElementById('score').textContent = \"Your score: \" + score + \"/7\";\r\n}\r\n</script>\r\n\r\n</body>\r\n</html>"
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 3,
+  "fields": {
+    "title": "Math 1 (Basic Algebra)",
+    "description": "This course introduces the basics of algebra, including variables, constants, operations, and equations. Students will learn how to simplify expressions and solve linear equations, building a foundation for higher-level mathematics.",
+    "duration": 5,
+    "level": "Beginner",
+    "content": "<h1>Math 1.1: Introduction to Algebra</h1>\r\n\r\n<h2>Welcome to Algebra</h2>\r\n<p>\r\nAlgebra is the branch of mathematics that deals with numbers, variables, and the rules for manipulating these elements. \r\nIn this module, you’ll learn the fundamental concepts of algebra that will be useful for more advanced studies.\r\n</p>\r\n\r\n<h2>What You'll Learn</h2>\r\n<ul>\r\n  <li>Understand variables and constants</li>\r\n  <li>Perform basic algebraic operations</li>\r\n  <li>Solve linear equations</li>\r\n</ul>\r\n\r\n<h2>Lesson 1: Variables and Constants</h2>\r\n<p>\r\nA <strong>variable</strong> is a symbol (often x, y, or z) used to represent an unknown value.  \r\nA <strong>constant</strong> is a fixed number that does not change in an equation (such as 5 or 10).  \r\nAlgebraic expressions are combinations of variables, constants, and operations.\r\n</p>\r\n\r\n<pre><code>\r\n# Examples\r\nVariable → x, y, z\r\nConstant → 7, 12, -3\r\nExpression → 2x + 3\r\nEquation → 3x + 4 = 10\r\n</code></pre>\r\n\r\n<h3>Exercise 1</h3>\r\n<p>What is the difference between a variable and a constant?</p>\r\n\r\n<h2>Lesson 2: Algebraic Operations</h2>\r\n<p>\r\nAlgebra uses the four basic operations — addition, subtraction, multiplication, and division — applied to variables and constants.\r\n</p>\r\n\r\n<pre><code>\r\n# Examples\r\nx + x = 2x        (Addition)\r\n2x - x = x        (Subtraction)\r\n3 * x = 3x        (Multiplication)\r\nx / 2             (Division)\r\n</code></pre>\r\n\r\n<h3>Exercise 2</h3>\r\n<p>Simplify: <strong>4x + 3x</strong></p>\r\n\r\n<h2>Lesson 3: Solving Linear Equations</h2>\r\n<p>\r\nA linear equation has the form <strong>ax + b = c</strong>.  \r\nTo solve for x, isolate it step by step.\r\n</p>\r\n\r\n<pre><code>\r\n# Example\r\n2x + 3 = 7\r\nStep 1: Subtract 3 → 2x = 4\r\nStep 2: Divide by 2 → x = 2\r\n</code></pre>\r\n\r\n<h3>Exercise 3</h3>\r\n<p>Solve for x: <strong>4x - 5 = 11</strong></p>\r\n\r\n<h2>Lesson 4: Algebra in Action</h2>\r\n<p>\r\nAlgebra is used in many real-life situations, such as budgeting, engineering, and problem-solving. \r\nBy mastering equations and logical steps, you can tackle practical challenges effectively.\r\n</p>\r\n\r\n<pre><code>\r\n# Real-life example\r\nCost per item = $5\r\nTotal cost = 5x\r\nIf 5x = 30 → x = 6 items\r\n</code></pre>\r\n\r\n<h3>Exercise 4</h3>\r\n<p>If 7x + 2 = 30, what is the value of x?</p>\r\n\r\n<h2>Key Takeaways</h2>\r\n<ul>\r\n  <li>Variables represent unknowns; constants are fixed values</li>\r\n  <li>Algebraic operations follow arithmetic rules with variables</li>\r\n  <li>Linear equations can be solved by isolating the variable</li>\r\n  <li>Algebra applies directly to real-world problem-solving</li>\r\n</ul>\r\n\r\n<p><strong>Next Steps:</strong> Practice solving equations and simplifying expressions to strengthen your algebra foundation.</p>"
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 4,
+  "fields": {
+    "title": "Biology 1 (Cell biology)",
+    "description": "Understanding cells is essential for understanding life at its most fundamental level.",
+    "duration": 5,
+    "level": "Beginner",
+    "content": "<h1>Biology 1.1: Introduction to Cell Biology</h1>\r\n\r\n<h2>Overview</h2>\r\n<p>\r\nCell biology is the study of the basic structural, functional, and biological units of life—the cell. \r\nUnderstanding cells is essential for understanding life at its most fundamental level.\r\n</p>\r\n\r\n<h2>What You'll Learn</h2>\r\n<ul>\r\n  <li>Understand the basic structure of plant and animal cells</li>\r\n  <li>Learn about the function of key cell organelles</li>\r\n  <li>Explore the differences between prokaryotic and eukaryotic cells</li>\r\n</ul>\r\n\r\n<h2>Lesson 1: What is a Cell?</h2>\r\n<p>\r\nA <strong>cell</strong> is the basic unit of life. All organisms, from simple bacteria to complex humans, are made of cells. \r\nCells can be broadly divided into two types: prokaryotic and eukaryotic.\r\n</p>\r\n\r\n<pre><code>\r\n# Types of cells\r\nProkaryotic → no nucleus (e.g., bacteria)\r\nEukaryotic → has a nucleus (e.g., plant and animal cells)\r\n</code></pre>\r\n\r\n<h3>Exercise 1</h3>\r\n<p>What is the basic unit of life?</p>\r\n\r\n<h2>Lesson 2: Prokaryotic vs. Eukaryotic Cells</h2>\r\n<p>\r\nProkaryotic cells are small, simple, and lack a nucleus. Eukaryotic cells are larger, more complex, and contain a nucleus and organelles. \r\nThis distinction is one of the most important in biology.\r\n</p>\r\n\r\n<pre><code>\r\n# Key difference\r\nProkaryotic → no nucleus\r\nEukaryotic → nucleus present\r\n</code></pre>\r\n\r\n<h3>Exercise 2</h3>\r\n<p>What structure do eukaryotic cells have that prokaryotic cells lack?</p>\r\n\r\n<h2>Lesson 3: Cell Organelles</h2>\r\n<p>\r\nOrganelles are specialized structures inside cells that carry out different functions. \r\nHere are some of the most important ones:\r\n</p>\r\n<ul>\r\n  <li><strong>Nucleus:</strong> Control center, stores DNA</li>\r\n  <li><strong>Mitochondria:</strong> Produces energy (ATP)</li>\r\n  <li><strong>Ribosomes:</strong> Build proteins</li>\r\n  <li><strong>Endoplasmic Reticulum (ER):</strong> Synthesizes proteins and lipids</li>\r\n  <li><strong>Golgi Apparatus:</strong> Packages and ships proteins/lipids</li>\r\n  <li><strong>Chloroplasts (plants only):</strong> Photosynthesis</li>\r\n  <li><strong>Cell Membrane:</strong> Selective barrier controlling entry/exit</li>\r\n</ul>\r\n\r\n<pre><code>\r\n# Example organelle functions\r\nNucleus → instructions\r\nMitochondria → energy\r\nRibosomes → proteins\r\n</code></pre>\r\n\r\n<h3>Exercise 3</h3>\r\n<p>Which organelle is known as the \"powerhouse of the cell\"?</p>\r\n\r\n<h2>Lesson 4: Plant vs. Animal Cells</h2>\r\n<p>\r\nPlant and animal cells share many similarities, but they also have differences.\r\n</p>\r\n<pre><code>\r\n# Plant cell features\r\n✔ Cell wall\r\n✔ Chloroplasts\r\n✘ Centrioles\r\n\r\n# Animal cell features\r\n✘ Cell wall\r\n✘ Chloroplasts\r\n✔ Centrioles\r\n</code></pre>\r\n\r\n<h3>Exercise 4</h3>\r\n<p>What two structures are found in plant cells but not in animal cells?</p>\r\n\r\n<h2>Lesson 5: The Cell Membrane</h2>\r\n<p>\r\nThe cell membrane is a selective barrier that controls what enters and leaves the cell. \r\nIt helps maintain balance inside the cell, a process called <strong>homeostasis</strong>.\r\n</p>\r\n\r\n<pre><code>\r\n# Example\r\nCell Membrane → selective barrier\r\nControls → nutrients in, waste out\r\n</code></pre>\r\n\r\n<h3>Exercise 5</h3>\r\n<p>What is the function of the cell membrane?</p>\r\n\r\n<h2>Lesson 6: Photosynthesis</h2>\r\n<p>\r\nPhotosynthesis occurs in the chloroplasts of plant cells. \r\nThis process converts light energy into chemical energy (glucose) for the plant.\r\n</p>\r\n\r\n<pre><code>\r\n# Photosynthesis equation\r\nCO₂ + H₂O + light → Glucose + O₂\r\n</code></pre>\r\n\r\n<h3>Exercise 6</h3>\r\n<p>Which organelle carries out photosynthesis?</p>\r\n\r\n<h2>Key Takeaways</h2>\r\n<ul>\r\n  <li>The cell is the basic unit of life</li>\r\n  <li>Prokaryotic cells lack a nucleus, eukaryotic cells have one</li>\r\n  <li>Organelles perform specialized functions (nucleus, mitochondria, ribosomes, etc.)</li>\r\n  <li>Plant cells have cell walls and chloroplasts; animal cells do not</li>\r\n  <li>The cell membrane acts as a selective barrier</li>\r\n  <li>Photosynthesis occurs in chloroplasts</li>\r\n</ul>\r\n\r\n<p><strong>Next Steps:</strong> Practice labeling cell diagrams and matching organelles to their functions.</p>"
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 5,
+  "fields": {
+    "title": "Philosophy 1 (Main branches)",
+    "description": "This course introduces the fundamental questions and methods of philosophy. Students explore the four main branches—metaphysics, epistemology, ethics, and logic—while examining the ideas of Socrates, Plato, and Aristotle. Emphasis is placed on developing critical thinking, reasoning, and reflective skills through engaging lessons and exercises. By the end of the course, students will understand key philosophical concepts, apply logical reasoning, and reflect on questions about knowledge, morality, and existence.",
+    "duration": 5,
+    "level": "Beginner",
+    "content": "<h1>Philosophy 1.1: Introduction to Philosophy</h1>\r\n\r\n<h2>Welcome to Philosophy!</h2>\r\n<p>\r\nPhilosophy is the study of fundamental questions about existence, knowledge, values, reason, and reality. In this course, you’ll learn about its main branches, influential thinkers, and timeless methods of inquiry.\r\n</p>\r\n\r\n<h2>What You'll Learn</h2>\r\n<ul>\r\n  <li><strong>Branches of Philosophy</strong> – Explore metaphysics, epistemology, ethics, and logic</li>\r\n  <li><strong>Socratic Method</strong> – Understand how questioning leads to deeper truth</li>\r\n  <li><strong>Epistemology</strong> – Examine the nature of knowledge and belief</li>\r\n  <li><strong>Ethics</strong> – Study morality and human values</li>\r\n  <li><strong>Logic</strong> – Learn how to reason clearly and avoid fallacies</li>\r\n  <li><strong>Plato & Aristotle</strong> – Discover their major contributions</li>\r\n</ul>\r\n\r\n<h2>Lesson 1: Branches of Philosophy</h2>\r\n<p>\r\nPhilosophy has four traditional branches: \r\n<strong>Metaphysics</strong> (the study of existence and reality), \r\n<strong>Epistemology</strong> (the study of knowledge), \r\n<strong>Ethics</strong> (the study of morality), and \r\n<strong>Logic</strong> (the study of reasoning).\r\n</p>\r\n\r\n<pre><code>\r\n# Example\r\nMetaphysics → What exists?\r\nEpistemology → How do we know?\r\nEthics → What is right or wrong?\r\nLogic → How should we reason?\r\n</code></pre>\r\n\r\n<h3>Exercise 1</h3>\r\n<p>Name the four traditional branches of philosophy.</p>\r\n\r\n<h2>Lesson 2: The Socratic Method</h2>\r\n<p>\r\nSocrates emphasized questioning as the path to truth. Instead of giving answers, he asked probing questions to expose contradictions and encourage deeper reflection. This is called the <strong>Socratic Method</strong>.\r\n</p>\r\n\r\n<pre><code>\r\n# Example of a Socratic dialogue\r\nQ: What is justice?\r\nA: Doing what is right.\r\nQ: But how do we define \"right\"?\r\n</code></pre>\r\n\r\n<h3>Exercise 2</h3>\r\n<p>What is the key characteristic of Socrates’ method?</p>\r\n\r\n<h2>Lesson 3: Epistemology</h2>\r\n<p>\r\nEpistemology studies knowledge. It asks: What does it mean to “know”? How can we justify our beliefs? Can we ever achieve certainty, or are we limited to probability and opinion?\r\n</p>\r\n\r\n<pre><code>\r\n# Example\r\nBelief + Truth + Justification = Knowledge\r\n</code></pre>\r\n\r\n<h3>Exercise 3</h3>\r\n<p>What branch of philosophy studies knowledge?</p>\r\n\r\n<h2>Lesson 4: Ethics</h2>\r\n<p>\r\nEthics is the study of morality and how we should live. It explores concepts like justice, virtue, responsibility, and what it means to live a good life.\r\n</p>\r\n\r\n<pre><code>\r\n# Example ethical questions\r\nIs stealing always wrong?\r\nDo ends justify the means?\r\n</code></pre>\r\n\r\n<h3>Exercise 4</h3>\r\n<p>Which branch of philosophy studies right and wrong?</p>\r\n\r\n<h2>Lesson 5: Logic</h2>\r\n<p>\r\nLogic provides rules for valid reasoning. It ensures our arguments are consistent and sound. Without logic, philosophy would lack clarity and precision.\r\n</p>\r\n\r\n<pre><code>\r\n# Example of valid reasoning\r\nAll humans are mortal.\r\nSocrates is a human.\r\nTherefore, Socrates is mortal.\r\n</code></pre>\r\n\r\n<h3>Exercise 5</h3>\r\n<p>What does logic study?</p>\r\n\r\n<h2>Lesson 6: Plato</h2>\r\n<p>\r\nPlato, a student of Socrates, developed the <strong>Theory of Forms</strong>, which proposed that beyond the physical world lies a realm of perfect, eternal ideas. He also wrote extensively about justice, politics, and knowledge.\r\n</p>\r\n\r\n<pre><code>\r\n# Example\r\nPhysical objects = imperfect copies\r\nForms (Ideas) = perfect realities\r\n</code></pre>\r\n\r\n<h3>Exercise 6</h3>\r\n<p>Which idea is most closely associated with Plato?</p>\r\n\r\n<h2>Lesson 7: Aristotle</h2>\r\n<p>\r\nAristotle, Plato’s student, emphasized observation, categorization, and logical reasoning. In ethics, he argued for the <strong>Golden Mean</strong>—virtue as the balance between extremes.\r\n</p>\r\n\r\n<pre><code>\r\n# Example\r\nCourage = balance between recklessness and cowardice\r\n</code></pre>\r\n\r\n<h3>Exercise 7</h3>\r\n<p>What did Aristotle emphasize in his ethical philosophy?</p>\r\n\r\n<h2>Key Takeaways</h2>\r\n<ul>\r\n  <li>Philosophy has four main branches: metaphysics, epistemology, ethics, and logic</li>\r\n  <li>The Socratic method uses questioning to reveal truth</li>\r\n  <li>Epistemology asks what it means to “know” something</li>\r\n  <li>Ethics studies morality and how we should live</li>\r\n  <li>Logic ensures reasoning is valid and sound</li>\r\n  <li>Plato developed the Theory of Forms</li>\r\n  <li>Aristotle emphasized observation and the Golden Mean in ethics</li>\r\n</ul>\r\n\r\n<p><strong>Next Steps:</strong> Try applying philosophy by questioning assumptions in everyday life. Ask: What do I know? How do I know it? Am I living well?</p>"
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 6,
+  "fields": {
+    "title": "Chemistry 2 (Organic matter)",
+    "description": "In this course, you’ll explore the structure, properties, and functions of organic compounds through simple explanations and examples.",
+    "duration": 15,
+    "level": "Intermediate",
+    "content": "<h1>Chemistry 2: Organic Matter and Molecules</h1>\r\n\r\n<h2>Welcome to Organic Chemistry!</h2>\r\n<p>Organic chemistry is the study of carbon-based molecules, which form the foundation of life. In this course, you’ll explore the structure, properties, and functions of organic compounds through simple explanations and examples.</p>\r\n\r\n<p><strong>Why Organic Chemistry?</strong> Organic molecules make up the carbohydrates, proteins, lipids, and nucleic acids essential to living organisms. Understanding how these molecules work will help you grasp how life itself is built at the molecular level.</p>\r\n\r\n<h2>What You'll Learn</h2>\r\n<ul>\r\n  <li><strong>Carbon’s Role</strong> - Learn why carbon is the backbone of organic molecules</li>\r\n  <li><strong>Organic Elements</strong> - Discover the key elements that make up organic compounds</li>\r\n  <li><strong>Types of Molecules</strong> - Understand carbohydrates, proteins, lipids, and nucleic acids</li>\r\n  <li><strong>Functional Groups</strong> - Identify groups that give molecules special properties</li>\r\n  <li><strong>Macromolecules</strong> - Explore carbohydrates, proteins, and lipids in detail</li>\r\n</ul>\r\n\r\n<h2>Lesson 1: Carbon’s Role in Organic Chemistry</h2>\r\n<p>Carbon is unique because it has four valence electrons, allowing it to form <strong>four covalent bonds</strong>. This makes it possible to create chains, branches, and rings that are the basis of organic molecules.</p>\r\n\r\n<pre><code>\r\n# Carbon has 4 bonds\r\nCarbon (C) → can bond with H, O, N, and other C atoms\r\nExample: CH₄ (Methane)\r\n</code></pre>\r\n\r\n<h3>Exercise 1: Explore Carbon Bonds</h3>\r\n<p>Draw a molecule of methane (CH₄). How many hydrogen atoms bond to a single carbon atom?</p>\r\n\r\n<h2>Lesson 2: Organic Molecule Elements</h2>\r\n<p>Organic molecules mainly contain carbon (C), hydrogen (H), oxygen (O), and nitrogen (N). These are the building blocks of life. Elements like neon (Ne), however, are inert and don’t form organic compounds.</p>\r\n\r\n<pre><code>\r\nCommon Elements:\r\n- Carbohydrates → C, H, O\r\n- Proteins → C, H, O, N (sometimes S)\r\n- Nucleic acids → C, H, O, N, P\r\n</code></pre>\r\n\r\n<h3>Exercise 2: Identify Elements</h3>\r\n<p>Which element below is NOT commonly found in organic molecules?</p>\r\n<ul>\r\n  <li>Carbon</li>\r\n  <li>Oxygen</li>\r\n  <li>Neon</li>\r\n</ul>\r\n\r\n<h2>Lesson 3: Types of Organic Molecules</h2>\r\n<p>Organic molecules fall into four main categories:</p>\r\n<ul>\r\n  <li><strong>Carbohydrates</strong> - energy storage and structure</li>\r\n  <li><strong>Proteins</strong> - enzymes, transport, and support</li>\r\n  <li><strong>Lipids</strong> - long-term energy and cell membranes</li>\r\n  <li><strong>Nucleic Acids</strong> - DNA and RNA, store genetic information</li>\r\n</ul>\r\n\r\n<pre><code>\r\nExample:\r\nDNA → Stores hereditary information\r\nProteins → Carry out cell functions\r\n</code></pre>\r\n\r\n<h3>Exercise 3: Match Molecules</h3>\r\n<p>Which type of organic molecule carries genetic information?</p>\r\n\r\n<h2>Lesson 4: Functional Groups</h2>\r\n<p>Functional groups are clusters of atoms that determine how molecules behave. For example:</p>\r\n\r\n<pre><code>\r\n- Hydroxyl (-OH): increases polarity, makes molecules soluble\r\n- Carboxyl (-COOH): gives acidic properties\r\n- Amino (-NH₂): makes molecules basic\r\n</code></pre>\r\n\r\n<h3>Exercise 4: Functional Groups</h3>\r\n<p>Which functional group gives molecules acidic properties?</p>\r\n\r\n<h2>Lesson 5: Carbohydrates</h2>\r\n<p>Carbohydrates are compounds of carbon, hydrogen, and oxygen, usually in a 1:2:1 ratio. They serve as the main energy source in living organisms.</p>\r\n\r\n<pre><code>\r\nExample: Glucose → C₆H₁₂O₆\r\n# Simple sugar used for energy\r\n</code></pre>\r\n\r\n<h3>Exercise 5: Identify Carbohydrates</h3>\r\n<p>Which of the following is a carbohydrate?</p>\r\n<ul>\r\n  <li>Glucose</li>\r\n  <li>DNA</li>\r\n  <li>Fatty acids</li>\r\n</ul>\r\n\r\n<h2>Lesson 6: Proteins</h2>\r\n<p>Proteins are made of amino acids, which contain carbon, hydrogen, oxygen, nitrogen, and sometimes sulfur. They form enzymes, structural components, and signaling molecules.</p>\r\n\r\n<pre><code>\r\nAmino Acid Structure:\r\n  H\r\n  |\r\nH₂N — C — COOH\r\n      |\r\n      R (side chain)\r\n</code></pre>\r\n\r\n<h3>Exercise 6: Protein Elements</h3>\r\n<p>Which elements are always found in amino acids?</p>\r\n\r\n<h2>Lesson 7: Lipids</h2>\r\n<p>Lipids are hydrophobic molecules like fats, oils, and phospholipids. They store long-term energy, provide insulation, and form cell membranes.</p>\r\n\r\n<pre><code>\r\nExamples:\r\n- Fats\r\n- Oils\r\n- Phospholipids (cell membranes)\r\n</code></pre>\r\n\r\n<h3>Exercise 7: Lipid Check</h3>\r\n<p>Which of the following is NOT a lipid?</p>\r\n<ul>\r\n  <li>Oils</li>\r\n  <li>Starches</li>\r\n  <li>Fats</li>\r\n</ul>\r\n\r\n<h2>Key Takeaways</h2>\r\n<ul>\r\n  <li>Carbon forms 4 bonds, making it the backbone of organic molecules</li>\r\n  <li>C, H, O, N (and sometimes S, P) are the key elements of life</li>\r\n  <li>Four main molecule types: carbohydrates, proteins, lipids, nucleic acids</li>\r\n  <li>Functional groups define molecular properties</li>\r\n  <li>Macromolecules power life through energy, structure, and genetics</li>\r\n</ul>\r\n\r\n<p><strong>Next Steps:</strong> Try identifying the molecules in your food (carbohydrates, fats, proteins) and relate them to what you’ve learned. Practice will help you see chemistry in everyday life!</p>"
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 7,
+  "fields": {
+    "title": "Math 2 (Algebra)",
+    "description": "Intermediate math with algebra",
+    "duration": 15,
+    "level": "Intermediate",
+    "content": "<h1>Intermediate Algebra Quick Course</h1>\r\n\r\n<h2>Welcome to Algebra!</h2>\r\n<p>Algebra is a branch of mathematics that uses symbols, letters, and numbers to represent relationships and solve problems. In this course, you’ll learn the fundamentals of intermediate algebra with clear examples and practice problems.</p>\r\n\r\n<p><strong>Why Algebra?</strong> Algebra is the foundation for higher-level math, science, engineering, and even programming. It teaches logical thinking, problem-solving, and prepares you for advanced topics.</p>\r\n\r\n<h2>What You'll Learn</h2>\r\n<ul>\r\n  <li><strong>Solving Linear Equations</strong> - Learn how to isolate variables and solve simple equations</li>\r\n  <li><strong>Distributive Property</strong> - Understand how to expand and simplify expressions</li>\r\n  <li><strong>Combining Like Terms</strong> - Simplify expressions by grouping similar terms</li>\r\n  <li><strong>Solving for Variables</strong> - Rearrange equations to find unknown values</li>\r\n  <li><strong>Inequalities</strong> - Work with values that are greater, less, or equal</li>\r\n</ul>\r\n\r\n<h2>Lesson 1: Solving Linear Equations</h2>\r\n<p>Linear equations are equations of the first degree, meaning the variable is raised to the power of one. To solve, isolate the variable by performing inverse operations.</p>\r\n\r\n<pre><code>\r\n# Solve for x: 2x + 3 = 7\r\n2x + 3 = 7\r\n2x = 7 - 3\r\n2x = 4\r\nx = 2\r\n</code></pre>\r\n\r\n<h3>Exercise 1: Solve for x</h3>\r\n<p>Solve: <em>3x - 5 = 10</em>. What is the value of <code>x</code>?</p>\r\n\r\n<h2>Lesson 2: Distributive Property</h2>\r\n<p>The distributive property allows you to multiply a single term across terms inside parentheses: <em>a(b + c) = ab + ac</em>.</p>\r\n\r\n<pre><code>\r\n# Example\r\n3(x + 4)\r\n= 3 * x + 3 * 4\r\n= 3x + 12\r\n</code></pre>\r\n\r\n<h3>Exercise 2: Apply the Distributive Property</h3>\r\n<p>Simplify: <em>5(y + 2)</em>.</p>\r\n\r\n<h2>Lesson 3: Combining Like Terms</h2>\r\n<p>Combining like terms means adding or subtracting terms that have the same variables and exponents.</p>\r\n\r\n<pre><code>\r\n# Example\r\n5x + 3 - 2x + 7\r\n= (5x - 2x) + (3 + 7)\r\n= 3x + 10\r\n</code></pre>\r\n\r\n<h3>Exercise 3: Simplify the Expression</h3>\r\n<p>Simplify: <em>4a + 6 - a + 9</em>.</p>\r\n\r\n<h2>Lesson 4: Solving for a Variable</h2>\r\n<p>To solve an equation for a variable, isolate it on one side of the equation by performing inverse operations.</p>\r\n\r\n<pre><code>\r\n# Solve for x: 4x - 5 = 11\r\n4x - 5 = 11\r\n4x = 11 + 5\r\n4x = 16\r\nx = 4\r\n</code></pre>\r\n\r\n<h3>Exercise 4: Solve for x</h3>\r\n<p>Solve: <em>7x + 2 = 23</em>. What is the value of <code>x</code>?</p>\r\n\r\n<h2>Lesson 5: Understanding Inequalities</h2>\r\n<p>Inequalities show the relationship between two values when they are not equal, using symbols like &lt;, &gt;, ≤, or ≥.</p>\r\n\r\n<pre><code>\r\n# Example\r\nx ≤ 7  # means x is less than or equal to 7\r\nx &gt; 3  # means x is greater than 3\r\n</code></pre>\r\n\r\n<h3>Exercise 5: Write an Inequality</h3>\r\n<p>Write an inequality that represents: “x is greater than or equal to 10”.</p>\r\n\r\n<h2>Key Takeaways</h2>\r\n<ul>\r\n  <li>Linear equations involve isolating the variable</li>\r\n  <li>The distributive property expands parentheses</li>\r\n  <li>Like terms can be combined to simplify expressions</li>\r\n  <li>You can rearrange equations to solve for a variable</li>\r\n  <li>Inequalities show relationships between values</li>\r\n  <li>Practice is essential to mastering algebra!</li>\r\n</ul>\r\n\r\n<p><strong>Next Steps:</strong> Try solving real-world problems with algebra, like calculating costs, distances, or rates. The more you practice, the more confident you’ll become!</p>"
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 8,
+  "fields": {
+    "title": "Coding 1 (Python)",
+    "description": "In this course, you'll learn the fundamentals of Python programming through hands-on examples and practical exercises.",
+    "duration": 5,
+    "level": "Beginner",
+    "content": "<h1>Introduction to Python Programming</h1>\r\n\r\n<h2>Welcome to Python!</h2>\r\n<p>Python is a powerful, versatile programming language that's perfect for beginners and professionals alike. In this course, you'll learn the fundamentals of Python programming through hands-on examples and practical exercises.</p>\r\n\r\n<p><strong>Why Python?</strong> Python is known for its simple syntax, making it one of the easiest programming languages to learn. It's used in web development, data science, artificial intelligence, and more!</p>\r\n\r\n<h2>What You'll Learn</h2>\r\n<ul>\r\n  <li><strong>Variables & Data Types</strong> - Learn how to store and work with different types of data</li>\r\n  <li><strong>Control Structures</strong> - Master if statements, loops, and decision making</li>\r\n  <li><strong>Functions</strong> - Create reusable blocks of code</li>\r\n  <li><strong>Lists & Dictionaries</strong> - Work with collections of data</li>\r\n</ul>\r\n\r\n<h2>Lesson 1: Variables and Data Types</h2>\r\n<p>In Python, you can store data in variables. Python automatically determines the data type based on the value you assign.</p>\r\n\r\n<pre><code>\r\n# String (text)\r\nname = \"Alice\"\r\nage = 25\r\nheight = 5.6\r\nis_student = True\r\n\r\nprint(\"Name:\", name)\r\nprint(\"Age:\", age)\r\nprint(\"Height:\", height)\r\nprint(\"Is student:\", is_student)\r\n</code></pre>\r\n\r\n<h3>Exercise 1: Create Your Profile</h3>\r\n<p>Create variables to store your name, age, and favorite color. Then print them out using the <code>print()</code> function.</p>\r\n\r\n<h2>Lesson 2: Control Structures</h2>\r\n<p>Control structures help you make decisions and repeat actions in your code.</p>\r\n\r\n<h3>If Statements</h3>\r\n<pre><code>\r\nage = 18\r\n\r\nif age >= 18:\r\n    print(\"You are an adult!\")\r\nelif age >= 13:\r\n    print(\"You are a teenager!\")\r\nelse:\r\n    print(\"You are a child!\")\r\n</code></pre>\r\n\r\n<h3>For Loops</h3>\r\n<pre><code>\r\n# Count from 1 to 5\r\nfor i in range(1, 6):\r\n    print(f\"Count: {i}\")\r\n\r\n# Loop through a list\r\nfruits = [\"apple\", \"banana\", \"orange\"]\r\nfor fruit in fruits:\r\n    print(f\"I like {fruit}\")\r\n</code></pre>\r\n\r\n<h3>Exercise 2: Number Guessing Game</h3>\r\n<p>Write a program that asks the user to guess a number between 1 and 10. Use an if statement to tell them if they guessed correctly!</p>\r\n\r\n<h2>Lesson 3: Functions</h2>\r\n<p>Functions are reusable blocks of code that perform specific tasks. They help organize your code and avoid repetition.</p>\r\n\r\n<pre><code>\r\n# Define a function\r\ndef greet(name):\r\n    return f\"Hello, {name}! Welcome to Python!\"\r\n\r\n# Call the function\r\nmessage = greet(\"Alice\")\r\nprint(message)\r\n\r\n# Function with multiple parameters\r\ndef calculate_area(length, width):\r\n    area = length * width\r\n    return area\r\n\r\nroom_area = calculate_area(10, 12)\r\nprint(f\"Room area: {room_area} square feet\")\r\n</code></pre>\r\n\r\n<h3>Exercise 3: Calculator Functions</h3>\r\n<p>Create functions for basic math operations (add, subtract, multiply, divide). Test them with different numbers!</p>\r\n\r\n<h2>Lesson 4: Lists and Dictionaries</h2>\r\n<p>Lists and dictionaries are powerful ways to store and organize multiple pieces of data.</p>\r\n\r\n<h3>Lists</h3>\r\n<pre><code>\r\n# Create a list\r\ngrades = [85, 92, 78, 96, 88]\r\n\r\n# Access elements\r\nprint(\"First grade:\", grades[0])\r\nprint(\"Last grade:\", grades[-1])\r\n\r\n# Add elements\r\ngrades.append(90)\r\nprint(\"Updated grades:\", grades)\r\n\r\n# Loop through list\r\nfor grade in grades:\r\n    print(f\"Grade: {grade}\")\r\n</code></pre>\r\n\r\n<h3>Dictionaries</h3>\r\n<pre><code>\r\n# Create a dictionary\r\nstudent = {\r\n    \"name\": \"Alice\",\r\n    \"age\": 20,\r\n    \"major\": \"Computer Science\",\r\n    \"gpa\": 3.8\r\n}\r\n\r\n# Access values\r\nprint(\"Name:\", student[\"name\"])\r\nprint(\"GPA:\", student[\"gpa\"])\r\n\r\n# Add new key-value pair\r\nstudent[\"year\"] = \"Junior\"\r\nprint(\"Student info:\", student)\r\n</code></pre>\r\n\r\n<h3>Exercise 4: Student Database</h3>\r\n<p>Create a list of dictionaries to store information about 3 students. Include their name, age, and favorite subject. Then print out each student's information.</p>\r\n\r\n<h2>Key Takeaways</h2>\r\n<ul>\r\n  <li>Python uses simple, readable syntax</li>\r\n  <li>Variables store data of different types</li>\r\n  <li>Control structures help make decisions and repeat actions</li>\r\n  <li>Functions organize code and make it reusable</li>\r\n  <li>Lists and dictionaries help organize multiple pieces of data</li>\r\n  <li>Practice is key to mastering programming!</li>\r\n</ul>\r\n\r\n<p><strong>Next Steps:</strong> Try building a simple project like a to-do list or a basic calculator. The more you practice, the better you'll become!</p>"
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 9,
+  "fields": {
+    "title": "Coding 1 (JavaScript)",
+    "description": "Coding 1 (JavaScript) introduces intermediate JavaScript concepts, focusing on functions, loops, arrays, and DOM manipulation to build interactive web applications",
+    "duration": 15,
+    "level": "Intermediate",
+    "content": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n<meta charset=\"UTF-8\" />\r\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\r\n<title>Coding 1: JavaScript</title>\r\n</head>\r\n<body>\r\n\r\n<h1>Coding 1: JavaScript</h1>\r\n\r\n<h2>Overview</h2>\r\n<p>This course covers intermediate JavaScript topics, including functions, loops, arrays, and interacting with the web page through the DOM.</p>\r\n\r\n<h2>Objectives</h2>\r\n<ul>\r\n  <li>Understand and use JavaScript functions effectively.</li>\r\n  <li>Work with loops and conditional statements to control program flow.</li>\r\n  <li>Manipulate arrays and objects for storing and processing data.</li>\r\n  <li>Interact with the DOM to create dynamic web content.</li>\r\n</ul>\r\n\r\n<h2>Key Concepts</h2>\r\n<p><strong>Functions:</strong> Blocks of code that can be called multiple times with different inputs.</p>\r\n<p><strong>Loops:</strong> Statements used to repeat actions, such as for-loops and while-loops.</p>\r\n<p><strong>Arrays:</strong> Collections of data stored in a single variable.</p>\r\n<p><strong>DOM Manipulation:</strong> Using JavaScript to dynamically change HTML content, styles, and structure.</p>\r\n\r\n<h2>Quiz</h2>\r\n\r\n<form>\r\n  <p>1. Which keyword is used to define a function in JavaScript?</p>\r\n  <label><input type=\"radio\" name=\"q1\" value=\"a\"> func</label>\r\n  <label><input type=\"radio\" name=\"q1\" value=\"b\"> function</label>\r\n  <label><input type=\"radio\" name=\"q1\" value=\"c\"> define</label>\r\n  <button type=\"button\" onclick=\"checkAnswer(1)\">Submit</button>\r\n  <div id=\"result1\"></div>\r\n</form>\r\n\r\n<form>\r\n  <p>2. How do you access the first element of an array named 'arr'?</p>\r\n  <label><input type=\"radio\" name=\"q2\" value=\"a\"> arr[0]</label>\r\n  <label><input type=\"radio\" name=\"q2\" value=\"b\"> arr[1]</label>\r\n  <label><input type=\"radio\" name=\"q2\" value=\"c\"> arr.first()</label>\r\n  <button type=\"button\" onclick=\"checkAnswer(2)\">Submit</button>\r\n  <div id=\"result2\"></div>\r\n</form>\r\n\r\n<form>\r\n  <p>3. Fill in the blank: \"A loop that runs until a condition becomes false is called a ______ loop.\"</p>\r\n  <input type=\"text\" id=\"q3-answer\" placeholder=\"Your answer\">\r\n  <button type=\"button\" onclick=\"checkAnswer(3)\">Submit</button>\r\n  <div id=\"result3\"></div>\r\n</form>\r\n\r\n<script>\r\nfunction checkAnswer(q){\r\n  const answers = {1:'b',2:'a',3:'while'};\r\n  let resultDiv = document.getElementById(\"result\"+q);\r\n  let value;\r\n  if(q===3){\r\n    value = document.getElementById(\"q3-answer\").value.trim().toLowerCase();\r\n  } else {\r\n    const selected = document.querySelector('input[name=\"q'+q+'\"]:checked');\r\n    if(!selected){\r\n      resultDiv.textContent = \"Please select an answer.\";\r\n      return;\r\n    }\r\n    value = selected.value;\r\n  }\r\n  if(value===answers[q]){\r\n    resultDiv.textContent=\"Correct!\";\r\n  } else {\r\n    resultDiv.textContent=\"Incorrect, try again.\";\r\n  }\r\n}\r\n</script>\r\n\r\n</body>\r\n</html>"
+  }
+},
+{
+  "model": "courses.quiz",
+  "pk": 1,
+  "fields": {
+    "course": 5,
+    "title": "Course Quiz Philosophy 1.1"
+  }
+},
+{
+  "model": "courses.quiz",
+  "pk": 2,
+  "fields": {
+    "course": 4,
+    "title": "Course Quiz Biology 1.1"
+  }
+},
+{
+  "model": "courses.quiz",
+  "pk": 3,
+  "fields": {
+    "course": 2,
+    "title": "Course Quiz physics 1.1"
+  }
+},
+{
+  "model": "courses.quiz",
+  "pk": 4,
+  "fields": {
+    "course": 1,
+    "title": "Course Quiz Chemistry 1.1"
+  }
+},
+{
+  "model": "courses.quiz",
+  "pk": 5,
+  "fields": {
+    "course": 6,
+    "title": "Course Quiz Chemistry 2"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 1,
+  "fields": {
+    "quiz": 1,
+    "text": "How old are you?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 2,
+  "fields": {
+    "quiz": 1,
+    "text": "How young are you?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 3,
+  "fields": {
+    "quiz": 2,
+    "text": "What does biology mean"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 4,
+  "fields": {
+    "quiz": 2,
+    "text": "Why is biology important"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 5,
+  "fields": {
+    "quiz": 3,
+    "text": "Which force is primarily responsible for keeping the planets moving around the Sun?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 6,
+  "fields": {
+    "quiz": 3,
+    "text": "According to Newton’s First Law, what will an object do if no external force influences it while it’s moving?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 7,
+  "fields": {
+    "quiz": 3,
+    "text": "What is the correct mathematical relationship that expresses Newton’s Second Law?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 8,
+  "fields": {
+    "quiz": 3,
+    "text": "Newton’s Third Law states that forces always come in pairs. What does this mean exactly?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 9,
+  "fields": {
+    "quiz": 3,
+    "text": "Which fundamental force acts to hold the protons and neutrons tightly bound within an atom’s nucleus?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 10,
+  "fields": {
+    "quiz": 3,
+    "text": "What key function does gravity serve on a cosmic scale?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 11,
+  "fields": {
+    "quiz": 3,
+    "text": "If the force applied to an object is doubled, what happens to its acceleration based on Newton’s Second Law?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 12,
+  "fields": {
+    "quiz": 4,
+    "text": "Which of the following structures acts as the control center of the cell, containing genetic material?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 13,
+  "fields": {
+    "quiz": 4,
+    "text": "Which feature is found in plant cells but not in animal cells?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 14,
+  "fields": {
+    "quiz": 4,
+    "text": "What is the primary function of the mitochondria in a cell?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 15,
+  "fields": {
+    "quiz": 4,
+    "text": "Which of these best describes a prokaryotic cell?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 16,
+  "fields": {
+    "quiz": 4,
+    "text": "What is the main role of ribosomes in a cell?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 17,
+  "fields": {
+    "quiz": 4,
+    "text": "Which structure controls what substances can enter and leave the cell?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 18,
+  "fields": {
+    "quiz": 4,
+    "text": "In which of the following would you find a rough endoplasmic reticulum (ER)?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 19,
+  "fields": {
+    "quiz": 5,
+    "text": "How many hydrogen atoms bond to a single carbon atom in methane (CH₄)?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 20,
+  "fields": {
+    "quiz": 5,
+    "text": "Which element is NOT commonly found in organic molecules?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 21,
+  "fields": {
+    "quiz": 5,
+    "text": "Which type of organic molecule carries genetic information?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 22,
+  "fields": {
+    "quiz": 5,
+    "text": "Which functional group gives molecules acidic properties?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 23,
+  "fields": {
+    "quiz": 5,
+    "text": "Which of the following is a carbohydrate?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 24,
+  "fields": {
+    "quiz": 5,
+    "text": "Which elements are always found in amino acids?"
+  }
+},
+{
+  "model": "courses.question",
+  "pk": 25,
+  "fields": {
+    "quiz": 5,
+    "text": "Which of the following is NOT a lipid?"
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 1,
+  "fields": {
+    "question": 2,
+    "text": "18",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 2,
+  "fields": {
+    "question": 2,
+    "text": "20",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 3,
+  "fields": {
+    "question": 4,
+    "text": "For us to understand the world around us",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 4,
+  "fields": {
+    "question": 4,
+    "text": "For the future of the planet",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 5,
+  "fields": {
+    "question": 4,
+    "text": "Both of the options are correct",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 6,
+  "fields": {
+    "question": 3,
+    "text": "Studying plants",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 7,
+  "fields": {
+    "question": 3,
+    "text": "Studying animals",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 8,
+  "fields": {
+    "question": 1,
+    "text": "21",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 9,
+  "fields": {
+    "question": 1,
+    "text": "22",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 10,
+  "fields": {
+    "question": 5,
+    "text": "Electromagnetic force",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 11,
+  "fields": {
+    "question": 5,
+    "text": "Gravitational force",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 12,
+  "fields": {
+    "question": 5,
+    "text": "Nuclear force",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 13,
+  "fields": {
+    "question": 6,
+    "text": "It will slow down and stop",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 14,
+  "fields": {
+    "question": 6,
+    "text": "It will keep moving at the same speed and direction",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 15,
+  "fields": {
+    "question": 6,
+    "text": "It will change direction randomly",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 16,
+  "fields": {
+    "question": 7,
+    "text": "Force = mass × acceleration",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 17,
+  "fields": {
+    "question": 7,
+    "text": "Force = mass ÷ acceleration",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 18,
+  "fields": {
+    "question": 7,
+    "text": "Force = acceleration ÷ mass",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 19,
+  "fields": {
+    "question": 8,
+    "text": "For every force, there is an equal force in the same direction",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 20,
+  "fields": {
+    "question": 8,
+    "text": "For every force, there is an equal force in the opposite direction",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 21,
+  "fields": {
+    "question": 8,
+    "text": "Forces cancel each other out completely",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 22,
+  "fields": {
+    "question": 9,
+    "text": "Gravitational force",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 23,
+  "fields": {
+    "question": 9,
+    "text": "Electromagnetic force",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 24,
+  "fields": {
+    "question": 9,
+    "text": "Strong nuclear force",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 25,
+  "fields": {
+    "question": 10,
+    "text": "It causes objects to repel each other",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 26,
+  "fields": {
+    "question": 10,
+    "text": "It keeps celestial bodies like planets and stars in orbit",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 27,
+  "fields": {
+    "question": 10,
+    "text": "It generates electromagnetic waves",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 28,
+  "fields": {
+    "question": 11,
+    "text": "Acceleration stays the same",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 29,
+  "fields": {
+    "question": 11,
+    "text": "Acceleration doubles",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 30,
+  "fields": {
+    "question": 11,
+    "text": "Acceleration halves",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 31,
+  "fields": {
+    "question": 12,
+    "text": "Mitochondria",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 32,
+  "fields": {
+    "question": 12,
+    "text": "Nucleus",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 33,
+  "fields": {
+    "question": 12,
+    "text": "Golgi Apparatus",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 34,
+  "fields": {
+    "question": 13,
+    "text": "Chloroplasts",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 35,
+  "fields": {
+    "question": 13,
+    "text": "Ribosomes",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 36,
+  "fields": {
+    "question": 13,
+    "text": "Centrioles",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 37,
+  "fields": {
+    "question": 14,
+    "text": "Packaging proteins for transport",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 38,
+  "fields": {
+    "question": 14,
+    "text": "Producing energy",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 39,
+  "fields": {
+    "question": 14,
+    "text": "Storing genetic information",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 40,
+  "fields": {
+    "question": 15,
+    "text": "A cell with a nucleus and membrane-bound organelles",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 41,
+  "fields": {
+    "question": 15,
+    "text": "A cell that only exists in plants",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 42,
+  "fields": {
+    "question": 15,
+    "text": "A simple cell without a nucleus",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 43,
+  "fields": {
+    "question": 16,
+    "text": "Synthesizing proteins",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 44,
+  "fields": {
+    "question": 16,
+    "text": "Regulating cell division",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 45,
+  "fields": {
+    "question": 16,
+    "text": "Performing photosynthesis",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 46,
+  "fields": {
+    "question": 17,
+    "text": "Cell Membrane",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 47,
+  "fields": {
+    "question": 17,
+    "text": "Endoplasmic Reticulum",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 48,
+  "fields": {
+    "question": 17,
+    "text": "Nucleus",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 49,
+  "fields": {
+    "question": 18,
+    "text": "Only in prokaryotic cells",
+    "is_correct": false
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 50,
+  "fields": {
+    "question": 18,
+    "text": "In both plant and animal cells",
+    "is_correct": true
+  }
+},
+{
+  "model": "courses.option",
+  "pk": 51,
+  "fields": {
+    "question": 18,
+    "text": "Only in plant cells",
+    "is_correct": false
+  }
+}
+]

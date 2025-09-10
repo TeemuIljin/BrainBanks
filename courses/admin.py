@@ -4,8 +4,8 @@ from .models import Course, ShopItem, PlayerProfile, Purchase, Quiz, Question, O
 
 # Course admin with custom display
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'level', 'duration')
-    fields = ('title', 'description', 'duration', 'category', 'level', 'content')
+    list_display = ('title', 'level', 'duration')
+    fields = ('title', 'description', 'duration', 'level', 'content')
 
 admin.site.register(Course, CourseAdmin)
 

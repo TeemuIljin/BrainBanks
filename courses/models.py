@@ -17,7 +17,6 @@ class Course(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     duration = models.IntegerField(help_text="Duration in minutes", default=30)
-    category = models.CharField(max_length=100, blank=True, null=True)
     level = models.CharField(max_length=50, choices=[
         ('Beginner', 'Beginner'),
         ('Intermediate', 'Intermediate'),

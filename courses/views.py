@@ -142,11 +142,25 @@ def buy_item(request, item_id):
         if player_profile.points >= item.price:
             # Use atomic transaction to prevent race conditions
             from django.db import transaction
+            from datetime import datetime, timedelta
             with transaction.atomic():
                 player_profile.points -= item.price
+                
+                # Apply special effects based on item name
+                if "Streak freeze" in item.name:
+                    player_profile.streak_freeze_count += 1
+                    messages.success(request, f"Successfully purchased {item.name}! You now have {player_profile.streak_freeze_count} streak freeze(s).")
+                elif "Fired up streak" in item.name:
+                    player_profile.fired_up_streak_until = datetime.now() + timedelta(days=1)
+                    messages.success(request, f"Successfully purchased {item.name}! Your streak will be tripled for 24 hours!")
+                elif "Experience festival" in item.name:
+                    player_profile.experience_festival_until = datetime.now() + timedelta(minutes=15)
+                    messages.success(request, f"Successfully purchased {item.name}! You'll earn 3x points for 15 minutes!")
+                else:
+                    messages.success(request, f"Successfully purchased {item.name}!")
+                
                 player_profile.save()
                 Purchase.objects.create(player=player_profile, item=item)
-            messages.success(request, f"Successfully purchased {item.name}!")
         else:
             messages.error(request, "You do not have enough points to buy this item.")
     except Exception as e:
@@ -191,10 +205,32 @@ def quiz_view(request, course_id, question_number=1):
 
         # Streak handling: increment if last activity was yesterday or today; reset otherwise
         today = date.today()
-        if player_profile.last_activity_date in (today, today - timedelta(days=1)):
-            player_profile.current_streak = (player_profile.current_streak or 0) + 1
+        from datetime import datetime
+        
+        # Check if streak should be maintained (normal logic or streak freeze)
+        should_maintain_streak = (
+            player_profile.last_activity_date in (today, today - timedelta(days=1)) or
+            (player_profile.streak_freeze_count > 0 and player_profile.last_activity_date == today - timedelta(days=2))
+        )
+        
+        if should_maintain_streak:
+            # Use streak freeze if needed
+            if (player_profile.streak_freeze_count > 0 and 
+                player_profile.last_activity_date == today - timedelta(days=2)):
+                player_profile.streak_freeze_count -= 1
+                messages.info(request, "❄️ Streak freeze used! Your streak continues.")
+            
+            # Apply fired up streak multiplier if active
+            streak_increment = 1
+            if (player_profile.fired_up_streak_until and 
+                datetime.now() < player_profile.fired_up_streak_until):
+                streak_increment = 3
+                messages.info(request, "🔥 Fired up streak active! +3 streak days!")
+            
+            player_profile.current_streak = (player_profile.current_streak or 0) + streak_increment
         else:
             player_profile.current_streak = 1
+            
         if player_profile.current_streak > (player_profile.longest_streak or 0):
             player_profile.longest_streak = player_profile.current_streak
         player_profile.last_activity_date = today
@@ -220,7 +256,14 @@ def quiz_view(request, course_id, question_number=1):
         if selected_option_id and correct_option and int(selected_option_id) == correct_option.id:
             request.session['score'] += 1
             player_profile = PlayerProfile.objects.get(user=request.user)
-            player_profile.points += points_per_correct
+            
+            # Apply experience festival multiplier if active
+            from datetime import datetime
+            points_to_add = points_per_correct
+            if player_profile.experience_festival_until and datetime.now() < player_profile.experience_festival_until:
+                points_to_add *= 3
+            
+            player_profile.points += points_to_add
             player_profile.save()
             # Update leaderboard immediately when points are earned
             update_leaderboard_entry(player_profile)

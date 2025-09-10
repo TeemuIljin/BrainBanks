@@ -287,6 +287,47 @@
                 font-size: 0.85rem;
             }
         }
+        
+        /* Active Effects Styles */
+        .active-effects {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 20px 0;
+            box-shadow: 0 8px 20px -12px var(--shadow);
+        }
+        
+        .active-effects h3 {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+        
+        .effects-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .effect-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: rgba(122, 162, 255, 0.1);
+            border: 1px solid rgba(122, 162, 255, 0.2);
+            border-radius: 8px;
+        }
+        
+        .effect-icon {
+            font-size: 1.2rem;
+        }
+        
+        .effect-text {
+            font-size: 0.9rem;
+            color: var(--text);
+        }
     </style>
 </head>
 <body>
@@ -314,6 +355,33 @@
             <a class="btn" href="{% url 'course_list' %}">📚 Courses</a>
             <a class="btn" href="{% url 'leaderboard' %}">🏆 Leaderboard</a>
         </nav>
+
+        <!-- Active Effects Display -->
+        {% if player_profile.streak_freeze_count > 0 or player_profile.fired_up_streak_until or player_profile.experience_festival_until %}
+        <div class="active-effects">
+            <h3>🎯 Active Effects</h3>
+            <div class="effects-grid">
+                {% if player_profile.streak_freeze_count > 0 %}
+                <div class="effect-item">
+                    <span class="effect-icon">❄️</span>
+                    <span class="effect-text">Streak Freeze: {{ player_profile.streak_freeze_count }} remaining</span>
+                </div>
+                {% endif %}
+                {% if player_profile.fired_up_streak_until %}
+                <div class="effect-item">
+                    <span class="effect-icon">🔥</span>
+                    <span class="effect-text">Fired Up Streak: Active until {{ player_profile.fired_up_streak_until|date:"M d, H:i" }}</span>
+                </div>
+                {% endif %}
+                {% if player_profile.experience_festival_until %}
+                <div class="effect-item">
+                    <span class="effect-icon">🎉</span>
+                    <span class="effect-text">Experience Festival: Active until {{ player_profile.experience_festival_until|date:"M d, H:i" }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
 
         {% if shop_items %}
             <div class="shop-container">

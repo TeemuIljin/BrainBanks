@@ -36,7 +36,7 @@
             color: var(--text);
             font-size:1rem; 
         }
-        input[type="text"], input[type="email"], input[type="date"], input[type="password"] { 
+        input[type="text"], input[type="email"], input[type="password"] { 
             padding:16px 20px; 
             border-radius:12px; 
             background:rgba(255,255,255,0.05); 
@@ -45,7 +45,7 @@
             font-size:1rem;
             transition: all 0.3s ease;
         }
-        input[type="text"]:focus, input[type="email"]:focus, input[type="date"]:focus, input[type="password"]:focus {
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
             outline: none;
             border-color: var(--accent);
             background: rgba(255, 255, 255, 0.08);
@@ -175,11 +175,6 @@
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email" value="{{ request.POST.email|default:'' }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="birthdate">Birthdate</label>
-                <input type="date" id="birthdate" name="birthdate" value="{{ request.POST.birthdate|default:'' }}" required>
             </div>
 
             <div class="form-group">

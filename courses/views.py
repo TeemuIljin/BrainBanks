@@ -134,11 +134,6 @@ def buy_item(request, item_id):
     try:
         player_profile, created = PlayerProfile.objects.get_or_create(user=request.user)
         
-        # Check if user already owns this item
-        if Purchase.objects.filter(player=player_profile, item=item).exists():
-            messages.warning(request, "You already own this item.")
-            return redirect('shop')
-        
         if player_profile.points >= item.price:
             # Use atomic transaction to prevent race conditions
             from django.db import transaction
@@ -146,16 +141,14 @@ def buy_item(request, item_id):
             with transaction.atomic():
                 player_profile.points -= item.price
                 
-                # Apply special effects based on item name
+                # Only add to inventory, don't activate effects immediately
                 if "Streak freeze" in item.name:
                     player_profile.streak_freeze_count += 1
-                    messages.success(request, f"Successfully purchased {item.name}! You now have {player_profile.streak_freeze_count} streak freeze(s).")
+                    messages.success(request, f"Successfully purchased {item.name}! Added to inventory. Use it from your profile when needed.")
                 elif "Fired up streak" in item.name:
-                    player_profile.fired_up_streak_until = datetime.now() + timedelta(days=1)
-                    messages.success(request, f"Successfully purchased {item.name}! Your streak will be tripled for 24 hours!")
+                    messages.success(request, f"Successfully purchased {item.name}! Added to inventory. Use it from your profile when needed.")
                 elif "Experience festival" in item.name:
-                    player_profile.experience_festival_until = datetime.now() + timedelta(minutes=15)
-                    messages.success(request, f"Successfully purchased {item.name}! You'll earn 3x points for 15 minutes!")
+                    messages.success(request, f"Successfully purchased {item.name}! Added to inventory. Use it from your profile when needed.")
                 else:
                     messages.success(request, f"Successfully purchased {item.name}!")
                 
@@ -331,7 +324,7 @@ def view_profile(request, username):
     inventory = (
         Purchase.objects
         .filter(player=player_profile)
-        .values('item__name', 'item__icon')
+        .values('item__name', 'item__icon', 'item__id')
         .annotate(quantity=Count('id'))
         .order_by('item__name')
     )
@@ -340,6 +333,47 @@ def view_profile(request, username):
         'player_profile': player_profile,
         'inventory': inventory,
     })
+
+
+@login_required
+def use_item(request, item_id):
+    """Use a consumable item from inventory"""
+    item = get_object_or_404(ShopItem, pk=item_id)
+    player_profile = get_object_or_404(PlayerProfile, user=request.user)
+    
+    # Check if user has this item
+    if not Purchase.objects.filter(player=player_profile, item=item).exists():
+        messages.error(request, "You don't have this item in your inventory.")
+        return redirect('view_profile', username=request.user.username)
+    
+    from datetime import datetime, timedelta
+    
+    # Apply effects based on item name
+    if "Streak freeze" in item.name:
+        if player_profile.streak_freeze_count > 0:
+            player_profile.streak_freeze_count -= 1
+            player_profile.save()
+            # Remove one purchase record
+            Purchase.objects.filter(player=player_profile, item=item).first().delete()
+            messages.success(request, "❄️ Streak freeze activated! Your streak will be protected if you miss a day.")
+        else:
+            messages.error(request, "You don't have any streak freezes to use.")
+    elif "Fired up streak" in item.name:
+        player_profile.fired_up_streak_until = datetime.now() + timedelta(days=1)
+        player_profile.save()
+        # Remove one purchase record
+        Purchase.objects.filter(player=player_profile, item=item).first().delete()
+        messages.success(request, "🔥 Fired up streak activated! Your streak will be tripled for 24 hours!")
+    elif "Experience festival" in item.name:
+        player_profile.experience_festival_until = datetime.now() + timedelta(minutes=15)
+        player_profile.save()
+        # Remove one purchase record
+        Purchase.objects.filter(player=player_profile, item=item).first().delete()
+        messages.success(request, "🎉 Experience festival activated! You'll earn 3x points for 15 minutes!")
+    else:
+        messages.info(request, "This item doesn't have a special effect to use.")
+    
+    return redirect('view_profile', username=request.user.username)
 
 
 def sign_in_view(request):

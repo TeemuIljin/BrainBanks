@@ -39,12 +39,17 @@
             <p class="meta">🔥 Current streak: {{ player_profile.current_streak }} · 🏆 Longest: {{ player_profile.longest_streak }}</p>
             <h2>Inventory</h2>
             {% if inventory %}
-                <ul>
+                <ul style="list-style:none; padding:0;">
                     {% for entry in inventory %}
-                        <li>
-                            {% if entry.item__icon %}{{ entry.item__icon }} {% endif %}
-                            {{ entry.item__name }}
-                            <span style="opacity:0.9; margin-left:6px; padding:2px 8px; border:1px solid var(--border); border-radius:12px; font-size:0.9em;">× {{ entry.quantity }}</span>
+                        <li style="display:flex; align-items:center; justify-content:space-between; margin:8px 0; padding:8px 12px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border);">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                {% if entry.item__icon %}{{ entry.item__icon }} {% endif %}
+                                <span>{{ entry.item__name }}</span>
+                                <span style="opacity:0.9; padding:2px 8px; border:1px solid var(--border); border-radius:12px; font-size:0.9em;">× {{ entry.quantity }}</span>
+                            </div>
+                            {% if "Streak freeze" in entry.item__name or "Fired up streak" in entry.item__name or "Experience festival" in entry.item__name %}
+                                <a href="{% url 'use_item' entry.item__id %}" class="btn" style="padding:4px 8px; font-size:0.8rem; background:var(--accent); color:white; text-decoration:none;">Use</a>
+                            {% endif %}
                         </li>
                     {% endfor %}
                 </ul>

@@ -24,6 +24,7 @@ urlpatterns = [
     path('shop/buy/<int:item_id>/', views.buy_item, name='buy_item'),
     path('create-profile/', views.create_profile, name='create_profile'),
     path('profile/<str:username>/', views.view_profile, name='view_profile'),
+    path('use-item/<int:item_id>/', views.use_item, name='use_item'),
     path('quiz/<int:course_id>/<int:question_number>/', views.quiz_view, name='quiz'),
     path('login/', views.sign_in_view, name='sign_in'),
     path('complete-course/', views.complete_course, name='complete_course'),

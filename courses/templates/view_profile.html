@@ -38,10 +38,14 @@
             <h2>Points: {{ player_profile.points }}</h2>
             <p class="meta">🔥 Current streak: {{ player_profile.current_streak }} · 🏆 Longest: {{ player_profile.longest_streak }}</p>
             <h2>Inventory</h2>
-            {% if purchases %}
+            {% if inventory %}
                 <ul>
-                    {% for purchase in purchases %}
-                        <li>{{ purchase.item.name }}</li>
+                    {% for entry in inventory %}
+                        <li>
+                            {% if entry.item__icon %}{{ entry.item__icon }} {% endif %}
+                            {{ entry.item__name }}
+                            <span style="opacity:0.9; margin-left:6px; padding:2px 8px; border:1px solid var(--border); border-radius:12px; font-size:0.9em;">× {{ entry.quantity }}</span>
+                        </li>
                     {% endfor %}
                 </ul>
             {% else %}

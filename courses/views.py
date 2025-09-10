@@ -9,6 +9,7 @@ from .models import (
 )
 from datetime import date, timedelta
 from .forms import SignInForm
+from django.db.models import Count
 
 # DRF API ViewSetit
 from rest_framework import viewsets
@@ -283,11 +284,18 @@ def create_profile(request):
 def view_profile(request, username):
     user = get_object_or_404(User, username=username)
     player_profile = get_object_or_404(PlayerProfile, user=user)
-    purchases = Purchase.objects.filter(player=player_profile)
+    # Group purchases by item to show quantities instead of duplicates
+    inventory = (
+        Purchase.objects
+        .filter(player=player_profile)
+        .values('item__name', 'item__icon')
+        .annotate(quantity=Count('id'))
+        .order_by('item__name')
+    )
     return render(request, 'view_profile.html', {
         'user_profile': user,
         'player_profile': player_profile,
-        'purchases': purchases,
+        'inventory': inventory,
     })
 
 

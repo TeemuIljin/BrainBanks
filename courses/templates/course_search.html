@@ -28,7 +28,15 @@
 </head>
 <body>
     <div class="top-bar">
-        <div class="brand"><div class="brand-badge"></div>BrainBank</div>
+        <div class="brand">
+            <div class="brand-badge"></div>
+            BrainBank
+            {% if active_effects %}
+                <span class="active-effects-display">
+                    {% for effect in active_effects %}{{ effect }}{% endfor %}
+                </span>
+            {% endif %}
+        </div>
         <div class="auth-actions">
             {% if user.is_authenticated %}
                 <a class="btn btn-primary" href="{% url 'view_profile' user.username %}">View Profile</a>

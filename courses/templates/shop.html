@@ -56,6 +56,17 @@
             font-size: 1.1rem;
         }
         
+        .active-effects-display {
+            margin-left: 8px;
+            font-size: 1.2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
         .brand-badge { 
             width:32px; 
             height:32px; 
@@ -333,7 +344,15 @@
 <body>
 
     <div class="top-bar">
-        <div class="brand"><div class="brand-badge"></div>BrainBank</div>
+        <div class="brand">
+            <div class="brand-badge"></div>
+            BrainBank
+            {% if active_effects %}
+                <span class="active-effects-display">
+                    {% for effect in active_effects %}{{ effect }}{% endfor %}
+                </span>
+            {% endif %}
+        </div>
         <div class="auth-actions">
             {% if request.user.is_authenticated %}
                 <a class="btn btn-primary" href="{% url 'view_profile' request.user.username %}">View Profile</a>

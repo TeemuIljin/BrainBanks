@@ -51,6 +51,17 @@
             font-weight: 700;
             letter-spacing: 0.4px;
         }
+        
+        .active-effects-display {
+            margin-left: 8px;
+            font-size: 1.2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
 
         .brand-badge {
             width: 32px;
@@ -250,6 +261,11 @@
         <div class="brand">
             <div class="brand-badge"></div>
             BrainBank
+            {% if active_effects %}
+                <span class="active-effects-display">
+                    {% for effect in active_effects %}{{ effect }}{% endfor %}
+                </span>
+            {% endif %}
         </div>
         <div class="auth-actions">
             {% if user.is_authenticated %}

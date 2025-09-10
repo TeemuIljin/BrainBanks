@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python manage.py migrate && if [ \"$LOAD_COURSES_FIXTURES\" = \"1\" ]; then python manage.py loaddata fixtures/courses_data.json; fi && python manage.py collectstatic --noinput && gunicorn BrainBank.wsgi",
+    "startCommand": "python manage.py migrate && python manage.py createcachetable && if [ \"$LOAD_COURSES_FIXTURES\" = \"1\" ]; then python manage.py loaddata fixtures/courses_data.json; fi && if [ \"$CLEAR_CACHE\" = \"1\" ]; then python manage.py shell -c 'from django.core.cache import cache; cache.clear(); print(\"Cache cleared\")'; fi && python manage.py collectstatic --noinput && gunicorn BrainBank.wsgi",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }

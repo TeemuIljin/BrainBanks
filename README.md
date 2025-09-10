@@ -22,3 +22,4 @@ The project is moving along well with core functionalities being implemented. Iâ
 
 * ## Deployed using Railway and updates often adding new key features 
 
+# Workflow trigger

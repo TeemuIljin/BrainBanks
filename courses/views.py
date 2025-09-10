@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .models import (
     Profile, Course, Quiz, ShopItem, PlayerProfile, Purchase,
-    CompletedQuiz, LeaderboardEntry, Question, Option
+    CompletedQuiz, LeaderboardEntry, Question, Option, UserSettings
 )
 from datetime import date, timedelta
 from .forms import SignInForm
@@ -362,6 +362,23 @@ def leaderboard(request):
         'user_position': user_position,
         'total_players': total_players
     })
+
+
+@login_required
+def settings_view(request):
+    # Ensure settings row exists
+    settings_obj, _ = UserSettings.objects.get_or_create(user=request.user)
+    if request.method == 'POST':
+        from .forms import SettingsForm
+        form = SettingsForm(request.POST, instance=settings_obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Settings updated')
+            return redirect('settings')
+    else:
+        from .forms import SettingsForm
+        form = SettingsForm(instance=settings_obj)
+    return render(request, 'settings.html', {'form': form})
 
 
 # 📦 REST API ViewSets (DRF)

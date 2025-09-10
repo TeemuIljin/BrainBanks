@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+    <style>
+        body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:0; padding:24px; background:#0b0b2e; color:#f5f7ff; }
+        .card { max-width:720px; margin:0 auto; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:20px; }
+        h1 { margin-top:0; }
+        label { display:block; margin:12px 0 6px; }
+        select, input[type="checkbox"] { padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,0.12); background:#101045; color:#fff; }
+        .row { margin-bottom:14px; }
+        .actions { margin-top:16px; }
+        .btn { background:#1e88e5; color:#fff; padding:10px 16px; border:none; border-radius:10px; cursor:pointer; }
+        a { color:#9ecbff; }
+    </style>
+    {% csrf_token %}
+    {% load static %}
+    {% load i18n %}
+</head>
+<body>
+    <div class="card">
+        <h1>Settings</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <label for="id_theme">Theme</label>
+                {{ form.theme }}
+            </div>
+            <div class="row">
+                <label for="id_email_notifications">Email notifications</label>
+                {{ form.email_notifications }}
+            </div>
+            <div class="row">
+                <label for="id_profile_visibility">Profile visibility</label>
+                {{ form.profile_visibility }}
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn">Save settings</button>
+                <a href="{% url 'home' %}" style="margin-left:12px;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+

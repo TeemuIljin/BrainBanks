@@ -29,5 +29,6 @@ urlpatterns = [
     path('complete-course/', views.complete_course, name='complete_course'),
     path('leaderboard/', views.leaderboard, name='leaderboard'),
     path('not_signed_in/', views.not_signed_in, name='not_signed_in'),
+    path('settings/', views.settings_view, name='settings'),
 ]
 

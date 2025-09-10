@@ -104,3 +104,24 @@ class LeaderboardEntry(models.Model):
 
     def __str__(self):
         return f"{self.name}: {self.score}"
+
+
+# 📦 User Settings Model
+class UserSettings(models.Model):
+    THEME_CHOICES = [
+        ('system', 'System'),
+        ('light', 'Light'),
+        ('dark', 'Dark'),
+    ]
+    VISIBILITY_CHOICES = [
+        ('public', 'Public'),
+        ('private', 'Private'),
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='settings')
+    theme = models.CharField(max_length=10, choices=THEME_CHOICES, default='system')
+    email_notifications = models.BooleanField(default=True)
+    profile_visibility = models.CharField(max_length=10, choices=VISIBILITY_CHOICES, default='public')
+
+    def __str__(self):
+        return f"Settings for {self.user.username}"

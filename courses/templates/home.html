@@ -256,6 +256,7 @@
                 {% if player_profile %}
                     <span title="Current streak" class="btn" style="cursor:default;">🔥 {{ player_profile.current_streak }} day streak</span>
                 {% endif %}
+                <a class="btn" href="{% url 'settings' %}" title="Settings">⚙️ Settings</a>
                 <a class="btn btn-primary" href="{% url 'view_profile' user.username %}" title="View your profile and inventory">
                     👤 {{ user.username }}
                 </a>

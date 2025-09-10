@@ -14,10 +14,236 @@
         .btn:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.25); }
         .btn-primary { background:linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)); border-color:rgba(122,162,255,0.35); }
         main { flex:1; padding:48px 20px 56px; display:flex; justify-content:center; }
-        .card { width:min(920px,92%); background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:28px 24px; box-shadow:0 18px 40px -22px var(--shadow); text-align:center; }
+        .card { 
+            width:min(920px,92%); 
+            background:var(--card-bg); 
+            border:1px solid var(--border); 
+            border-radius:18px; 
+            padding:28px 24px; 
+            box-shadow:0 18px 40px -22px var(--shadow); 
+            text-align:center; 
+            overflow:hidden;
+            word-wrap:break-word;
+        }
         h1 { font-size:clamp(2rem,3.6vw,3rem); margin:0 0 12px; }
         .meta { color:var(--muted); margin:0 0 12px; }
-        .content-block { text-align:left; margin:8px auto 0; max-width:780px; line-height:1.6; }
+        .content-block { 
+            text-align:left; 
+            margin:8px auto 0; 
+            max-width:780px; 
+            line-height:1.6; 
+            word-wrap:break-word; 
+            overflow-wrap:break-word; 
+            overflow-x:auto; 
+            max-height:600px; 
+            overflow-y:auto; 
+            padding:16px; 
+            background:rgba(255,255,255,0.02); 
+            border-radius:12px; 
+            border:1px solid rgba(255,255,255,0.08);
+        }
+        
+        /* Override course content styling to match BrainBank theme */
+        .content-block * {
+            max-width:100%;
+            box-sizing:border-box;
+            color: var(--text) !important;
+            background: transparent !important;
+        }
+        
+        .content-block body {
+            background: transparent !important;
+            color: var(--text) !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            min-height: auto !important;
+            display: block !important;
+            flex-direction: unset !important;
+            align-items: unset !important;
+            text-align: left !important;
+        }
+        
+        .content-block main {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding: 0 !important;
+            flex: unset !important;
+        }
+        
+        .content-block h1 {
+            font-size: 2rem !important;
+            margin-bottom: 16px !important;
+            text-shadow: none !important;
+            color: var(--accent) !important;
+        }
+        
+        .content-block h2 {
+            font-size: 1.5rem !important;
+            margin: 20px 0 12px 0 !important;
+            color: var(--accent-2) !important;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+        
+        .content-block section {
+            margin-bottom: 24px !important;
+            background: rgba(255,255,255,0.03) !important;
+            border-radius: 12px !important;
+            padding: 20px !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+            text-align: left !important;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        .content-block p {
+            font-size: 1rem !important;
+            line-height: 1.6 !important;
+            color: var(--text) !important;
+            margin: 8px 0 !important;
+        }
+        
+        .content-block form {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+            font-size: 1rem !important;
+            margin-top: 16px !important;
+        }
+        
+        .content-block label {
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            cursor: pointer !important;
+            padding: 8px 12px !important;
+            border-radius: 8px !important;
+            transition: background-color 0.2s ease !important;
+            color: var(--text) !important;
+        }
+        
+        .content-block label:hover {
+            background: rgba(122,162,255,0.1) !important;
+        }
+        
+        .content-block input[type="radio"] {
+            accent-color: var(--accent) !important;
+            width: 18px !important;
+            height: 18px !important;
+        }
+        
+        .content-block button {
+            align-self: center !important;
+            padding: 12px 24px !important;
+            background: linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)) !important;
+            border: 1px solid var(--accent) !important;
+            border-radius: 8px !important;
+            color: var(--text) !important;
+            font-size: 1rem !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+        }
+        
+        .content-block button:hover {
+            background: linear-gradient(135deg, rgba(122,162,255,0.35), rgba(98,224,217,0.26)) !important;
+            transform: translateY(-1px) !important;
+        }
+        
+        .content-block .result {
+            margin-top: 12px !important;
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            padding: 8px 12px !important;
+            border-radius: 6px !important;
+            text-align: center !important;
+        }
+        
+        /* Matrix styling */
+        .content-block .matrix {
+            display: inline-block !important;
+            border-collapse: collapse !important;
+            margin: 0 6px !important;
+            vertical-align: middle !important;
+        }
+        
+        .content-block .matrix td {
+            border: 1px solid rgba(255,255,255,0.2) !important;
+            padding: 6px 10px !important;
+            min-width: 28px !important;
+            text-align: center !important;
+            color: var(--text) !important;
+            background: rgba(255,255,255,0.05) !important;
+        }
+        
+        .content-block .matrix-wrap {
+            font-family: 'Courier New', monospace !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+        
+        .content-block .note {
+            font-size: 0.9rem !important;
+            color: var(--muted) !important;
+        }
+        
+        /* Fix for images and other media */
+        .content-block img {
+            max-width:100%;
+            height:auto;
+            display:block;
+            margin:8px auto;
+        }
+        
+        /* Fix for tables */
+        .content-block table {
+            width:100%;
+            table-layout:fixed;
+            border-collapse:collapse;
+        }
+        
+        .content-block td, .content-block th {
+            word-wrap:break-word;
+            overflow-wrap:break-word;
+        }
+        
+        /* Fix for code blocks */
+        .content-block pre, .content-block code {
+            white-space:pre-wrap;
+            word-wrap:break-word;
+            overflow-x:auto;
+        }
+        
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            .card {
+                width: 95%;
+                padding: 20px 16px;
+            }
+            
+            .content-block {
+                max-width: 100%;
+                padding: 12px;
+                max-height: 400px;
+            }
+            
+            main {
+                padding: 24px 12px 40px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .card {
+                width: 98%;
+                padding: 16px 12px;
+            }
+            
+            .content-block {
+                padding: 8px;
+                max-height: 300px;
+            }
+        }
     </style>
 </head>
 <body>

@@ -27,9 +27,12 @@ admin.site.register(Purchase, PurchaseAdmin)
 class QuestionInline(admin.TabularInline):
     model = Question
     extra = 1
+    fields = ('text',)
 
 class QuizAdmin(admin.ModelAdmin):
-    list_display = ('title',)
+    list_display = ('title', 'course')
+    list_filter = ('course__level',)
+    search_fields = ('title', 'course__title')
     inlines = [QuestionInline]
 
 admin.site.register(Quiz, QuizAdmin)
@@ -37,13 +40,31 @@ admin.site.register(Quiz, QuizAdmin)
 # Question admin with options inline
 class OptionInline(admin.TabularInline):
     model = Option
-    extra = 2
+    extra = 3
+    fields = ('text', 'is_correct')
+    ordering = ('id',)
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('text', 'quiz')
+    list_display = ('text', 'quiz', 'get_course')
+    list_filter = ('quiz__course__level', 'quiz__course')
+    search_fields = ('text', 'quiz__title', 'quiz__course__title')
     inlines = [OptionInline]
+    
+    def get_course(self, obj):
+        return obj.quiz.course.title if obj.quiz and obj.quiz.course else "No Course"
+    get_course.short_description = "Course"
 
 admin.site.register(Question, QuestionAdmin)
 
-# Option admin (basic registration)
-admin.site.register(Option)
+# Option admin with better display
+class OptionAdmin(admin.ModelAdmin):
+    list_display = ('text', 'question', 'is_correct', 'get_course')
+    list_filter = ('is_correct', 'question__quiz__course')
+    search_fields = ('text', 'question__text', 'question__quiz__title')
+    list_editable = ('is_correct',)
+    
+    def get_course(self, obj):
+        return obj.question.quiz.course.title if obj.question and obj.question.quiz and obj.question.quiz.course else "No Course"
+    get_course.short_description = "Course"
+
+admin.site.register(Option, OptionAdmin)

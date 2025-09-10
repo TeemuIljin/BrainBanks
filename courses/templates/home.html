@@ -94,6 +94,11 @@
         }
         .btn-primary:hover { background: linear-gradient(135deg, rgba(122,162,255,0.35), rgba(98,224,217,0.26)); }
 
+        /* Bold buttons for key actions */
+        .btn-bold {
+            font-weight: 700;
+        }
+
         /* Main content */
         .main-content {
             flex: 1;
@@ -219,7 +224,9 @@
                 {% if player_profile %}
                     <span title="Current streak" class="btn" style="cursor:default;">🔥 {{ player_profile.current_streak }} day streak</span>
                 {% endif %}
-                <a class="btn btn-primary" href="{% url 'view_profile' user.username %}">View Profile</a>
+                <a class="btn btn-primary" href="{% url 'view_profile' user.username %}" title="View your profile and inventory">
+                    👤 {{ user.username }}
+                </a>
             {% else %}
                 <a class="btn" href="{% url 'sign_in' %}">Sign In</a>
             {% endif %}
@@ -232,9 +239,9 @@
             <p class="subtitle">Explore our courses and learn new skills for free.</p>
 
             <div class="button-group">
-                <a class="btn btn-primary" href="{% url 'create_profile' %}">Create Profile</a>
-                <a class="btn" href="{% url 'shop' %}">Visit the Shop</a>
-                <a class="btn" href="{% url 'leaderboard' %}">Leaderboard</a>
+                <a class="btn btn-primary btn-bold" href="{% url 'create_profile' %}">Create Profile</a>
+                <a class="btn btn-bold" href="{% url 'shop' %}">Visit the Shop</a>
+                <a class="btn btn-bold" href="{% url 'leaderboard' %}">Leaderboard</a>
             </div>
             
             <div class="main-action-section">

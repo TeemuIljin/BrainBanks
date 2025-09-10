@@ -133,27 +133,29 @@
             justify-items: center;
         }
 
-        .search-section {
+        .main-action-section {
             display: flex;
             justify-content: center;
-            margin-top: 24px;
+            margin-top: 20px;
         }
 
-        .btn-search {
-            font-size: 1.1rem;
-            padding: 14px 24px;
-            min-width: 220px;
-            background: linear-gradient(135deg, rgba(122,162,255,0.2), rgba(98,224,217,0.15));
-            border-color: rgba(122,162,255,0.4);
-            font-weight: 600;
+        .btn-main {
+            font-size: 1.2rem;
+            padding: 16px 32px;
+            min-width: 280px;
+            background: linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.2));
+            border-color: rgba(122,162,255,0.5);
+            font-weight: 700;
             transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .btn-search:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(135deg, rgba(122,162,255,0.3), rgba(98,224,217,0.25));
-            border-color: rgba(122,162,255,0.6);
-            box-shadow: 0 8px 20px -8px var(--shadow);
+        .btn-main:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, rgba(122,162,255,0.35), rgba(98,224,217,0.3));
+            border-color: rgba(122,162,255,0.7);
+            box-shadow: 0 12px 25px -10px var(--shadow);
         }
 
         footer {
@@ -202,12 +204,11 @@
             <div class="button-group">
                 <a class="btn btn-primary" href="{% url 'create_profile' %}">Create Profile</a>
                 <a class="btn" href="{% url 'shop' %}">Visit the Shop</a>
-                <a class="btn" href="{% url 'course_list' %}">View All Courses</a>
                 <a class="btn" href="{% url 'leaderboard' %}">Leaderboard</a>
             </div>
             
-            <div class="search-section">
-                <a class="btn btn-search" href="{% url 'course_search' %}">🔍 Search for Courses</a>
+            <div class="main-action-section">
+                <a class="btn btn-main" href="{% url 'course_list' %}">📚 View All Courses</a>
             </div>
         </div>
     </div>

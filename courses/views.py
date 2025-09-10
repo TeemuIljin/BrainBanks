@@ -230,7 +230,22 @@ def leaderboard(request):
     # Sync leaderboard with current PlayerProfile data
     sync_leaderboard()
     entries = LeaderboardEntry.objects.order_by('-score', 'name')
-    return render(request, 'leaderboard.html', {'entries': entries})
+    
+    # Find current user's position if logged in
+    user_position = None
+    if request.user.is_authenticated:
+        try:
+            user_entry = entries.filter(name=request.user.username).first()
+            if user_entry:
+                user_position = list(entries).index(user_entry) + 1
+        except:
+            pass
+    
+    return render(request, 'leaderboard.html', {
+        'entries': entries,
+        'user_position': user_position,
+        'total_players': entries.count()
+    })
 
 
 # 📦 REST API ViewSets (DRF)

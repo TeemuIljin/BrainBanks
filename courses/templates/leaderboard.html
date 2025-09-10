@@ -16,10 +16,26 @@
         .main-content { flex:1; display:flex; flex-direction:column; align-items:center; padding:48px 20px 56px; max-width:920px; margin:0 auto; }
         .card { width:100%; background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:26px 24px; box-shadow:0 18px 40px -22px var(--shadow); }
         h1 { font-size:clamp(2rem,3.6vw,3rem); margin:0 0 16px; text-align:center; }
-        table { width:100%; border-collapse:collapse; overflow:hidden; border-radius:12px; }
-        thead th { background:rgba(7,7,53,0.75); color:var(--muted); }
-        th, td { border:1px solid var(--border); padding:12px 15px; font-size:1.05rem; }
+        table { width:100%; border-collapse:collapse; overflow:hidden; border-radius:12px; margin:20px 0; }
+        thead th { background:rgba(7,7,53,0.75); color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+        th, td { border:1px solid var(--border); padding:16px 20px; font-size:1.05rem; text-align:left; }
         tbody tr:nth-child(even) { background:rgba(255,255,255,0.04); }
+        tbody tr:hover { background:rgba(122,162,255,0.1); transform:scale(1.01); transition:all 0.2s ease; }
+        .rank { font-weight:700; color:var(--accent); text-align:center; }
+        .rank-1 { color:#ffd700; font-size:1.2rem; }
+        .rank-2 { color:#c0c0c0; font-size:1.1rem; }
+        .rank-3 { color:#cd7f32; font-size:1.05rem; }
+        .username { font-weight:600; color:var(--text); }
+        .score { font-weight:700; color:var(--accent-2); text-align:right; }
+        .medal { font-size:1.2rem; margin-right:8px; }
+        .empty-state { text-align:center; padding:40px; color:var(--muted); font-style:italic; }
+        .leaderboard-stats { display:flex; justify-content:space-between; margin-bottom:20px; padding:16px; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid var(--border); }
+        .stat { text-align:center; }
+        .stat-number { font-size:1.5rem; font-weight:700; color:var(--accent); }
+        .stat-label { font-size:0.9rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; }
+        .current-user { background:rgba(122,162,255,0.15) !important; border-left:4px solid var(--accent); }
+        .current-user:hover { background:rgba(122,162,255,0.25) !important; }
+        .refresh-btn { margin-left:12px; }
     </style>
 </head>
 <body>
@@ -37,33 +53,77 @@
 
     <div class="main-content">
         <div class="card">
-            <h1>Leaderboard</h1>
+            <h1>🏆 Leaderboard</h1>
+            
+            {% if entries %}
+            <div class="leaderboard-stats">
+                <div class="stat">
+                    <div class="stat-number">{{ total_players }}</div>
+                    <div class="stat-label">Players</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">{{ entries.0.score|floatformat:0 }}</div>
+                    <div class="stat-label">Top Score</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">
+                        {% if user_position %}
+                            #{{ user_position }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+                    <div class="stat-label">Your Rank</div>
+                </div>
+            </div>
+            {% endif %}
 
             <table>
                 <thead>
                     <tr>
-                        <th>Rank</th>
-                        <th>User Name</th>
-                        <th>Score</th>
+                        <th style="width:80px;">Rank</th>
+                        <th>Player</th>
+                        <th style="width:120px; text-align:right;">Score</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for entry in entries %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ entry.name }}</td>
-                        <td>{{ entry.score }}</td>
+                    <tr {% if user.is_authenticated and entry.name == user.username %}class="current-user"{% endif %}>
+                        <td class="rank rank-{{ forloop.counter }}">
+                            {% if forloop.counter == 1 %}
+                                <span class="medal">🥇</span>
+                            {% elif forloop.counter == 2 %}
+                                <span class="medal">🥈</span>
+                            {% elif forloop.counter == 3 %}
+                                <span class="medal">🥉</span>
+                            {% endif %}
+                            {{ forloop.counter }}
+                        </td>
+                        <td class="username">
+                            {{ entry.name }}
+                            {% if user.is_authenticated and entry.name == user.username %}
+                                <span style="color:var(--accent); font-size:0.8rem; margin-left:8px;">(You)</span>
+                            {% endif %}
+                        </td>
+                        <td class="score">{{ entry.score|floatformat:0 }}</td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="3">No leaderboard entries yet.</td>
+                        <td colspan="3" class="empty-state">
+                            <div style="font-size:3rem; margin-bottom:16px;">🎯</div>
+                            <div>No players on the leaderboard yet!</div>
+                            <div style="margin-top:8px; font-size:0.9rem;">Complete some courses to earn points and climb the ranks.</div>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
 
-            <div style="display:flex; justify-content:center;">
-                <a href="{% url 'home' %}" class="btn">Back to Home</a>
+            <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
+                <a href="{% url 'home' %}" class="btn">🏠 Back to Home</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'course_list' %}" class="btn btn-primary">📚 Start Learning</a>
+                {% endif %}
             </div>
         </div>
     </div>

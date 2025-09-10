@@ -126,6 +126,9 @@ def quiz_view(request, course_id, question_number=1):
             player_profile.longest_streak = player_profile.current_streak
         player_profile.last_activity_date = today
         player_profile.save()
+        
+        # Update leaderboard with new points
+        update_leaderboard_entry(player_profile)
 
         return render(request, 'quiz_complete.html', {
             'course': course,
@@ -146,6 +149,8 @@ def quiz_view(request, course_id, question_number=1):
             player_profile = PlayerProfile.objects.get(user=request.user)
             player_profile.points += points_per_correct
             player_profile.save()
+            # Update leaderboard immediately when points are earned
+            update_leaderboard_entry(player_profile)
 
         return redirect('quiz', course_id=course.id, question_number=question_number + 1)
 
@@ -222,6 +227,8 @@ def complete_course(request):
 
 
 def leaderboard(request):
+    # Sync leaderboard with current PlayerProfile data
+    sync_leaderboard()
     entries = LeaderboardEntry.objects.order_by('-score', 'name')
     return render(request, 'leaderboard.html', {'entries': entries})
 
@@ -291,3 +298,35 @@ class LeaderboardEntryViewSet(viewsets.ModelViewSet):
 # View to show when user is not signed in
 def not_signed_in(request):
     return render(request, 'not_signed_in.html')
+
+
+def update_leaderboard_entry(player_profile):
+    """Update or create leaderboard entry for a player profile"""
+    if player_profile.points > 0:
+        entry, created = LeaderboardEntry.objects.get_or_create(
+            name=player_profile.user.username,
+            defaults={'score': 0}
+        )
+        # Update score to match current points
+        if entry.score != player_profile.points:
+            entry.score = player_profile.points
+            entry.save()
+
+
+def sync_leaderboard():
+    """Sync leaderboard entries with current PlayerProfile data"""
+    for profile in PlayerProfile.objects.all():
+        if profile.points > 0:  # Only include users with points
+            entry, created = LeaderboardEntry.objects.get_or_create(
+                name=profile.user.username,
+                defaults={'score': 0}
+            )
+            # Update score to match current points
+            if entry.score != profile.points:
+                entry.score = profile.points
+                entry.save()
+    
+    # Remove entries for users who no longer exist or have 0 points
+    LeaderboardEntry.objects.exclude(
+        name__in=PlayerProfile.objects.filter(points__gt=0).values_list('user__username', flat=True)
+    ).delete()

@@ -22,41 +22,76 @@ from .serializers import (
 # 📦 HTML-based views (templates)
 
 def home(request):
-    courses = Course.objects.all()
+    # Optimize: Only fetch courses that are needed for display
+    courses = Course.objects.all()[:6]  # Limit to 6 courses for home page
     completed_courses = []
+    player_profile = None
 
     if request.user.is_authenticated:
-        player_profile = PlayerProfile.objects.get(user=request.user)
-        completed_courses = Course.objects.filter(completedquiz__player=player_profile)
+        try:
+            # Use get_or_create to handle missing PlayerProfile gracefully
+            player_profile, created = PlayerProfile.objects.get_or_create(user=request.user)
+            # Optimize: Use select_related to reduce queries
+            completed_courses = Course.objects.filter(
+                completedquiz__player=player_profile
+            ).select_related('quiz')
+        except Exception as e:
+            # Log error and continue without breaking the page
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error fetching player profile for user {request.user.id}: {e}")
 
-    context = {'courses': courses, 'completed_courses': completed_courses}
-    if request.user.is_authenticated:
-        context['player_profile'] = player_profile
+    context = {
+        'courses': courses, 
+        'completed_courses': completed_courses,
+        'player_profile': player_profile
+    }
     return render(request, 'home.html', context)
 
 
 def course_list(request):
-    courses = Course.objects.all().order_by('title')
+    # Optimize: Use select_related for better performance
+    courses = Course.objects.select_related('quiz').order_by('title')
     completed_course_ids = []
+    player_profile = None
 
     if request.user.is_authenticated:
-        player_profile = PlayerProfile.objects.get(user=request.user)
-        completed_course_ids = CompletedQuiz.objects.filter(player=player_profile).values_list('course_id', flat=True)
+        try:
+            player_profile, created = PlayerProfile.objects.get_or_create(user=request.user)
+            # Optimize: Use values_list to get only course IDs
+            completed_course_ids = list(CompletedQuiz.objects.filter(
+                player=player_profile
+            ).values_list('course_id', flat=True))
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error fetching course list data for user {request.user.id}: {e}")
 
-    context = {'courses': courses, 'completed_course_ids': completed_course_ids}
-    if request.user.is_authenticated:
-        context['player_profile'] = player_profile
+    context = {
+        'courses': courses, 
+        'completed_course_ids': completed_course_ids,
+        'player_profile': player_profile
+    }
     return render(request, 'course_list.html', context)
 
 
 def course_detail(request, pk):
-    course = get_object_or_404(Course, pk=pk)
+    # Optimize: Use select_related and prefetch_related for better performance
+    course = get_object_or_404(
+        Course.objects.select_related('quiz').prefetch_related('quiz__questions__options'),
+        pk=pk
+    )
     context = {'course': course}
+    
     if request.user.is_authenticated:
         try:
-            context['player_profile'] = PlayerProfile.objects.get(user=request.user)
-        except PlayerProfile.DoesNotExist:
-            pass
+            player_profile, created = PlayerProfile.objects.get_or_create(user=request.user)
+            context['player_profile'] = player_profile
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error fetching player profile for course detail: {e}")
+    
     return render(request, 'course_detail.html', context)
 
 
@@ -84,22 +119,52 @@ def shop(request):
 
 @login_required
 def buy_item(request, item_id):
+    # Validate item_id is a positive integer
+    try:
+        item_id = int(item_id)
+        if item_id <= 0:
+            raise ValueError("Invalid item ID")
+    except (ValueError, TypeError):
+        messages.error(request, "Invalid item selected.")
+        return redirect('shop')
+    
     item = get_object_or_404(ShopItem, pk=item_id)
-    player_profile = PlayerProfile.objects.get(user=request.user)
-    if player_profile.points >= item.price:
-        player_profile.points -= item.price
-        player_profile.save()
-        Purchase.objects.create(player=player_profile, item=item)
-    else:
-        messages.error(request, "You do not have enough points to buy this item.")
+    
+    try:
+        player_profile, created = PlayerProfile.objects.get_or_create(user=request.user)
+        
+        # Check if user already owns this item
+        if Purchase.objects.filter(player=player_profile, item=item).exists():
+            messages.warning(request, "You already own this item.")
+            return redirect('shop')
+        
+        if player_profile.points >= item.price:
+            # Use atomic transaction to prevent race conditions
+            from django.db import transaction
+            with transaction.atomic():
+                player_profile.points -= item.price
+                player_profile.save()
+                Purchase.objects.create(player=player_profile, item=item)
+            messages.success(request, f"Successfully purchased {item.name}!")
+        else:
+            messages.error(request, "You do not have enough points to buy this item.")
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error purchasing item {item_id} for user {request.user.id}: {e}")
+        messages.error(request, "An error occurred while processing your purchase.")
+    
     return redirect('shop')
 
 
 @login_required
 def quiz_view(request, course_id, question_number=1):
-    course = get_object_or_404(Course, pk=course_id)
-    quiz = get_object_or_404(Quiz, course=course)
-    questions = quiz.questions.all().order_by('id')
+    # Optimize: Use select_related and prefetch_related for better performance
+    course = get_object_or_404(Course.objects.select_related('quiz'), pk=course_id)
+    quiz = get_object_or_404(Quiz.objects.prefetch_related('questions__options'), course=course)
+    
+    # Optimize: Get questions with options in one query
+    questions = quiz.questions.select_related().prefetch_related('options').order_by('id')
     total_questions = questions.count()
     points_per_correct = 50
 
@@ -113,8 +178,15 @@ def quiz_view(request, course_id, question_number=1):
         if 'score' in request.session:
             del request.session['score']
 
-        player_profile = PlayerProfile.objects.get(user=request.user)
-        CompletedQuiz.objects.get_or_create(player=player_profile, course=course)
+        try:
+            player_profile, created = PlayerProfile.objects.get_or_create(user=request.user)
+            CompletedQuiz.objects.get_or_create(player=player_profile, course=course)
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error in quiz completion for user {request.user.id}: {e}")
+            messages.error(request, "An error occurred while saving your progress.")
+            return redirect('course_detail', pk=course_id)
 
         # Streak handling: increment if last activity was yesterday or today; reset otherwise
         today = date.today()
@@ -167,20 +239,43 @@ def quiz_view(request, course_id, question_number=1):
 def create_profile(request):
     error_message = ''
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        birthdate = request.POST.get('birthdate')
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        birthdate = request.POST.get('birthdate', '').strip()
+        password = request.POST.get('password', '')
+        confirm_password = request.POST.get('confirm_password', '')
 
-        if password != confirm_password:
+        # Input validation
+        if not username or len(username) < 3:
+            error_message = 'Username must be at least 3 characters long.'
+        elif not email or '@' not in email:
+            error_message = 'Please enter a valid email address.'
+        elif not password or len(password) < 8:
+            error_message = 'Password must be at least 8 characters long.'
+        elif password != confirm_password:
             error_message = 'Passwords do not match.'
         elif User.objects.filter(username=username).exists():
             error_message = 'Username already exists.'
+        elif User.objects.filter(email=email).exists():
+            error_message = 'Email address is already registered.'
         else:
-            user = User.objects.create_user(username=username, email=email, password=password)
-            PlayerProfile.objects.create(user=user)
-            return redirect('home')
+            try:
+                # Use atomic transaction to ensure data consistency
+                from django.db import transaction
+                with transaction.atomic():
+                    user = User.objects.create_user(
+                        username=username, 
+                        email=email, 
+                        password=password
+                    )
+                    PlayerProfile.objects.create(user=user)
+                messages.success(request, 'Profile created successfully!')
+                return redirect('home')
+            except Exception as e:
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(f"Error creating profile: {e}")
+                error_message = 'An error occurred while creating your profile. Please try again.'
 
     return render(request, 'create_profile.html', {'error_message': error_message})
 
@@ -227,24 +322,38 @@ def complete_course(request):
 
 
 def leaderboard(request):
-    # Sync leaderboard with current PlayerProfile data
-    sync_leaderboard()
-    entries = LeaderboardEntry.objects.order_by('-score', 'name')
+    from .utils import get_cached_leaderboard, set_cached_leaderboard
     
-    # Find current user's position if logged in
-    user_position = None
-    if request.user.is_authenticated:
-        try:
-            user_entry = entries.filter(name=request.user.username).first()
-            if user_entry:
-                user_position = list(entries).index(user_entry) + 1
-        except:
-            pass
+    # Try to get cached leaderboard data
+    cached_data = get_cached_leaderboard()
+    if cached_data:
+        entries, user_position, total_players = cached_data
+    else:
+        # Sync leaderboard with current PlayerProfile data
+        sync_leaderboard()
+        entries = LeaderboardEntry.objects.order_by('-score', 'name')
+        
+        # Find current user's position if logged in
+        user_position = None
+        if request.user.is_authenticated:
+            try:
+                user_entry = entries.filter(name=request.user.username).first()
+                if user_entry:
+                    user_position = list(entries).index(user_entry) + 1
+            except Exception as e:
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(f"Error finding user position in leaderboard: {e}")
+        
+        total_players = entries.count()
+        
+        # Cache the result
+        set_cached_leaderboard((entries, user_position, total_players))
     
     return render(request, 'leaderboard.html', {
         'entries': entries,
         'user_position': user_position,
-        'total_players': entries.count()
+        'total_players': total_players
     })
 
 

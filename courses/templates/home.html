@@ -133,6 +133,29 @@
             justify-items: center;
         }
 
+        .search-section {
+            display: flex;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn-search {
+            font-size: 1.1rem;
+            padding: 14px 24px;
+            min-width: 220px;
+            background: linear-gradient(135deg, rgba(122,162,255,0.2), rgba(98,224,217,0.15));
+            border-color: rgba(122,162,255,0.4);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, rgba(122,162,255,0.3), rgba(98,224,217,0.25));
+            border-color: rgba(122,162,255,0.6);
+            box-shadow: 0 8px 20px -8px var(--shadow);
+        }
+
         footer {
             background: rgba(7, 7, 53, 0.75);
             backdrop-filter: blur(8px);
@@ -181,7 +204,10 @@
                 <a class="btn" href="{% url 'shop' %}">Visit the Shop</a>
                 <a class="btn" href="{% url 'course_list' %}">View All Courses</a>
                 <a class="btn" href="{% url 'leaderboard' %}">Leaderboard</a>
-                <a class="btn" href="{% url 'course_search' %}">Search for Courses</a>
+            </div>
+            
+            <div class="search-section">
+                <a class="btn btn-search" href="{% url 'course_search' %}">🔍 Search for Courses</a>
             </div>
         </div>
     </div>

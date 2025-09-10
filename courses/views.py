@@ -137,7 +137,6 @@ def buy_item(request, item_id):
         if player_profile.points >= item.price:
             # Use atomic transaction to prevent race conditions
             from django.db import transaction
-            from datetime import datetime, timedelta
             with transaction.atomic():
                 player_profile.points -= item.price
                 
@@ -198,7 +197,7 @@ def quiz_view(request, course_id, question_number=1):
 
         # Streak handling: increment if last activity was yesterday or today; reset otherwise
         today = date.today()
-        from datetime import datetime
+        from django.utils import timezone
         
         # Check if streak should be maintained (normal logic or streak freeze)
         should_maintain_streak = (
@@ -216,7 +215,7 @@ def quiz_view(request, course_id, question_number=1):
             # Apply fired up streak multiplier if active
             streak_increment = 1
             if (player_profile.fired_up_streak_until and 
-                datetime.now() < player_profile.fired_up_streak_until):
+                timezone.now() < player_profile.fired_up_streak_until):
                 streak_increment = 3
                 messages.info(request, "🔥 Fired up streak active! +3 streak days!")
             
@@ -251,9 +250,9 @@ def quiz_view(request, course_id, question_number=1):
             player_profile = PlayerProfile.objects.get(user=request.user)
             
             # Apply experience festival multiplier if active
-            from datetime import datetime
+            from django.utils import timezone
             points_to_add = points_per_correct
-            if player_profile.experience_festival_until and datetime.now() < player_profile.experience_festival_until:
+            if player_profile.experience_festival_until and timezone.now() < player_profile.experience_festival_until:
                 points_to_add *= 3
             
             player_profile.points += points_to_add
@@ -346,7 +345,8 @@ def use_item(request, item_id):
         messages.error(request, "You don't have this item in your inventory.")
         return redirect('view_profile', username=request.user.username)
     
-    from datetime import datetime, timedelta
+    from django.utils import timezone
+    from datetime import timedelta
     
     # Apply effects based on item name
     if "Streak freeze" in item.name:
@@ -359,13 +359,13 @@ def use_item(request, item_id):
         else:
             messages.error(request, "You don't have any streak freezes to use.")
     elif "Fired up streak" in item.name:
-        player_profile.fired_up_streak_until = datetime.now() + timedelta(days=1)
+        player_profile.fired_up_streak_until = timezone.now() + timedelta(days=1)
         player_profile.save()
         # Remove one purchase record
         Purchase.objects.filter(player=player_profile, item=item).first().delete()
         messages.success(request, "🔥 Fired up streak activated! Your streak will be tripled for 24 hours!")
     elif "Experience festival" in item.name:
-        player_profile.experience_festival_until = datetime.now() + timedelta(minutes=15)
+        player_profile.experience_festival_until = timezone.now() + timedelta(minutes=15)
         player_profile.save()
         # Remove one purchase record
         Purchase.objects.filter(player=player_profile, item=item).first().delete()

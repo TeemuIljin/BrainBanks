@@ -1,1 +1,1 @@
-web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn BrainBank.wsgi
+web: python manage.py migrate && if [ "$LOAD_COURSES_FIXTURES" = "1" ]; then python manage.py loaddata fixtures/courses_data.json; fi && python manage.py collectstatic --noinput && gunicorn BrainBank.wsgi

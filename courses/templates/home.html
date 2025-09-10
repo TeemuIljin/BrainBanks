@@ -158,6 +158,36 @@
             box-shadow: 0 12px 25px -10px var(--shadow);
         }
 
+        /* Rotating announcements */
+        .announcement-container {
+            position: relative;
+            height: 60px;
+            overflow: hidden;
+        }
+
+        .announcement {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-in-out;
+            text-align: center;
+            font-style: italic;
+            font-size: 0.98rem;
+        }
+
+        .announcement.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .announcement.fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
         footer {
             background: rgba(7, 7, 53, 0.75);
             backdrop-filter: blur(8px);
@@ -214,8 +244,49 @@
     </div>
 
     <footer>
-        💡 Fun Fact: Did you know BrainBank is constantly evolving? Stay tuned for exciting events like 2x points and special promotions coming soon!
+        <div class="announcement-container">
+            <div class="announcement active" data-announcement="0">
+                💡 Fun Fact: Did you know BrainBank is constantly evolving? Stay tuned for exciting events like 2x points and special promotions coming soon!
+            </div>
+            <div class="announcement" data-announcement="1">
+                🎯 Pro Tip: Complete courses daily to maintain your streak and earn bonus points!
+            </div>
+            <div class="announcement" data-announcement="2">
+                🏆 Challenge: Climb the leaderboard by mastering new skills and completing quizzes!
+            </div>
+        </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const announcements = document.querySelectorAll('.announcement');
+            let currentIndex = 0;
+            
+            function rotateAnnouncements() {
+                // Fade out current announcement
+                announcements[currentIndex].classList.remove('active');
+                announcements[currentIndex].classList.add('fade-out');
+                
+                // Move to next announcement
+                currentIndex = (currentIndex + 1) % announcements.length;
+                
+                // Reset previous announcement
+                setTimeout(() => {
+                    announcements.forEach(announcement => {
+                        announcement.classList.remove('fade-out');
+                    });
+                }, 800);
+                
+                // Fade in next announcement
+                setTimeout(() => {
+                    announcements[currentIndex].classList.add('active');
+                }, 400);
+            }
+            
+            // Start rotation every 7 seconds
+            setInterval(rotateAnnouncements, 7000);
+        });
+    </script>
 
 </body>
 </html>

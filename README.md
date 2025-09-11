@@ -21,5 +21,3 @@ The project is moving along well with core functionalities being implemented. Iâ
 * Implement monetization strategies to support and expand the platform.
 
 * ## Deployed using Railway and updates often adding new key features 
-
-# Workflow trigger

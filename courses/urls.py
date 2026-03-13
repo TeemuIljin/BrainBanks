@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
 
@@ -31,5 +31,7 @@ urlpatterns = [
     path('leaderboard/', views.leaderboard, name='leaderboard'),
     path('not_signed_in/', views.not_signed_in, name='not_signed_in'),
     path('settings/', views.settings_view, name='settings'),
+    # REST API (multi-client: web/mobile) endpoints
+    path('api/', include(router.urls)),
 ]
 

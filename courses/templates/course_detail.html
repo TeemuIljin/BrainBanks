@@ -96,18 +96,13 @@
     <div>
         <div class="detail-hero">
             <div class="detail-eyebrow">
-                {% if course.category %}
-                <span class="badge
-                    {% if course.category == 'Mathematics' %}badge-purple
-                    {% elif course.category == 'Physics' %}badge-blue
-                    {% elif course.category == 'Chemistry' %}badge-cyan
-                    {% elif course.category == 'Biology' %}badge-green
-                    {% else %}badge-default{% endif %}">
-                    {{ course.category }}
-                </span>
-                {% endif %}
                 {% if course.level %}
-                <span class="badge badge-default">{{ course.level }}</span>
+                <span class="badge
+                    {% if course.level == 'Advanced' %}badge-purple
+                    {% elif course.level == 'Intermediate' %}badge-blue
+                    {% else %}badge-green{% endif %}">
+                    {{ course.level }}
+                </span>
                 {% endif %}
             </div>
             <h1 class="detail-title">{{ course.title }}</h1>
@@ -119,16 +114,16 @@
                     <div class="meta-value">⏱ {{ course.duration }} months</div>
                 </div>
                 <div class="meta-item">
-                    <div class="meta-label">Category</div>
-                    <div class="meta-value">{{ course.category|default:"General" }}</div>
-                </div>
-                <div class="meta-item">
                     <div class="meta-label">Level</div>
                     <div class="meta-value">{{ course.level|default:"All levels" }}</div>
                 </div>
                 <div class="meta-item">
-                    <div class="meta-label">Price</div>
-                    <div class="meta-value">{% if course.price %}${{ course.price }}{% else %}Free{% endif %}</div>
+                    <div class="meta-label">Questions</div>
+                    <div class="meta-value">{% if course.quiz %}{{ course.quiz.questions.count }} Qs{% else %}—{% endif %}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Points</div>
+                    <div class="meta-value">⚡ 50 / correct</div>
                 </div>
             </div>
         </div>

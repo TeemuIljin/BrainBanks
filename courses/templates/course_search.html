@@ -79,18 +79,21 @@
         <a href="{% url 'course_detail' course.pk %}" class="result-item">
             <div class="result-left">
                 <div class="result-icon">
-                    {% if course.category == "Mathematics" %}➗
-                    {% elif course.category == "Physics" %}⚛️
-                    {% elif course.category == "Chemistry" %}🧪
-                    {% elif course.category == "Biology" %}🧬
+                    {% if course.level == "Advanced" %}🔬
+                    {% elif course.level == "Intermediate" %}⚛️
                     {% else %}📖{% endif %}
                 </div>
                 <div>
                     <div class="result-name">{{ course.title }}</div>
                     <div class="result-meta">
-                        {% if course.category %}<span class="badge badge-default" style="margin-right:8px;">{{ course.category }}</span>{% endif %}
+                        {% if course.level %}
+                        <span class="badge
+                            {% if course.level == 'Advanced' %}badge-purple
+                            {% elif course.level == 'Intermediate' %}badge-blue
+                            {% else %}badge-green{% endif %}"
+                            style="margin-right:8px;">{{ course.level }}</span>
+                        {% endif %}
                         ⏱ {{ course.duration }} months
-                        {% if course.level %} · 📊 {{ course.level }}{% endif %}
                     </div>
                 </div>
             </div>

@@ -1,46 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Settings</title>
-    <style>
-        body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:0; padding:24px; background:#0b0b2e; color:#f5f7ff; }
-        .card { max-width:720px; margin:0 auto; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:20px; }
-        h1 { margin-top:0; }
-        label { display:block; margin:12px 0 6px; }
-        select, input[type="checkbox"] { padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,0.12); background:#101045; color:#fff; }
-        .row { margin-bottom:14px; }
-        .actions { margin-top:16px; }
-        .btn { background:#1e88e5; color:#fff; padding:10px 16px; border:none; border-radius:10px; cursor:pointer; }
-        a { color:#9ecbff; }
-    </style>
-    {% csrf_token %}
-    {% load static %}
-    {% load i18n %}
-</head>
-<body>
-    <div class="card">
-        <h1>Settings</h1>
-        <form method="post">
-            {% csrf_token %}
-            <div class="row">
-                <label for="id_theme">Theme</label>
-                {{ form.theme }}
-            </div>
-            <div class="row">
-                <label for="id_email_notifications">Email notifications</label>
-                {{ form.email_notifications }}
-            </div>
-            <div class="row">
-                <label for="id_profile_visibility">Profile visibility</label>
-                {{ form.profile_visibility }}
-            </div>
-            <div class="actions">
-                <button type="submit" class="btn">Save settings</button>
-                <a href="{% url 'home' %}" style="margin-left:12px;">Cancel</a>
-            </div>
-        </form>
-    </div>
-</body>
-</html>
+{% extends "base.html" %}
 
+{% block title %}Settings — BrainBank{% endblock %}
+{% block page_title %}Settings{% endblock %}
+{% block nav_settings %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+    .settings-wrap { max-width: 560px; }
+
+    .settings-section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 28px;
+        margin-bottom: 20px;
+    }
+    .settings-section h2 {
+        font-size: 0.85rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.07em;
+        color: var(--text-dim); margin-bottom: 20px;
+    }
+
+    .setting-row {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px 0; border-bottom: 1px solid var(--border);
+        gap: 20px;
+    }
+    .setting-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .setting-label { font-size: 0.875rem; font-weight: 600; }
+    .setting-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* Style Django form widgets */
+    select.form-input {
+        max-width: 180px; cursor: pointer;
+    }
+
+    /* Toggle checkbox styling */
+    .toggle-wrap { display: flex; align-items: center; gap: 8px; }
+    input[type="checkbox"] {
+        width: 18px; height: 18px; cursor: pointer;
+        accent-color: var(--primary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="settings-wrap">
+
+    <div style="margin-bottom:28px;">
+        <h1 style="font-size:1.6rem;font-weight:800;margin-bottom:6px;">⚙️ Settings</h1>
+        <p style="font-size:0.875rem;color:var(--text-dim);">Manage your account preferences.</p>
+    </div>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'error' %}alert-error{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %}" style="margin-bottom:16px;">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="settings-section">
+            <h2>Appearance</h2>
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">Theme</div>
+                    <div class="setting-desc">Choose your preferred color scheme</div>
+                </div>
+                <select name="theme" class="form-input">
+                    <option value="system" {% if form.instance.theme == "system" %}selected{% endif %}>System default</option>
+                    <option value="dark"   {% if form.instance.theme == "dark"   %}selected{% endif %}>Dark</option>
+                    <option value="light"  {% if form.instance.theme == "light"  %}selected{% endif %}>Light</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h2>Privacy</h2>
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">Profile Visibility</div>
+                    <div class="setting-desc">Who can see your profile</div>
+                </div>
+                <select name="profile_visibility" class="form-input">
+                    <option value="public"  {% if form.instance.profile_visibility == "public"  %}selected{% endif %}>Public</option>
+                    <option value="private" {% if form.instance.profile_visibility == "private" %}selected{% endif %}>Private</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h2>Notifications</h2>
+            <div class="setting-row">
+                <div>
+                    <div class="setting-label">Email Notifications</div>
+                    <div class="setting-desc">Receive updates and reminders by email</div>
+                </div>
+                <div class="toggle-wrap">
+                    <input type="checkbox" name="email_notifications" id="email_notifications"
+                        {% if form.instance.email_notifications %}checked{% endif %}>
+                    <label for="email_notifications" style="font-size:0.82rem;color:var(--text-dim);cursor:pointer;">Enabled</label>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:12px;">
+            <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
+            <a href="{% url 'view_profile' request.user.username %}" class="btn btn-ghost btn-lg">← Back to Profile</a>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

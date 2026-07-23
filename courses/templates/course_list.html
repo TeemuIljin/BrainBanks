@@ -93,14 +93,12 @@
         <div class="course-list-card">
             <div class="clc-top">
                 <div>
-                    {% if course.category %}
+                    {% if course.level %}
                     <span class="badge
-                        {% if course.category == 'Mathematics' %}badge-purple
-                        {% elif course.category == 'Physics' %}badge-blue
-                        {% elif course.category == 'Chemistry' %}badge-cyan
-                        {% elif course.category == 'Biology' %}badge-green
-                        {% else %}badge-default{% endif %}">
-                        {{ course.category }}
+                        {% if course.level == 'Advanced' %}badge-purple
+                        {% elif course.level == 'Intermediate' %}badge-blue
+                        {% else %}badge-green{% endif %}">
+                        {{ course.level }}
                     </span>
                     {% endif %}
                     <a href="{% url 'course_detail' course.pk %}" class="clc-title" style="display:block;margin-top:8px;">
@@ -108,10 +106,8 @@
                     </a>
                 </div>
                 <div class="clc-icon">
-                    {% if course.category == "Mathematics" %}➗
-                    {% elif course.category == "Physics" %}⚛️
-                    {% elif course.category == "Chemistry" %}🧪
-                    {% elif course.category == "Biology" %}🧬
+                    {% if course.level == "Advanced" %}🔬
+                    {% elif course.level == "Intermediate" %}⚛️
                     {% else %}📖{% endif %}
                 </div>
             </div>

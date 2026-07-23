@@ -399,6 +399,9 @@
             <a href="{% url 'view_profile' user.username %}" class="nav-item {% block nav_profile %}{% endblock %}">
                 <span class="nav-icon">👤</span> Profile
             </a>
+            <a href="{% url 'settings' %}" class="nav-item {% block nav_settings %}{% endblock %}">
+                <span class="nav-icon">⚙️</span> Settings
+            </a>
             {% endif %}
         </nav>
 

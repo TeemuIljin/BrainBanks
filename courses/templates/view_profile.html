@@ -40,12 +40,8 @@
         box-shadow: 0 0 24px var(--primary-glow);
     }
 
-    .profile-name {
-        font-size: 1.3rem; font-weight: 800; margin-bottom: 4px;
-    }
-    .profile-tag {
-        font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px;
-    }
+    .profile-name { font-size: 1.3rem; font-weight: 800; margin-bottom: 4px; }
+    .profile-tag { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px; }
 
     .profile-stats {
         display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;
@@ -56,30 +52,32 @@
         border-radius: var(--radius-sm);
         padding: 14px 10px; text-align: center;
     }
-    .profile-stat-num {
-        font-size: 1.4rem; font-weight: 800;
-        color: var(--primary-light);
+    .profile-stat-num { font-size: 1.4rem; font-weight: 800; color: var(--primary-light); }
+    .profile-stat-label { font-size: 0.68rem; color: var(--text-muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Active effects pills */
+    .effects-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; justify-content: center; }
+    .effect-pill {
+        display: inline-flex; align-items: center; gap: 5px;
+        padding: 4px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600;
     }
-    .profile-stat-label {
-        font-size: 0.68rem; color: var(--text-muted); margin-top: 3px;
-        text-transform: uppercase; letter-spacing: 0.06em;
-    }
+    .effect-pill.fire  { background: rgba(255,140,66,0.2); color: var(--accent-orange); border: 1px solid rgba(255,140,66,0.3); }
+    .effect-pill.party { background: rgba(251,191,36,0.2); color: var(--accent-yellow); border: 1px solid rgba(251,191,36,0.3); }
+    .effect-pill.ice   { background: rgba(34,211,238,0.2); color: var(--accent-cyan);   border: 1px solid rgba(34,211,238,0.3); }
 
     /* Right panel */
-    .inventory-card {
+    .detail-card {
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--radius-lg);
         padding: 24px;
         margin-bottom: 20px;
     }
-    .inventory-card h2 {
-        font-size: 1rem; font-weight: 700; margin-bottom: 18px;
-    }
 
+    /* Inventory grid */
     .inventory-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 12px;
     }
 
@@ -87,16 +85,18 @@
         background: rgba(255,255,255,0.04);
         border: 1px solid var(--border);
         border-radius: var(--radius-md);
-        padding: 16px 12px; text-align: center;
+        padding: 18px 14px; text-align: center;
         transition: all 0.18s ease;
     }
     .inventory-item:hover { border-color: rgba(124,92,252,0.3); }
     .inventory-item-icon { font-size: 1.8rem; margin-bottom: 8px; }
-    .inventory-item-name { font-size: 0.8rem; font-weight: 600; }
+    .inventory-item-name { font-size: 0.82rem; font-weight: 600; margin-bottom: 4px; }
+    .inventory-item-qty {
+        font-size: 0.7rem; color: var(--text-muted); margin-bottom: 10px;
+    }
 
     .empty-inventory {
-        text-align: center; padding: 40px;
-        color: var(--text-muted); font-size: 0.875rem;
+        text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.875rem;
     }
     .empty-inventory .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
 
@@ -107,14 +107,37 @@
 {% endblock %}
 
 {% block content %}
+
+{% if messages %}
+<div style="margin-bottom:20px;">
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'error' %}alert-error{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <div class="profile-layout">
 
-    <!-- LEFT: Profile summary -->
+    <!-- LEFT: Profile card -->
     <div>
         <div class="profile-card">
             <div class="profile-avatar">{{ user_profile.username|first|upper }}</div>
             <div class="profile-name">{{ user_profile.username }}</div>
-            <div class="profile-tag">@{{ user_profile.username }} · BrainBank Learner</div>
+            <div class="profile-tag">BrainBank Learner</div>
+
+            <!-- Active power-up effects -->
+            {% with now=request|default:'' %}
+            <div class="effects-row">
+                {% if player_profile.current_streak > 0 %}
+                <span class="effect-pill fire">🔥 {{ player_profile.current_streak }} day streak</span>
+                {% endif %}
+                {% if player_profile.streak_freeze_count > 0 %}
+                <span class="effect-pill ice">❄️ {{ player_profile.streak_freeze_count }} freeze{{ player_profile.streak_freeze_count|pluralize }}</span>
+                {% endif %}
+            </div>
+            {% endwith %}
 
             <div class="profile-stats">
                 <div class="profile-stat">
@@ -122,14 +145,15 @@
                     <div class="profile-stat-label">⚡ Points</div>
                 </div>
                 <div class="profile-stat">
-                    <div class="profile-stat-num">{{ purchases|length }}</div>
-                    <div class="profile-stat-label">🎁 Items</div>
+                    <div class="profile-stat-num">{{ player_profile.longest_streak }}</div>
+                    <div class="profile-stat-label">🏆 Best streak</div>
                 </div>
             </div>
 
             <div style="display:flex;flex-direction:column;gap:10px;">
                 <a href="{% url 'shop' %}" class="btn btn-primary btn-full">🛒 Visit Shop</a>
                 <a href="{% url 'leaderboard' %}" class="btn btn-ghost btn-full">🏆 Leaderboard</a>
+                <a href="{% url 'settings' %}" class="btn btn-ghost btn-full">⚙️ Settings</a>
                 <a href="{% url 'home' %}" class="btn btn-ghost btn-full">🏠 Home</a>
             </div>
         </div>
@@ -137,45 +161,58 @@
 
     <!-- RIGHT: Content -->
     <div>
-        <div class="inventory-card">
+        <!-- Inventory -->
+        <div class="detail-card">
             <div class="section-header" style="margin-bottom:18px;">
-                <h2 style="margin:0;">🎒 Inventory</h2>
-                <a href="{% url 'shop' %}" class="section-link">+ Get more</a>
+                <h2 style="font-size:1rem;font-weight:700;margin:0;">🎒 Inventory</h2>
+                <a href="{% url 'shop' %}" class="section-link">+ Get more items</a>
             </div>
 
-            {% if purchases %}
+            {% if inventory %}
             <div class="inventory-grid">
-                {% for purchase in purchases %}
+                {% for item in inventory %}
                 <div class="inventory-item">
-                    <div class="inventory-item-icon">
-                        {% if purchase.item.icon %}{{ purchase.item.icon }}{% else %}📦{% endif %}
-                    </div>
-                    <div class="inventory-item-name">{{ purchase.item.name }}</div>
+                    <div class="inventory-item-icon">{{ item.item__icon|default:"📦" }}</div>
+                    <div class="inventory-item-name">{{ item.item__name }}</div>
+                    <div class="inventory-item-qty">× {{ item.quantity }}</div>
+                    <form method="post" action="{% url 'use_item' item.item__id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-sm" style="width:100%;">Use</button>
+                    </form>
                 </div>
                 {% endfor %}
             </div>
             {% else %}
             <div class="empty-inventory">
                 <div class="empty-icon">📦</div>
-                <div>No items purchased yet.</div>
+                <div>No items in inventory yet.</div>
                 <a href="{% url 'shop' %}" class="btn btn-primary btn-sm" style="margin-top:14px;">Visit Shop</a>
             </div>
             {% endif %}
         </div>
 
-        <div class="inventory-card" style="margin-bottom:0;">
-            <h2>📊 Your Stats</h2>
-            <div style="display:flex;flex-direction:column;gap:10px;">
+        <!-- Stats -->
+        <div class="detail-card" style="margin-bottom:0;">
+            <h2 style="font-size:1rem;font-weight:700;margin-bottom:16px;">📊 Your Stats</h2>
+            <div style="display:flex;flex-direction:column;gap:0;">
                 <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);">
                     <span style="font-size:0.875rem;color:var(--text-dim);">Total BrainPoints</span>
                     <span style="font-weight:700;color:var(--primary-light);">⚡ {{ player_profile.points }}</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);">
-                    <span style="font-size:0.875rem;color:var(--text-dim);">Items Owned</span>
-                    <span style="font-weight:700;">{{ purchases|length }}</span>
+                    <span style="font-size:0.875rem;color:var(--text-dim);">Current Streak</span>
+                    <span style="font-weight:700;">🔥 {{ player_profile.current_streak }} day{{ player_profile.current_streak|pluralize }}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);">
+                    <span style="font-size:0.875rem;color:var(--text-dim);">Longest Streak</span>
+                    <span style="font-weight:700;">🏆 {{ player_profile.longest_streak }} day{{ player_profile.longest_streak|pluralize }}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);">
+                    <span style="font-size:0.875rem;color:var(--text-dim);">Last Activity</span>
+                    <span style="font-weight:600;color:var(--text-dim);">{{ player_profile.last_activity_date|default:"Never" }}</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
-                    <span style="font-size:0.875rem;color:var(--text-dim);">Member Status</span>
+                    <span style="font-size:0.875rem;color:var(--text-dim);">Status</span>
                     <span class="badge badge-purple">Active Learner</span>
                 </div>
             </div>

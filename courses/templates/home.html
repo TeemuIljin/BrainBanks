@@ -192,14 +192,14 @@
         <div class="stat-card">
             <div class="stat-icon orange">🔥</div>
             <div>
-                <div class="stat-num">—</div>
+                <div class="stat-num">{% if player_profile %}{{ player_profile.current_streak }}{% else %}<span style="font-size:1rem;color:var(--text-muted)">—</span>{% endif %}</div>
                 <div class="stat-label">Day Streak</div>
             </div>
         </div>
         <div class="stat-card">
             <div class="stat-icon purple">⚡</div>
             <div>
-                <div class="stat-num">—</div>
+                <div class="stat-num">{% if player_profile %}{{ player_profile.points }}{% else %}<span style="font-size:1rem;color:var(--text-muted)">—</span>{% endif %}</div>
                 <div class="stat-label">BrainPoints</div>
             </div>
         </div>
@@ -244,28 +244,23 @@
         {% for course in courses %}
         <a href="{% url 'course_detail' course.pk %}" class="course-card">
             <div class="course-icon">
-                {% if course.category == "Mathematics" %}➗
-                {% elif course.category == "Physics" %}⚛️
-                {% elif course.category == "Chemistry" %}🧪
-                {% elif course.category == "Biology" %}🧬
+                {% if course.level == "Advanced" %}🔬
+                {% elif course.level == "Intermediate" %}⚛️
                 {% else %}📖{% endif %}
             </div>
             <div>
-                {% if course.category %}
+                {% if course.level %}
                 <span class="badge
-                    {% if course.category == 'Mathematics' %}badge-purple
-                    {% elif course.category == 'Physics' %}badge-blue
-                    {% elif course.category == 'Chemistry' %}badge-cyan
-                    {% elif course.category == 'Biology' %}badge-green
-                    {% else %}badge-default{% endif %}">
-                    {{ course.category }}
+                    {% if course.level == 'Advanced' %}badge-purple
+                    {% elif course.level == 'Intermediate' %}badge-blue
+                    {% else %}badge-green{% endif %}">
+                    {{ course.level }}
                 </span>
                 {% endif %}
                 <div class="course-title" style="margin-top:8px;">{{ course.title }}</div>
             </div>
             <div class="course-meta">
                 <span>⏱ {{ course.duration }}mo</span>
-                {% if course.level %}<span>📊 {{ course.level }}</span>{% endif %}
             </div>
             <div class="course-footer">
                 <span class="btn btn-ghost btn-sm">Start Quiz →</span>

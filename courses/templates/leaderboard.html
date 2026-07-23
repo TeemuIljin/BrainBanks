@@ -1,170 +1,196 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <title>Leaderboard</title>
-    <style>
-        :root { --bg-start:#0a0a40; --bg-end:#161658; --card-bg:rgba(255,255,255,0.06); --text:#f5f7ff; --muted:#c6c9ff; --accent:#7aa2ff; --accent-2:#62e0d9; --border:rgba(255,255,255,0.12); --shadow:rgba(0,0,0,0.35); }
-        body { background: radial-gradient(1000px 600px at 20% 0%, var(--bg-end), transparent 60%), radial-gradient(900px 600px at 80% 0%, #0f2a80, transparent 55%), linear-gradient(180deg, var(--bg-start), #0b0b2e 65%); color: var(--text); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column; }
-        .top-bar { display:flex; justify-content:space-between; align-items:center; padding:16px 28px; background:rgba(7,7,53,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
-        .brand { display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:0.4px; }
-        .brand-badge { width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 6px 14px var(--shadow); }
-        .auth-actions { display:flex; gap:12px; }
-        .btn { appearance:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 16px; border-radius:10px; border:1px solid var(--border); color:var(--text); text-decoration:none; font-size:0.95rem; line-height:1; transition:transform .1s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); box-shadow:0 6px 14px -8px var(--shadow); }
-        .btn:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.25); }
-        .btn-primary { background:linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)); border-color:rgba(122,162,255,0.35); }
-        .main-content { flex:1; display:flex; flex-direction:column; align-items:center; padding:48px 20px 56px; max-width:1400px; margin:0 auto; width:100%; }
-        .card { width:100%; background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:32px 40px; box-shadow:0 18px 40px -22px var(--shadow); }
-        h1 { font-size:clamp(2rem,3.6vw,3rem); margin:0 0 16px; text-align:center; }
-        table { width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:16px; margin:24px 0; background:rgba(255,255,255,0.02); box-shadow:0 8px 32px -12px var(--shadow); }
-        thead th { background:linear-gradient(135deg, rgba(7,7,53,0.9), rgba(15,42,128,0.8)); color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:1px; font-size:0.9rem; padding:20px 24px; border:none; }
-        th:first-child { border-top-left-radius:16px; }
-        th:last-child { border-top-right-radius:16px; }
-        th, td { padding:20px 24px; font-size:1.1rem; text-align:left; border:none; }
-        tbody tr { border-bottom:1px solid rgba(255,255,255,0.08); transition:all 0.3s ease; }
-        tbody tr:nth-child(even) { background:rgba(255,255,255,0.03); }
-        tbody tr:hover { background:rgba(122,162,255,0.12); transform:translateY(-2px); box-shadow:0 8px 25px -8px rgba(122,162,255,0.3); }
-        tbody tr:last-child td:first-child { border-bottom-left-radius:16px; }
-        tbody tr:last-child td:last-child { border-bottom-right-radius:16px; }
-        .rank { font-weight:800; text-align:center; display:flex; align-items:center; justify-content:center; gap:8px; }
-        .rank-1 { color:#ffd700; font-size:1.4rem; text-shadow:0 0 20px rgba(255,215,0,0.5); }
-        .rank-2 { color:#c0c0c0; font-size:1.3rem; text-shadow:0 0 15px rgba(192,192,192,0.4); }
-        .rank-3 { color:#cd7f32; font-size:1.2rem; text-shadow:0 0 15px rgba(205,127,50,0.4); }
-        .rank-4, .rank-5, .rank-6, .rank-7, .rank-8, .rank-9, .rank-10 { color:var(--accent); font-size:1.1rem; }
-        .username { font-weight:700; color:var(--text); font-size:1.15rem; }
-        .score { font-weight:800; color:var(--accent-2); text-align:right; font-size:1.2rem; text-shadow:0 0 10px rgba(98,224,217,0.3); }
-        .medal { font-size:1.5rem; margin-right:8px; filter:drop-shadow(0 0 8px rgba(255,215,0,0.6)); }
-        .empty-state { text-align:center; padding:40px; color:var(--muted); font-style:italic; }
-        .leaderboard-stats { display:flex; justify-content:space-around; margin-bottom:32px; padding:24px; background:linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); border-radius:16px; border:1px solid var(--border); box-shadow:0 8px 32px -12px var(--shadow); }
-        .stat { text-align:center; flex:1; }
-        .stat-number { font-size:2rem; font-weight:800; color:var(--accent); text-shadow:0 0 15px rgba(122,162,255,0.4); margin-bottom:4px; }
-        .stat-label { font-size:0.95rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; font-weight:600; }
-        .current-user { background:linear-gradient(135deg, rgba(122,162,255,0.2), rgba(98,224,217,0.15)) !important; border-left:6px solid var(--accent); box-shadow:0 0 20px rgba(122,162,255,0.3); }
-        .current-user:hover { background:linear-gradient(135deg, rgba(122,162,255,0.3), rgba(98,224,217,0.25)) !important; transform:translateY(-3px) !important; }
-        .current-user .username { color:var(--accent) !important; }
-        .refresh-btn { margin-left:12px; }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .main-content { padding:24px 16px 40px; }
-            .card { padding:24px 20px; }
-            .leaderboard-stats { flex-direction:column; gap:16px; padding:20px; }
-            .stat { margin-bottom:8px; }
-            th, td { padding:16px 20px; font-size:1rem; }
-            .rank-1, .rank-2, .rank-3 { font-size:1.2rem; }
-            .username { font-size:1.05rem; }
-            .score { font-size:1.1rem; }
-        }
-        
-        @media (max-width: 480px) {
-            .main-content { padding:16px 12px 32px; }
-            .card { padding:20px 16px; }
-            th, td { padding:12px 16px; font-size:0.95rem; }
-            .medal { font-size:1.2rem; }
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <div class="top-bar">
-        <div class="brand">
-            <div class="brand-badge"></div>
-            BrainBank
-            {% if active_effects %}
-                <span class="active-effects-display">
-                    {% for effect in active_effects %}{{ effect }}{% endfor %}
-                </span>
-            {% endif %}
-        </div>
-        <div class="auth-actions">
-            {% if user.is_authenticated %}
-                <a class="btn btn-primary" href="{% url 'view_profile' user.username %}">View Profile</a>
-            {% else %}
-                <a class="btn" href="{% url 'sign_in' %}">Sign In</a>
-            {% endif %}
-        </div>
-    </div>
+{% block title %}Leaderboard — BrainBank{% endblock %}
+{% block page_title %}Leaderboard{% endblock %}
+{% block nav_leaderboard %}active{% endblock %}
 
-    <div class="main-content">
-        <div class="card">
+{% block extra_head %}
+<style>
+    .lb-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 28px; flex-wrap: wrap; gap: 12px;
+    }
+    .lb-header h1 { font-size: 1.6rem; font-weight: 800; }
+    .lb-header p { font-size: 0.875rem; color: var(--text-dim); margin-top: 4px; }
+
+    .podium {
+        display: grid;
+        grid-template-columns: 1fr 1.15fr 1fr;
+        gap: 12px;
+        margin-bottom: 28px;
+        align-items: end;
+    }
+
+    .podium-item {
+        border-radius: var(--radius-lg);
+        padding: 20px 16px 24px;
+        text-align: center;
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+    }
+    .podium-item:hover { transform: translateY(-2px); }
+
+    .podium-item.rank-1 {
+        background: linear-gradient(180deg, rgba(251,191,36,0.18) 0%, rgba(251,191,36,0.05) 100%);
+        border-color: rgba(251,191,36,0.3);
+        box-shadow: 0 0 24px rgba(251,191,36,0.1);
+    }
+    .podium-item.rank-2 {
+        background: linear-gradient(180deg, rgba(148,163,184,0.12) 0%, rgba(148,163,184,0.04) 100%);
+        border-color: rgba(148,163,184,0.25);
+    }
+    .podium-item.rank-3 {
+        background: linear-gradient(180deg, rgba(251,146,60,0.12) 0%, rgba(251,146,60,0.04) 100%);
+        border-color: rgba(251,146,60,0.25);
+    }
+
+    .podium-crown { font-size: 1.8rem; margin-bottom: 8px; }
+    .podium-rank {
+        font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.1em; margin-bottom: 6px; opacity: 0.7;
+    }
+    .podium-name { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+    .podium-score {
+        font-size: 1.3rem; font-weight: 800;
+    }
+    .podium-score.gold   { color: var(--accent-yellow); }
+    .podium-score.silver { color: #94a3b8; }
+    .podium-score.bronze { color: #fb923c; }
+    .podium-pts { font-size: 0.72rem; color: var(--text-muted); }
+
+    /* Full table */
+    .lb-table-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+    }
+
+    .lb-table {
+        width: 100%; border-collapse: collapse;
+    }
+
+    .lb-table thead th {
+        background: rgba(255,255,255,0.03);
+        padding: 14px 20px;
+        text-align: left;
+        font-size: 0.72rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.08em;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .lb-table tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: background 0.15s ease;
+    }
+    .lb-table tbody tr:last-child { border-bottom: none; }
+    .lb-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+    .lb-table tbody td {
+        padding: 14px 20px;
+        font-size: 0.875rem;
+        vertical-align: middle;
+    }
+
+    .lb-rank { font-weight: 800; font-size: 1rem; color: var(--text-muted); width: 50px; }
+    .lb-rank.top3 { color: var(--accent-yellow); }
+    .lb-name { font-weight: 600; color: var(--text); }
+    .lb-score { font-weight: 700; color: var(--primary-light); }
+
+    .rank-medal { font-size: 1.1rem; }
+
+    @media (max-width: 600px) {
+        .podium { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="lb-header">
+        <div>
             <h1>🏆 Leaderboard</h1>
-            
-            {% if entries %}
-            <div class="leaderboard-stats">
-                <div class="stat">
-                    <div class="stat-number">{{ total_players }}</div>
-                    <div class="stat-label">Players</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">{{ entries.0.score|floatformat:0 }}</div>
-                    <div class="stat-label">Top Score</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">
-                        {% if user_position %}
-                            #{{ user_position }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </div>
-                    <div class="stat-label">Your Rank</div>
-                </div>
-            </div>
-            {% endif %}
-
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width:100px;">🏆 Rank</th>
-                        <th>👤 Player</th>
-                        <th style="width:140px; text-align:right;">⭐ Score</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entry in entries %}
-                    <tr {% if user.is_authenticated and entry.name == user.username %}class="current-user"{% endif %}>
-                        <td class="rank rank-{{ forloop.counter }}">
-                            {% if forloop.counter == 1 %}
-                                <span class="medal">🥇</span>
-                            {% elif forloop.counter == 2 %}
-                                <span class="medal">🥈</span>
-                            {% elif forloop.counter == 3 %}
-                                <span class="medal">🥉</span>
-                            {% endif %}
-                            {{ forloop.counter }}
-                        </td>
-                        <td class="username">
-                            {{ entry.name }}
-                            {% if user.is_authenticated and entry.name == user.username %}
-                                <span style="color:var(--accent); font-size:0.8rem; margin-left:8px;">(You)</span>
-                            {% endif %}
-                        </td>
-                        <td class="score">{{ entry.score|floatformat:0 }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="3" class="empty-state">
-                            <div style="font-size:4rem; margin-bottom:20px; filter:drop-shadow(0 0 20px rgba(122,162,255,0.4));">🎯</div>
-                            <div style="font-size:1.3rem; font-weight:600; margin-bottom:8px;">No players on the leaderboard yet!</div>
-                            <div style="font-size:1rem; opacity:0.8;">Complete some courses to earn points and climb the ranks.</div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
-                <a href="{% url 'home' %}" class="btn">🏠 Back to Home</a>
-                {% if user.is_authenticated %}
-                <a href="{% url 'course_list' %}" class="btn btn-primary">📚 Start Learning</a>
-                {% endif %}
-            </div>
+            <p>Top learners ranked by BrainPoints earned.</p>
         </div>
+        <a href="{% url 'shop' %}" class="btn btn-ghost">🛒 Spend Points</a>
     </div>
 
-    <footer style="background:rgba(7,7,53,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); padding:16px 28px; text-align:center; font-style:italic; font-size:0.98rem; border-top:1px solid var(--border); color:var(--muted);">
-        💡 Fun Fact: Did you know BrainBank is constantly evolving? Stay tuned for exciting events like 2x points and special promotions coming soon!
-    </footer>
+    {% if entries %}
 
-</body>
-</html>
+    <!-- TOP 3 PODIUM -->
+    <div class="podium">
+        {% if entries|length >= 2 %}
+        <div class="podium-item rank-2">
+            <div class="podium-crown">🥈</div>
+            <div class="podium-rank">2nd Place</div>
+            <div class="podium-name">{{ entries.1.name }}</div>
+            <div class="podium-score silver">{{ entries.1.score }}</div>
+            <div class="podium-pts">BrainPoints</div>
+        </div>
+        {% else %}
+        <div></div>
+        {% endif %}
+
+        {% if entries|length >= 1 %}
+        <div class="podium-item rank-1">
+            <div class="podium-crown">👑</div>
+            <div class="podium-rank">1st Place</div>
+            <div class="podium-name">{{ entries.0.name }}</div>
+            <div class="podium-score gold">{{ entries.0.score }}</div>
+            <div class="podium-pts">BrainPoints</div>
+        </div>
+        {% else %}
+        <div></div>
+        {% endif %}
+
+        {% if entries|length >= 3 %}
+        <div class="podium-item rank-3">
+            <div class="podium-crown">🥉</div>
+            <div class="podium-rank">3rd Place</div>
+            <div class="podium-name">{{ entries.2.name }}</div>
+            <div class="podium-score bronze">{{ entries.2.score }}</div>
+            <div class="podium-pts">BrainPoints</div>
+        </div>
+        {% else %}
+        <div></div>
+        {% endif %}
+    </div>
+
+    <!-- FULL TABLE -->
+    <div class="lb-table-wrap">
+        <table class="lb-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>BrainPoints</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                <tr>
+                    <td class="lb-rank {% if forloop.counter <= 3 %}top3{% endif %}">
+                        {% if forloop.counter == 1 %}🥇
+                        {% elif forloop.counter == 2 %}🥈
+                        {% elif forloop.counter == 3 %}🥉
+                        {% else %}#{{ forloop.counter }}{% endif %}
+                    </td>
+                    <td class="lb-name">{{ entry.name }}</td>
+                    <td class="lb-score">⚡ {{ entry.score }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+    <div class="card" style="text-align:center;padding:64px;color:var(--text-muted);">
+        <div style="font-size:3rem;margin-bottom:16px;">🏆</div>
+        <div style="font-size:1rem;font-weight:600;margin-bottom:8px;">No entries yet</div>
+        <div style="font-size:0.875rem;">Complete quizzes to appear on the leaderboard!</div>
+        <a href="{% url 'course_list' %}" class="btn btn-primary" style="margin-top:20px;">Start Learning</a>
+    </div>
+    {% endif %}
+
+{% endblock %}

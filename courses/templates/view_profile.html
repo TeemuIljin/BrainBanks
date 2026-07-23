@@ -1,73 +1,186 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ user_profile.username }}'s Profile</title>
-    <style>
-        :root { --bg-start:#0a0a40; --bg-end:#161658; --card-bg:rgba(255,255,255,0.06); --text:#f5f7ff; --muted:#c6c9ff; --accent:#7aa2ff; --accent-2:#62e0d9; --border:rgba(255,255,255,0.12); --shadow:rgba(0,0,0,0.35); }
-        body { background: radial-gradient(1000px 600px at 20% 0%, var(--bg-end), transparent 60%), radial-gradient(900px 600px at 80% 0%, #0f2a80, transparent 55%), linear-gradient(180deg, var(--bg-start), #0b0b2e 65%); color: var(--text); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column; }
-        .top-bar { display:flex; justify-content:space-between; align-items:center; padding:16px 28px; background:rgba(7,7,53,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
-        .brand { display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:0.4px; }
-        .brand-badge { width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 6px 14px var(--shadow); }
-        .auth-actions { display:flex; gap:12px; }
-        .btn { appearance:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 16px; border-radius:10px; border:1px solid var(--border); color:var(--text); text-decoration:none; font-size:0.95rem; line-height:1; transition:transform .1s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); box-shadow:0 6px 14px -8px var(--shadow); }
-        .btn:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.25); }
-        .btn-primary { background:linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)); border-color:rgba(122,162,255,0.35); }
-        main { flex:1; display:flex; justify-content:center; padding:48px 20px 56px; }
-        .card { width:min(800px,92%); background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:26px 24px; box-shadow:0 18px 40px -22px var(--shadow); text-align:center; }
-        h1 { margin:0 0 8px; font-size:clamp(2rem,3.2vw,2.6rem); }
-        h2 { margin:10px 0 18px; color:var(--muted); }
-        ul { list-style:none; padding:0; margin:0 auto; max-width:520px; text-align:left; }
-        li { margin:6px 0; }
-    </style>
-</head>
-<body>
-    <div class="top-bar">
-        <div class="brand">
-            <div class="brand-badge"></div>
-            BrainBank
-            {% if active_effects %}
-                <span class="active-effects-display">
-                    {% for effect in active_effects %}{{ effect }}{% endfor %}
-                </span>
-            {% endif %}
-        </div>
-        <div class="auth-actions">
-            {% if user.is_authenticated %}
-                <a class="btn btn-primary" href="{% url 'view_profile' user.username %}">View Profile</a>
-            {% else %}
-                <a class="btn" href="{% url 'sign_in' %}">Sign In</a>
-            {% endif %}
-        </div>
-    </div>
-    <main>
-        <div class="card">
-            <h1>{{ user_profile.username }}'s Profile</h1>
-            <h2>Points: {{ player_profile.points }}</h2>
-            <p class="meta">🔥 Current streak: {{ player_profile.current_streak }} · 🏆 Longest: {{ player_profile.longest_streak }}</p>
-            <h2>Inventory</h2>
-            {% if inventory %}
-                <ul style="list-style:none; padding:0;">
-                    {% for entry in inventory %}
-                        <li style="display:flex; align-items:center; justify-content:space-between; margin:8px 0; padding:8px 12px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border);">
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                {% if entry.item__icon %}{{ entry.item__icon }} {% endif %}
-                                <span>{{ entry.item__name }}</span>
-                                <span style="opacity:0.9; padding:2px 8px; border:1px solid var(--border); border-radius:12px; font-size:0.9em;">× {{ entry.quantity }}</span>
-                            </div>
-                            {% if "Streak freeze" in entry.item__name or "Fired up streak" in entry.item__name or "Experience festival" in entry.item__name %}
-                                <a href="{% url 'use_item' entry.item__id %}" class="btn" style="padding:4px 8px; font-size:0.8rem; background:var(--accent); color:white; text-decoration:none;">Use</a>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No items purchased yet.</p>
-            {% endif %}
-            <div style="margin-top:16px;">
-                <a href="{% url 'home' %}" class="btn">Return to Home</a>
+{% extends "base.html" %}
+
+{% block title %}{{ user_profile.username }}'s Profile — BrainBank{% endblock %}
+{% block page_title %}Profile{% endblock %}
+{% block nav_profile %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+    .profile-layout {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 24px;
+        align-items: start;
+    }
+
+    /* Left panel */
+    .profile-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 32px 24px;
+        text-align: center;
+        position: relative; overflow: hidden;
+    }
+    .profile-card::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; height: 80px;
+        background: linear-gradient(135deg, rgba(124,92,252,0.18), rgba(79,138,255,0.12));
+    }
+
+    .profile-avatar {
+        position: relative; z-index: 1;
+        width: 80px; height: 80px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2rem; font-weight: 800; color: white;
+        margin: 0 auto 16px;
+        border: 3px solid var(--bg);
+        box-shadow: 0 0 24px var(--primary-glow);
+    }
+
+    .profile-name {
+        font-size: 1.3rem; font-weight: 800; margin-bottom: 4px;
+    }
+    .profile-tag {
+        font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px;
+    }
+
+    .profile-stats {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;
+    }
+    .profile-stat {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 10px; text-align: center;
+    }
+    .profile-stat-num {
+        font-size: 1.4rem; font-weight: 800;
+        color: var(--primary-light);
+    }
+    .profile-stat-label {
+        font-size: 0.68rem; color: var(--text-muted); margin-top: 3px;
+        text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    /* Right panel */
+    .inventory-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        margin-bottom: 20px;
+    }
+    .inventory-card h2 {
+        font-size: 1rem; font-weight: 700; margin-bottom: 18px;
+    }
+
+    .inventory-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+    }
+
+    .inventory-item {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 16px 12px; text-align: center;
+        transition: all 0.18s ease;
+    }
+    .inventory-item:hover { border-color: rgba(124,92,252,0.3); }
+    .inventory-item-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .inventory-item-name { font-size: 0.8rem; font-weight: 600; }
+
+    .empty-inventory {
+        text-align: center; padding: 40px;
+        color: var(--text-muted); font-size: 0.875rem;
+    }
+    .empty-inventory .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+
+    @media (max-width: 780px) {
+        .profile-layout { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-layout">
+
+    <!-- LEFT: Profile summary -->
+    <div>
+        <div class="profile-card">
+            <div class="profile-avatar">{{ user_profile.username|first|upper }}</div>
+            <div class="profile-name">{{ user_profile.username }}</div>
+            <div class="profile-tag">@{{ user_profile.username }} · BrainBank Learner</div>
+
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <div class="profile-stat-num">{{ player_profile.points }}</div>
+                    <div class="profile-stat-label">⚡ Points</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="profile-stat-num">{{ purchases|length }}</div>
+                    <div class="profile-stat-label">🎁 Items</div>
+                </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:10px;">
+                <a href="{% url 'shop' %}" class="btn btn-primary btn-full">🛒 Visit Shop</a>
+                <a href="{% url 'leaderboard' %}" class="btn btn-ghost btn-full">🏆 Leaderboard</a>
+                <a href="{% url 'home' %}" class="btn btn-ghost btn-full">🏠 Home</a>
             </div>
         </div>
-    </main>
-</body>
-</html>
+    </div>
+
+    <!-- RIGHT: Content -->
+    <div>
+        <div class="inventory-card">
+            <div class="section-header" style="margin-bottom:18px;">
+                <h2 style="margin:0;">🎒 Inventory</h2>
+                <a href="{% url 'shop' %}" class="section-link">+ Get more</a>
+            </div>
+
+            {% if purchases %}
+            <div class="inventory-grid">
+                {% for purchase in purchases %}
+                <div class="inventory-item">
+                    <div class="inventory-item-icon">
+                        {% if purchase.item.icon %}{{ purchase.item.icon }}{% else %}📦{% endif %}
+                    </div>
+                    <div class="inventory-item-name">{{ purchase.item.name }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-inventory">
+                <div class="empty-icon">📦</div>
+                <div>No items purchased yet.</div>
+                <a href="{% url 'shop' %}" class="btn btn-primary btn-sm" style="margin-top:14px;">Visit Shop</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="inventory-card" style="margin-bottom:0;">
+            <h2>📊 Your Stats</h2>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);">
+                    <span style="font-size:0.875rem;color:var(--text-dim);">Total BrainPoints</span>
+                    <span style="font-weight:700;color:var(--primary-light);">⚡ {{ player_profile.points }}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);">
+                    <span style="font-size:0.875rem;color:var(--text-dim);">Items Owned</span>
+                    <span style="font-weight:700;">{{ purchases|length }}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
+                    <span style="font-size:0.875rem;color:var(--text-dim);">Member Status</span>
+                    <span class="badge badge-purple">Active Learner</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

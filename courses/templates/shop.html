@@ -1,429 +1,154 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Game Shop</title>
-    <style>
-        :root { 
-            --bg-start:#0a0a40; 
-            --bg-end:#161658; 
-            --card-bg:rgba(255,255,255,0.06); 
-            --text:#f5f7ff; 
-            --muted:#c6c9ff; 
-            --accent:#7aa2ff; 
-            --accent-2:#62e0d9; 
-            --border:rgba(255,255,255,0.12); 
-            --shadow:rgba(0,0,0,0.35);
-            --success:#4ade80;
-            --warning:#fbbf24;
-            --danger:#ef4444;
-        }
-        
-        body { 
-            background: radial-gradient(1000px 600px at 20% 0%, var(--bg-end), transparent 60%), 
-                       radial-gradient(900px 600px at 80% 0%, #0f2a80, transparent 55%), 
-                       linear-gradient(180deg, var(--bg-start), #0b0b2e 65%); 
-            color: var(--text); 
-            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin:0; 
-            padding:0; 
-            min-height:100vh; 
-            display:flex; 
-            flex-direction:column; 
-        }
-        
-        .top-bar { 
-            display:flex; 
-            justify-content:space-between; 
-            align-items:center; 
-            padding:16px 28px; 
-            background:rgba(7,7,53,0.75); 
-            backdrop-filter:blur(8px); 
-            -webkit-backdrop-filter:blur(8px); 
-            border-bottom:1px solid var(--border); 
-            position:sticky; 
-            top:0; 
-            z-index:10; 
-        }
-        
-        .brand { 
-            display:flex; 
-            align-items:center; 
-            gap:12px; 
-            font-weight:700; 
-            letter-spacing:0.4px; 
-            font-size: 1.1rem;
-        }
-        
-        .active-effects-display {
-            margin-left: 8px;
-            font-size: 1.2rem;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        .brand-badge { 
-            width:32px; 
-            height:32px; 
-            border-radius:8px; 
-            background:linear-gradient(135deg, var(--accent), var(--accent-2)); 
-            box-shadow:0 6px 14px var(--shadow); 
-        }
-        
-        .auth-actions { 
-            display:flex; 
-            gap:12px; 
-        }
-        
-        .btn { 
-            appearance:none; 
-            display:inline-flex; 
-            align-items:center; 
-            justify-content:center; 
-            gap:8px; 
-            padding:10px 16px; 
-            border-radius:10px; 
-            border:1px solid var(--border); 
-            color:var(--text); 
-            text-decoration:none; 
-            font-size:0.9rem; 
-            line-height:1; 
-            transition:transform .1s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease; 
-            background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); 
-            box-shadow:0 6px 14px -8px var(--shadow); 
-        }
-        
-        .btn:hover { 
-            transform:translateY(-1px); 
-            border-color:rgba(255,255,255,0.25); 
-        }
-        
-        .btn-primary { 
-            background:linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)); 
-            border-color:rgba(122,162,255,0.35); 
-        }
-        
-        .btn-success {
-            background: linear-gradient(135deg, rgba(74,222,128,0.25), rgba(34,197,94,0.18));
-            border-color: rgba(74,222,128,0.35);
-        }
-        
-        .btn-success:hover {
-            background: linear-gradient(135deg, rgba(74,222,128,0.35), rgba(34,197,94,0.26));
-        }
-        
-        main { 
-            flex:1; 
-            padding:32px 20px 56px; 
-            max-width:1200px; 
-            margin:0 auto; 
-            width:100%; 
-        }
-        
-        .shop-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-        
-        h1 { 
-            font-size: 2.2rem; 
-            margin:0 0 8px; 
-            color: var(--accent);
-            font-weight: 600;
-        }
-        
-        .shop-subtitle {
-            color: var(--muted);
-            font-size: 1rem;
-            margin-bottom: 20px;
-        }
-        
-        .points-display {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(122,162,255,0.1);
-            border: 1px solid rgba(122,162,255,0.2);
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--accent);
-        }
-        
-        .points-display::before {
-            content: "💰";
-            font-size: 1.1rem;
-        }
-        
-        nav { 
-            margin-bottom:32px; 
-            display:flex; 
-            justify-content:center; 
-            gap:12px; 
-            flex-wrap: wrap;
-        }
-        
-        .shop-container { 
-            display:grid; 
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap:20px; 
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        
-        .shop-item { 
-            background:var(--card-bg); 
-            border:1px solid var(--border); 
-            border-radius:16px; 
-            padding:24px 20px; 
-            box-sizing:border-box; 
-            display:flex; 
-            flex-direction:column; 
-            align-items:center; 
-            transition:all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .shop-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .shop-item:hover { 
-            border-color:rgba(122,162,255,0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        }
-        
-        .shop-item:hover::before {
-            opacity: 1;
-        }
-        
-        .shop-item h2 { 
-            margin:0 0 12px 0; 
-            font-size:1.2rem; 
-            font-weight:600; 
-            text-align:center; 
-            color: var(--text);
-        }
-        
-        .shop-item p { 
-            font-size:0.9rem; 
-            margin:8px 0; 
-            text-align:center; 
-            color: var(--muted);
-            line-height: 1.4;
-        }
-        
-        .price-tag {
-            background: linear-gradient(135deg, rgba(74,222,128,0.15), rgba(34,197,94,0.1));
-            border: 1px solid rgba(74,222,128,0.2);
-            border-radius: 12px;
-            padding: 6px 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--success);
-            margin: 8px 0;
-        }
-        
-        .shop-item form { 
-            margin-top:16px; 
-            width:100%; 
-            display:flex; 
-            justify-content:center; 
-        }
-        
-        .shop-item button { 
-            width:100%; 
-            padding: 12px 20px;
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-        
-        .empty-shop {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--muted);
-        }
-        
-        .empty-shop h3 {
-            font-size: 1.5rem;
-            margin-bottom: 12px;
-            color: var(--accent);
-        }
-        
-        .empty-shop p {
-            font-size: 1rem;
-            margin-bottom: 20px;
-        }
-        
-        @media (max-width: 768px) {
-            main {
-                padding: 24px 16px 40px;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .shop-container {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            
-            .shop-item {
-                padding: 20px 16px;
-            }
-            
-            nav {
-                gap: 8px;
-            }
-            
-            .btn {
-                padding: 8px 12px;
-                font-size: 0.85rem;
-            }
-        }
-        
-        /* Active Effects Styles */
-        .active-effects {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            margin: 20px 0;
-            box-shadow: 0 8px 20px -12px var(--shadow);
-        }
-        
-        .active-effects h3 {
-            margin: 0 0 12px;
-            color: var(--accent);
-            font-size: 1.1rem;
-        }
-        
-        .effects-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .effect-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            background: rgba(122, 162, 255, 0.1);
-            border: 1px solid rgba(122, 162, 255, 0.2);
-            border-radius: 8px;
-        }
-        
-        .effect-icon {
-            font-size: 1.2rem;
-        }
-        
-        .effect-text {
-            font-size: 0.9rem;
-            color: var(--text);
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <div class="top-bar">
-        <div class="brand">
-            <div class="brand-badge"></div>
-            BrainBank
-            {% if active_effects %}
-                <span class="active-effects-display">
-                    {% for effect in active_effects %}{{ effect }}{% endfor %}
-                </span>
-            {% endif %}
+{% block title %}Shop — BrainBank{% endblock %}
+{% block page_title %}BrainPoints Shop{% endblock %}
+{% block nav_shop %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+    .shop-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
+    }
+    .shop-header-left h1 {
+        font-size: 1.6rem; font-weight: 800; margin-bottom: 4px;
+    }
+    .shop-header-left p {
+        font-size: 0.875rem; color: var(--text-dim);
+    }
+
+    .balance-card {
+        background: linear-gradient(135deg, rgba(124,92,252,0.18) 0%, rgba(79,138,255,0.12) 100%);
+        border: 1px solid rgba(124,92,252,0.25);
+        border-radius: var(--radius-lg);
+        padding: 18px 24px;
+        display: flex; align-items: center; gap: 14px;
+        min-width: 200px;
+    }
+    .balance-icon {
+        width: 44px; height: 44px;
+        background: rgba(124,92,252,0.2);
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.3rem;
+    }
+    .balance-amount {
+        font-size: 1.5rem; font-weight: 800;
+        color: var(--primary-light);
+        line-height: 1;
+    }
+    .balance-label { font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; }
+
+    /* Messages */
+    .messages-list { margin-bottom: 20px; }
+
+    /* Shop grid */
+    .shop-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 18px;
+    }
+
+    .shop-item-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        display: flex; flex-direction: column; gap: 12px;
+        transition: all 0.2s ease;
+        position: relative; overflow: hidden;
+    }
+    .shop-item-card:hover {
+        border-color: rgba(124,92,252,0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .shop-item-card::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        opacity: 0; transition: opacity 0.2s;
+    }
+    .shop-item-card:hover::before { opacity: 1; }
+
+    .item-icon-wrap {
+        width: 52px; height: 52px;
+        background: linear-gradient(135deg, rgba(124,92,252,0.18), rgba(79,138,255,0.12));
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.6rem;
+    }
+
+    .item-name {
+        font-size: 1rem; font-weight: 700;
+    }
+
+    .item-desc {
+        font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; flex: 1;
+    }
+
+    .item-price {
+        display: flex; align-items: center; gap: 6px;
+        font-size: 1rem; font-weight: 800; color: var(--accent-yellow);
+    }
+
+    .item-footer {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 10px;
+    }
+
+    form { display: inline; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+    {% if messages %}
+    <div class="messages-list">
+        {% for message in messages %}
+        <div class="alert alert-error">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="shop-header">
+        <div class="shop-header-left">
+            <h1>🛒 BrainPoints Shop</h1>
+            <p>Spend your hard-earned points on exclusive rewards.</p>
         </div>
-        <div class="auth-actions">
-            {% if request.user.is_authenticated %}
-                <a class="btn btn-primary" href="{% url 'view_profile' request.user.username %}">View Profile</a>
-            {% else %}
-                <a class="btn" href="{% url 'sign_in' %}">Sign In</a>
-            {% endif %}
+        <div class="balance-card">
+            <div class="balance-icon">⚡</div>
+            <div>
+                <div class="balance-amount">{{ player_profile.points }}</div>
+                <div class="balance-label">BrainPoints Balance</div>
+            </div>
         </div>
     </div>
 
-    <main>
-        <div class="shop-header">
-            <h1>🛒 Game Shop</h1>
-            <p class="shop-subtitle">Spend your hard-earned points on awesome rewards!</p>
-            <div class="points-display">{{ player_profile.points }} points</div>
-        </div>
-
-        <nav>
-            <a class="btn" href="{% url 'home' %}">🏠 Home</a>
-            <a class="btn" href="{% url 'course_list' %}">📚 Courses</a>
-            <a class="btn" href="{% url 'leaderboard' %}">🏆 Leaderboard</a>
-        </nav>
-
-        <!-- Active Effects Display -->
-        {% if player_profile.streak_freeze_count > 0 or player_profile.fired_up_streak_until or player_profile.experience_festival_until %}
-        <div class="active-effects">
-            <h3>🎯 Active Effects</h3>
-            <div class="effects-grid">
-                {% if player_profile.streak_freeze_count > 0 %}
-                <div class="effect-item">
-                    <span class="effect-icon">❄️</span>
-                    <span class="effect-text">Streak Freeze: {{ player_profile.streak_freeze_count }} remaining</span>
+    <div class="shop-grid">
+        {% for item in shop_items %}
+        <div class="shop-item-card">
+            <div class="item-icon-wrap">{{ item.icon }}</div>
+            <div class="item-name">{{ item.name }}</div>
+            <div class="item-desc">{{ item.description }}</div>
+            <div class="item-footer">
+                <div class="item-price">
+                    ⚡ {{ item.price }} pts
                 </div>
-                {% endif %}
-                {% if player_profile.fired_up_streak_until %}
-                <div class="effect-item">
-                    <span class="effect-icon">🔥</span>
-                    <span class="effect-text">Fired Up Streak: Active until {{ player_profile.fired_up_streak_until|date:"M d, H:i" }}</span>
-                </div>
-                {% endif %}
-                {% if player_profile.experience_festival_until %}
-                <div class="effect-item">
-                    <span class="effect-icon">🎉</span>
-                    <span class="effect-text">Experience Festival: Active until {{ player_profile.experience_festival_until|date:"M d, H:i" }}</span>
-                </div>
-                {% endif %}
+                <form method="post" action="{% url 'buy_item' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-sm"
+                        {% if player_profile.points < item.price %}disabled style="opacity:0.5;cursor:not-allowed;"{% endif %}>
+                        Buy
+                    </button>
+                </form>
             </div>
         </div>
-        {% endif %}
+        {% empty %}
+        <div class="card" style="grid-column:1/-1;text-align:center;padding:48px;color:var(--text-muted);">
+            The shop is empty right now. Check back soon!
+        </div>
+        {% endfor %}
+    </div>
 
-        {% if shop_items %}
-            <div class="shop-container">
-                {% for item in shop_items %}
-                <div class="shop-item">
-                    <h2>{{ item.icon }} {{ item.name }}</h2>
-                    <p>{{ item.description }}</p>
-                    <div class="price-tag">{{ item.price }} points</div>
-                    <form method="post" action="{% url 'buy_item' item.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-success">🛒 Buy Now</button>
-                    </form>
-                </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="empty-shop">
-                <h3>🛍️ Shop Coming Soon!</h3>
-                <p>We're working on adding amazing items to the shop. Check back later!</p>
-                <a class="btn btn-primary" href="{% url 'home' %}">Return to Home</a>
-            </div>
-        {% endif %}
-    </main>
-
-</body>
-</html>
+{% endblock %}

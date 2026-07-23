@@ -1,281 +1,162 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ course.title }}</title>
-    <style>
-        :root { --bg-start:#0a0a40; --bg-end:#161658; --card-bg:rgba(255,255,255,0.06); --text:#f5f7ff; --muted:#c6c9ff; --accent:#7aa2ff; --accent-2:#62e0d9; --border:rgba(255,255,255,0.12); --shadow:rgba(0,0,0,0.35); }
-        body { background: radial-gradient(1000px 600px at 20% 0%, var(--bg-end), transparent 60%), radial-gradient(900px 600px at 80% 0%, #0f2a80, transparent 55%), linear-gradient(180deg, var(--bg-start), #0b0b2e 65%); color: var(--text); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column; }
-        .top-bar { display:flex; justify-content:space-between; align-items:center; padding:16px 28px; background:rgba(7,7,53,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
-        .brand { display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:0.4px; }
-        .brand-badge { width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 6px 14px var(--shadow); }
-        .auth-actions { display:flex; gap:12px; }
-        .btn { appearance:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 16px; border-radius:10px; border:1px solid var(--border); color:var(--text); text-decoration:none; font-size:0.95rem; line-height:1; transition:transform .1s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); box-shadow:0 6px 14px -8px var(--shadow); }
-        .btn:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.25); }
-        .btn-primary { background:linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)); border-color:rgba(122,162,255,0.35); }
-        main { flex:1; padding:48px 20px 56px; display:flex; justify-content:center; }
-        .card { 
-            width:min(920px,92%); 
-            background:var(--card-bg); 
-            border:1px solid var(--border); 
-            border-radius:18px; 
-            padding:28px 24px; 
-            box-shadow:0 18px 40px -22px var(--shadow); 
-            text-align:center; 
-            overflow:hidden;
-            word-wrap:break-word;
-        }
-        h1 { font-size:clamp(2rem,3.6vw,3rem); margin:0 0 12px; }
-        .meta { color:var(--muted); margin:0 0 12px; }
-        .content-block { 
-            text-align:left; 
-            margin:8px auto 0; 
-            max-width:780px; 
-            line-height:1.6; 
-            word-wrap:break-word; 
-            overflow-wrap:break-word; 
-            overflow-x:auto; 
-            max-height:600px; 
-            overflow-y:auto; 
-            padding:16px; 
-            background:rgba(255,255,255,0.02); 
-            border-radius:12px; 
-            border:1px solid rgba(255,255,255,0.08);
-        }
-        
-        /* Override course content styling to match BrainBank theme */
-        .content-block * {
-            max-width:100%;
-            box-sizing:border-box;
-            color: var(--text) !important;
-            background: transparent !important;
-        }
-        
-        .content-block body {
-            background: transparent !important;
-            color: var(--text) !important;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            min-height: auto !important;
-            display: block !important;
-            flex-direction: unset !important;
-            align-items: unset !important;
-            text-align: left !important;
-        }
-        
-        .content-block main {
-            max-width: 100% !important;
-            width: 100% !important;
-            padding: 0 !important;
-            flex: unset !important;
-        }
-        
-        .content-block h1 {
-            font-size: 2rem !important;
-            margin-bottom: 16px !important;
-            text-shadow: none !important;
-            color: var(--accent) !important;
-        }
-        
-        .content-block h2 {
-            font-size: 1.5rem !important;
-            margin: 20px 0 12px 0 !important;
-            color: var(--accent-2) !important;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 8px;
-        }
-        
-        .content-block section {
-            margin-bottom: 24px !important;
-            background: rgba(255,255,255,0.03) !important;
-            border-radius: 12px !important;
-            padding: 20px !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
-            text-align: left !important;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        
-        .content-block p {
-            font-size: 1rem !important;
-            line-height: 1.6 !important;
-            color: var(--text) !important;
-            margin: 8px 0 !important;
-        }
-        
-        .content-block form {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 12px !important;
-            font-size: 1rem !important;
-            margin-top: 16px !important;
-        }
-        
-        .content-block label {
-            display: flex !important;
-            align-items: center !important;
-            gap: 10px !important;
-            cursor: pointer !important;
-            padding: 8px 12px !important;
-            border-radius: 8px !important;
-            transition: background-color 0.2s ease !important;
-            color: var(--text) !important;
-        }
-        
-        .content-block label:hover {
-            background: rgba(122,162,255,0.1) !important;
-        }
-        
-        .content-block input[type="radio"] {
-            accent-color: var(--accent) !important;
-            width: 18px !important;
-            height: 18px !important;
-        }
-        
-        .content-block button {
-            align-self: center !important;
-            padding: 12px 24px !important;
-            background: linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)) !important;
-            border: 1px solid var(--accent) !important;
-            border-radius: 8px !important;
-            color: var(--text) !important;
-            font-size: 1rem !important;
-            cursor: pointer !important;
-            transition: all 0.3s ease !important;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-        }
-        
-        .content-block button:hover {
-            background: linear-gradient(135deg, rgba(122,162,255,0.35), rgba(98,224,217,0.26)) !important;
-            transform: translateY(-1px) !important;
-        }
-        
-        .content-block .result {
-            margin-top: 12px !important;
-            font-size: 1rem !important;
-            font-weight: 600 !important;
-            padding: 8px 12px !important;
-            border-radius: 6px !important;
-            text-align: center !important;
-        }
-        
-        /* Matrix styling */
-        .content-block .matrix {
-            display: inline-block !important;
-            border-collapse: collapse !important;
-            margin: 0 6px !important;
-            vertical-align: middle !important;
-        }
-        
-        .content-block .matrix td {
-            border: 1px solid rgba(255,255,255,0.2) !important;
-            padding: 6px 10px !important;
-            min-width: 28px !important;
-            text-align: center !important;
-            color: var(--text) !important;
-            background: rgba(255,255,255,0.05) !important;
-        }
-        
-        .content-block .matrix-wrap {
-            font-family: 'Courier New', monospace !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            gap: 8px !important;
-        }
-        
-        .content-block .note {
-            font-size: 0.9rem !important;
-            color: var(--muted) !important;
-        }
-        
-        /* Fix for images and other media */
-        .content-block img {
-            max-width:100%;
-            height:auto;
-            display:block;
-            margin:8px auto;
-        }
-        
-        /* Fix for tables */
-        .content-block table {
-            width:100%;
-            table-layout:fixed;
-            border-collapse:collapse;
-        }
-        
-        .content-block td, .content-block th {
-            word-wrap:break-word;
-            overflow-wrap:break-word;
-        }
-        
-        /* Fix for code blocks */
-        .content-block pre, .content-block code {
-            white-space:pre-wrap;
-            word-wrap:break-word;
-            overflow-x:auto;
-        }
-        
-        /* Responsive design for mobile */
-        @media (max-width: 768px) {
-            .card {
-                width: 95%;
-                padding: 20px 16px;
-            }
-            
-            .content-block {
-                max-width: 100%;
-                padding: 12px;
-                max-height: 400px;
-            }
-            
-            main {
-                padding: 24px 12px 40px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .card {
-                width: 98%;
-                padding: 16px 12px;
-            }
-            
-            .content-block {
-                padding: 8px;
-                max-height: 300px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="top-bar">
-        <div class="brand">
-            <div class="brand-badge"></div>
-            BrainBank
-            {% if active_effects %}
-                <span class="active-effects-display">
-                    {% for effect in active_effects %}{{ effect }}{% endfor %}
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }} — BrainBank{% endblock %}
+{% block page_title %}{{ course.title }}{% endblock %}
+{% block nav_learn %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+    .detail-layout {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 24px;
+        align-items: start;
+    }
+
+    .detail-hero {
+        background: linear-gradient(135deg, rgba(124,92,252,0.14) 0%, rgba(79,138,255,0.07) 100%);
+        border: 1px solid rgba(124,92,252,0.2);
+        border-radius: 20px;
+        padding: 36px 40px;
+        margin-bottom: 24px;
+        position: relative; overflow: hidden;
+    }
+    .detail-hero::before {
+        content: '';
+        position: absolute; top: -40px; right: -40px;
+        width: 200px; height: 200px;
+        background: radial-gradient(circle, rgba(124,92,252,0.12) 0%, transparent 70%);
+    }
+    .detail-eyebrow {
+        display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+    }
+    .detail-title {
+        font-size: 1.9rem; font-weight: 800; line-height: 1.15;
+        margin-bottom: 12px;
+        background: linear-gradient(90deg, #fff 40%, var(--primary-light));
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .detail-desc {
+        font-size: 0.95rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 24px;
+    }
+
+    .meta-grid {
+        display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+    }
+    .meta-item {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+    }
+    .meta-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .meta-value { font-size: 0.95rem; font-weight: 700; }
+
+    .content-block {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 28px 32px;
+    }
+    .content-block h2, .content-block h3 {
+        color: var(--primary-light); margin: 1.2em 0 0.6em; font-weight: 700;
+    }
+    .content-block p { color: var(--text-dim); line-height: 1.7; margin-bottom: 1em; }
+    .content-block ul, .content-block ol {
+        color: var(--text-dim); line-height: 1.7; padding-left: 1.5em; margin-bottom: 1em;
+    }
+    .content-block strong { color: var(--text); }
+
+    .sidebar-actions {
+        display: flex; flex-direction: column; gap: 14px;
+    }
+    .action-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 20px;
+    }
+    .action-card h3 {
+        font-size: 0.85rem; font-weight: 700; margin-bottom: 14px;
+        color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    @media (max-width: 860px) {
+        .detail-layout { grid-template-columns: 1fr; }
+        .sidebar-actions { flex-direction: row; flex-wrap: wrap; }
+        .action-card { flex: 1; min-width: 200px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="detail-layout">
+
+    <div>
+        <div class="detail-hero">
+            <div class="detail-eyebrow">
+                {% if course.category %}
+                <span class="badge
+                    {% if course.category == 'Mathematics' %}badge-purple
+                    {% elif course.category == 'Physics' %}badge-blue
+                    {% elif course.category == 'Chemistry' %}badge-cyan
+                    {% elif course.category == 'Biology' %}badge-green
+                    {% else %}badge-default{% endif %}">
+                    {{ course.category }}
                 </span>
-            {% endif %}
-        </div>
-        <div class="auth-actions">
-            {% if user.is_authenticated %}
-                <a class="btn btn-primary" href="{% url 'view_profile' user.username %}">View Profile</a>
-            {% else %}
-                <a class="btn" href="{% url 'sign_in' %}">Sign In</a>
-            {% endif %}
-        </div>
-    </div>
-    <main>
-        <div class="card">
-            <h1>{{ course.title }}</h1>
-            <p class="meta">Level: {{ course.level }} · Duration: {{ course.duration }} minutes</p>
-            <p style="margin: 16px 0 8px;">{{ course.description }}</p>
-            <div class="content-block">{{ course.content|safe }}</div>
-            <div style="margin-top:18px; display:flex; gap:10px; justify-content:center;">
-                <a href="{% url 'course_list' %}" class="btn">Back to Course List</a>
-                <a href="{% url 'quiz' course.pk 1 %}" class="btn btn-primary">Start Quiz</a>
+                {% endif %}
+                {% if course.level %}
+                <span class="badge badge-default">{{ course.level }}</span>
+                {% endif %}
+            </div>
+            <h1 class="detail-title">{{ course.title }}</h1>
+            <p class="detail-desc">{{ course.description }}</p>
+
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <div class="meta-label">Duration</div>
+                    <div class="meta-value">⏱ {{ course.duration }} months</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Category</div>
+                    <div class="meta-value">{{ course.category|default:"General" }}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Level</div>
+                    <div class="meta-value">{{ course.level|default:"All levels" }}</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">Price</div>
+                    <div class="meta-value">{% if course.price %}${{ course.price }}{% else %}Free{% endif %}</div>
+                </div>
             </div>
         </div>
-    </main>
-</body>
-</html>
+
+        {% if course.content %}
+        <div class="content-block">
+            <div class="section-header" style="margin-bottom:20px;">
+                <span class="section-title">Course Content</span>
+            </div>
+            {{ course.content|safe }}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="sidebar-actions">
+        <div class="action-card">
+            <h3>Quick Actions</h3>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+                <a href="{% url 'quiz' course.pk 1 %}" class="btn btn-primary btn-full">▶ Take Quiz</a>
+                <a href="{% url 'course_list' %}" class="btn btn-ghost btn-full">← All Courses</a>
+                <a href="{% url 'home' %}" class="btn btn-ghost btn-full">🏠 Home</a>
+            </div>
+        </div>
+        <div class="action-card">
+            <h3>More Courses</h3>
+            <a href="{% url 'course_search' %}" class="btn btn-ghost btn-full" style="margin-bottom:8px;">🔍 Search</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

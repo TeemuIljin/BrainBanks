@@ -1,74 +1,111 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Course Search</title>
-    <style>
-        :root { --bg-start:#0a0a40; --bg-end:#161658; --card-bg:rgba(255,255,255,0.06); --text:#f5f7ff; --muted:#c6c9ff; --accent:#7aa2ff; --accent-2:#62e0d9; --border:rgba(255,255,255,0.12); --shadow:rgba(0,0,0,0.35); }
-        body { background: radial-gradient(1000px 600px at 20% 0%, var(--bg-end), transparent 60%), radial-gradient(900px 600px at 80% 0%, #0f2a80, transparent 55%), linear-gradient(180deg, var(--bg-start), #0b0b2e 65%); color: var(--text); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column; }
-        .top-bar { display:flex; justify-content:space-between; align-items:center; padding:16px 28px; background:rgba(7,7,53,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
-        .brand { display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:0.4px; }
-        .brand-badge { width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 6px 14px var(--shadow); }
-        .auth-actions { display:flex; gap:12px; }
-        .btn { appearance:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 16px; border-radius:10px; border:1px solid var(--border); color:var(--text); text-decoration:none; font-size:0.95rem; line-height:1; transition:transform .1s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); box-shadow:0 6px 14px -8px var(--shadow); }
-        .btn:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.25); }
-        .btn-primary { background:linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)); border-color:rgba(122,162,255,0.35); }
-        main { flex:1; display:flex; justify-content:center; padding:48px 20px 56px; }
-        .card { width:min(900px,92%); background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:26px 24px; box-shadow:0 18px 40px -22px var(--shadow); }
-        h1 { font-size:clamp(2rem,3.2vw,2.6rem); margin:0 0 14px; text-align:center; }
-        .subtitle { color:var(--muted); text-align:center; margin:0 0 20px; }
-        form { margin:0 auto 22px; display:flex; gap:10px; justify-content:center; }
-        input[type="text"] { padding:10px 14px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid var(--border); color:var(--text); width:260px; }
-        input[type="text"]::placeholder { color:#bfc3ff; }
-        ul { list-style:none; padding:0; margin:0; max-width:720px; }
-        li { margin:10px 0; font-size:1.05rem; }
-        a { color:var(--text); text-decoration:none; border-bottom:1px solid transparent; }
-        a:hover { border-bottom:1px solid var(--text); }
-    </style>
-</head>
-<body>
-    <div class="top-bar">
-        <div class="brand">
-            <div class="brand-badge"></div>
-            BrainBank
-            {% if active_effects %}
-                <span class="active-effects-display">
-                    {% for effect in active_effects %}{{ effect }}{% endfor %}
-                </span>
-            {% endif %}
-        </div>
-        <div class="auth-actions">
-            {% if user.is_authenticated %}
-                <a class="btn btn-primary" href="{% url 'view_profile' user.username %}">View Profile</a>
-            {% else %}
-                <a class="btn" href="{% url 'sign_in' %}">Sign In</a>
-            {% endif %}
-        </div>
-    </div>
-    <main>
-        <div class="card">
-            <h1>Search Results for "{{ query }}"</h1>
-            <p class="subtitle">Find courses by title and explore details.</p>
+{% extends "base.html" %}
 
-            <form method="get" action="{% url 'course_search' %}">
-                <input type="text" name="q" value="{{ query }}" placeholder="Search for courses...">
+{% block title %}Search Courses — BrainBank{% endblock %}
+{% block page_title %}Search Courses{% endblock %}
+{% block nav_search %}active{% endblock %}
+
+{% block extra_head %}
+<style>
+    .search-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 28px;
+        margin-bottom: 28px;
+    }
+    .search-box h2 {
+        font-size: 1.1rem; font-weight: 700; margin-bottom: 16px;
+    }
+    .search-row { display: flex; gap: 10px; }
+
+    .search-results-header {
+        font-size: 0.85rem; color: var(--text-muted);
+        margin-bottom: 18px; font-weight: 500;
+    }
+    .search-results-header strong { color: var(--primary-light); }
+
+    .result-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .result-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 18px 22px;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        text-decoration: none; color: var(--text);
+        transition: all 0.18s ease;
+    }
+    .result-item:hover {
+        border-color: rgba(124,92,252,0.35);
+        background: var(--surface-hover);
+        transform: translateX(3px);
+    }
+    .result-left { display: flex; align-items: center; gap: 14px; }
+    .result-icon {
+        width: 40px; height: 40px;
+        background: linear-gradient(135deg, rgba(124,92,252,0.2), rgba(79,138,255,0.1));
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.1rem; flex-shrink: 0;
+    }
+    .result-name { font-size: 0.9rem; font-weight: 700; }
+    .result-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
+    .result-arrow { color: var(--text-muted); font-size: 1.1rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="search-box">
+        <h2>🔍 Find a Course</h2>
+        <form method="get" action="{% url 'course_search' %}">
+            <div class="search-row">
+                <input type="text" name="q" value="{{ query|default:'' }}"
+                       placeholder="e.g. Quantum Mechanics, Calculus…"
+                       class="form-input" style="flex:1;">
                 <button type="submit" class="btn btn-primary">Search</button>
-            </form>
-
-            <ul>
-                {% for course in courses %}
-                    <li>
-                        <a href="{% url 'course_detail' course.pk %}">{{ course.title }}</a> — {{ course.duration }} minutes
-                    </li>
-                {% empty %}
-                    <li>No courses found.</li>
-                {% endfor %}
-            </ul>
-
-            <div style="display:flex; justify-content:center; margin-top:16px;">
-                <a href="{% url 'course_list' %}" class="btn">Back to Course List</a>
             </div>
+        </form>
+    </div>
+
+    {% if query %}
+    <div class="search-results-header">
+        Showing results for <strong>"{{ query }}"</strong> — {{ courses|length }} found
+    </div>
+    {% endif %}
+
+    <div class="result-list">
+        {% for course in courses %}
+        <a href="{% url 'course_detail' course.pk %}" class="result-item">
+            <div class="result-left">
+                <div class="result-icon">
+                    {% if course.category == "Mathematics" %}➗
+                    {% elif course.category == "Physics" %}⚛️
+                    {% elif course.category == "Chemistry" %}🧪
+                    {% elif course.category == "Biology" %}🧬
+                    {% else %}📖{% endif %}
+                </div>
+                <div>
+                    <div class="result-name">{{ course.title }}</div>
+                    <div class="result-meta">
+                        {% if course.category %}<span class="badge badge-default" style="margin-right:8px;">{{ course.category }}</span>{% endif %}
+                        ⏱ {{ course.duration }} months
+                        {% if course.level %} · 📊 {{ course.level }}{% endif %}
+                    </div>
+                </div>
+            </div>
+            <span class="result-arrow">→</span>
+        </a>
+        {% empty %}
+        <div class="card" style="text-align:center;padding:48px;color:var(--text-muted);">
+            {% if query %}No courses matched "{{ query }}". Try a different search.
+            {% else %}Enter a search term above to find courses.{% endif %}
         </div>
-    </main>
-</body>
-</html>
+        {% endfor %}
+    </div>
+
+    <div style="margin-top:24px;">
+        <a href="{% url 'course_list' %}" class="btn btn-ghost">← Back to All Courses</a>
+    </div>
+
+{% endblock %}

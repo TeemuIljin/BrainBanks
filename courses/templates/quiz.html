@@ -1,332 +1,168 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ course.title }} Quiz</title>
-    <style>
-        :root { 
-            --bg-start:#0a0a40; 
-            --bg-end:#161658; 
-            --card-bg:rgba(255,255,255,0.06); 
-            --text:#f5f7ff; 
-            --muted:#c6c9ff; 
-            --accent:#7aa2ff; 
-            --accent-2:#62e0d9; 
-            --border:rgba(255,255,255,0.12); 
-            --shadow:rgba(0,0,0,0.35);
-            --success:#4ade80;
-            --warning:#fbbf24;
-        }
-        
-        body { 
-            background: radial-gradient(1000px 600px at 20% 0%, var(--bg-end), transparent 60%), 
-                       radial-gradient(900px 600px at 80% 0%, #0f2a80, transparent 55%), 
-                       linear-gradient(180deg, var(--bg-start), #0b0b2e 65%); 
-            color: var(--text); 
-            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin:0; 
-            padding:0; 
-            min-height:100vh; 
-            display:flex; 
-            flex-direction:column; 
-        }
-        
-        .top-bar { 
-            display:flex; 
-            justify-content:space-between; 
-            align-items:center; 
-            padding:16px 28px; 
-            background:rgba(7,7,53,0.75); 
-            backdrop-filter:blur(8px); 
-            -webkit-backdrop-filter:blur(8px); 
-            border-bottom:1px solid var(--border); 
-            position:sticky; 
-            top:0; 
-            z-index:10; 
-        }
-        
-        .brand { 
-            display:flex; 
-            align-items:center; 
-            gap:12px; 
-            font-weight:700; 
-            letter-spacing:0.4px; 
-            font-size: 1.1rem;
-        }
-        
-        .brand-badge { 
-            width:32px; 
-            height:32px; 
-            border-radius:8px; 
-            background:linear-gradient(135deg, var(--accent), var(--accent-2)); 
-            box-shadow:0 6px 14px var(--shadow); 
-        }
-        
-        .auth-actions { 
-            display:flex; 
-            gap:12px; 
-        }
-        
-        .btn { 
-            appearance:none; 
-            display:inline-flex; 
-            align-items:center; 
-            justify-content:center; 
-            gap:8px; 
-            padding:10px 16px; 
-            border-radius:10px; 
-            border:1px solid var(--border); 
-            color:var(--text); 
-            text-decoration:none; 
-            font-size:0.9rem; 
-            line-height:1; 
-            transition:transform .1s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease; 
-            background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); 
-            box-shadow:0 6px 14px -8px var(--shadow); 
-        }
-        
-        .btn:hover { 
-            transform:translateY(-1px); 
-            border-color:rgba(255,255,255,0.25); 
-        }
-        
-        .btn-primary { 
-            background:linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)); 
-            border-color:rgba(122,162,255,0.35); 
-        }
-        
-        main { 
-            flex:1; 
-            max-width: 720px; 
-            margin: 32px auto; 
-            padding: 0 20px; 
-        }
-        
-        .card { 
-            background:var(--card-bg); 
-            border:1px solid var(--border); 
-            border-radius:16px; 
-            padding:32px 28px; 
-            box-shadow:0 18px 40px -22px var(--shadow); 
-        }
-        
-        h1 { 
-            font-size: 1.8rem; 
-            margin:0 0 8px; 
-            text-align:center; 
-            color: var(--accent);
-            font-weight: 600;
-        }
-        
-        .quiz-subtitle {
-            text-align: center;
-            color: var(--muted);
-            font-size: 0.9rem;
-            margin-bottom: 24px;
-        }
-        
-        form { 
-            background:transparent; 
-            padding:0; 
-            box-shadow:none; 
-        }
-        
-        .question { 
-            margin-bottom: 24px;
-        }
-        
-        .question h2 { 
-            margin-bottom: 20px; 
-            font-size: 1.1rem; 
-            color: var(--text); 
-            font-weight: 500;
-            line-height: 1.4;
-        }
-        
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        input[type="radio"] { 
-            display:none; 
-        }
-        
-        label { 
-            display:flex; 
-            align-items:center; 
-            cursor:pointer; 
-            font-size:0.95rem; 
-            color:var(--text); 
-            user-select:none; 
-            padding: 14px 16px 14px 48px; 
-            position:relative; 
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
-            transition: all 0.2s ease;
-        }
-        
-        label:hover {
-            background: rgba(255,255,255,0.04);
-            border-color: rgba(255,255,255,0.15);
-        }
-        
-        label::before { 
-            content:""; 
-            position:absolute; 
-            left:16px; 
-            top:50%; 
-            transform:translateY(-50%); 
-            width:18px; 
-            height:18px; 
-            border:2px solid var(--border); 
-            border-radius:50%; 
-            background-color:transparent; 
-            box-sizing:border-box; 
-            transition: all 0.2s ease; 
-        }
-        
-        input[type="radio"]:checked + label { 
-            background: rgba(122,162,255,0.1);
-            border-color: var(--accent);
-        }
-        
-        input[type="radio"]:checked + label::before { 
-            background-color: var(--accent); 
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(122,162,255,0.2);
-        }
-        
-        button[type="submit"] { 
-            margin-top: 24px; 
-            width: 100%; 
-            padding: 14px 24px;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-        
-        .progress { 
-            margin-top: 20px; 
-            font-size: 0.85rem; 
-            text-align: center; 
-            color: var(--muted); 
-            background: rgba(255,255,255,0.02);
-            padding: 8px 16px;
-            border-radius: 20px;
-            display: inline-block;
-        }
-        
-        .score { 
-            margin-top: 16px; 
-            font-size: 0.95rem; 
-            font-weight: 600; 
-            text-align: center; 
-            color: var(--success); 
-            background: rgba(74,222,128,0.1);
-            padding: 8px 16px;
-            border-radius: 20px;
-            display: inline-block;
-        }
-        
-        .return-home { 
-            margin: 20px auto 0; 
-            text-align: center; 
-        }
-        
-        .quiz-header {
-            text-align: center;
-            margin-bottom: 28px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-        
-        @media (max-width: 768px) {
-            main {
-                margin: 20px auto;
-                padding: 0 16px;
-            }
-            
-            .card {
-                padding: 24px 20px;
-            }
-            
-            h1 {
-                font-size: 1.6rem;
-            }
-            
-            .question h2 {
-                font-size: 1rem;
-            }
-            
-            label {
-                font-size: 0.9rem;
-                padding: 12px 14px 12px 44px;
-            }
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <div class="top-bar">
-        <div class="brand">
-            <div class="brand-badge"></div>
-            BrainBank
-            {% if active_effects %}
-                <span class="active-effects-display">
-                    {% for effect in active_effects %}{{ effect }}{% endfor %}
-                </span>
-            {% endif %}
-        </div>
-        <div class="auth-actions">
-            {% if user.is_authenticated %}
-                <a class="btn btn-primary" href="{% url 'view_profile' user.username %}">View Profile</a>
-            {% else %}
-                <a class="btn" href="{% url 'sign_in' %}">Sign In</a>
-            {% endif %}
+{% block title %}{{ course.title }} Quiz — BrainBank{% endblock %}
+{% block page_title %}{{ course.title }} Quiz{% endblock %}
+
+{% block extra_head %}
+<style>
+    .quiz-layout {
+        max-width: 720px;
+        margin: 0 auto;
+    }
+
+    /* Progress header */
+    .quiz-progress-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 24px;
+    }
+    .quiz-progress-label {
+        font-size: 0.82rem; color: var(--text-muted); font-weight: 600;
+    }
+    .quiz-progress-count {
+        font-size: 0.82rem; color: var(--primary-light); font-weight: 700;
+    }
+
+    .quiz-progress-bar {
+        margin-bottom: 32px;
+    }
+
+    /* Question card */
+    .question-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 36px;
+        margin-bottom: 20px;
+        position: relative; overflow: hidden;
+    }
+    .question-card::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    .question-num {
+        font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+        text-transform: uppercase; color: var(--primary-light);
+        margin-bottom: 14px;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .question-num::before {
+        content: '';
+        display: inline-block; width: 20px; height: 2px;
+        background: var(--primary);
+        border-radius: 2px;
+    }
+
+    .question-text {
+        font-size: 1.25rem; font-weight: 700; line-height: 1.4;
+        margin-bottom: 28px; color: var(--text);
+    }
+
+    /* Options */
+    .options-list {
+        display: flex; flex-direction: column; gap: 10px;
+        margin-bottom: 28px;
+    }
+
+    .option-label {
+        display: flex; align-items: center; gap: 14px;
+        padding: 15px 18px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        transition: all 0.15s ease;
+        font-size: 0.9rem; font-weight: 500;
+        color: var(--text);
+    }
+    .option-label:hover {
+        background: rgba(124,92,252,0.10);
+        border-color: rgba(124,92,252,0.35);
+    }
+
+    input[type="radio"] { display: none; }
+
+    .option-radio-box {
+        width: 20px; height: 20px;
+        border: 2px solid var(--text-muted);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; transition: all 0.15s ease;
+    }
+    .option-radio-box::after {
+        content: '';
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: var(--primary);
+        opacity: 0; transform: scale(0);
+        transition: all 0.15s ease;
+    }
+
+    input[type="radio"]:checked + .option-label {
+        background: rgba(124,92,252,0.14);
+        border-color: var(--primary);
+    }
+    input[type="radio"]:checked + .option-label .option-radio-box {
+        border-color: var(--primary);
+    }
+    input[type="radio"]:checked + .option-label .option-radio-box::after {
+        opacity: 1; transform: scale(1);
+    }
+
+    .quiz-submit {
+        display: flex; align-items: center; justify-content: space-between;
+        flex-wrap: wrap; gap: 12px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="quiz-layout">
+
+    <div class="quiz-progress-header">
+        <span class="quiz-progress-label">{{ course.title }}</span>
+        <span class="quiz-progress-count">{{ current_question_number }} / {{ total_questions }}</span>
+    </div>
+
+    <div class="quiz-progress-bar">
+        <div class="progress-track">
+            <div class="progress-fill" style="width: {% widthratio current_question_number total_questions 100 %}%"></div>
         </div>
     </div>
 
-    <main>
-        <div class="card">
-            <div class="quiz-header">
-                <h1>{{ course.title }} Quiz</h1>
-                <p class="quiz-subtitle">Test your knowledge and earn points!</p>
+    <div class="question-card">
+        <div class="question-num">Question {{ current_question_number }}</div>
+        <div class="question-text">{{ question.text }}</div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="options-list">
+                {% for option in question.options.all %}
+                <input type="radio" id="opt{{ option.id }}" name="selected_option" value="{{ option.id }}">
+                <label class="option-label" for="opt{{ option.id }}">
+                    <span class="option-radio-box"></span>
+                    {{ option.text }}
+                </label>
+                {% endfor %}
             </div>
 
-            <form method="post">
-                {% csrf_token %}
-
-                <div class="question">
-                    <h2>{{ question.text }}</h2>
-                    <div class="options-container">
-                        {% for option in question.options.all %}
-                            <input type="radio" id="option{{ option.id }}" name="selected_option" value="{{ option.id }}">
-                            <label for="option{{ option.id }}">{{ option.text }}</label>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Submit Answer</button>
-            </form>
-
-            <div style="text-align: center; margin-top: 20px;">
-                <div class="progress">
-                    Question {{ current_question_number }} of {{ total_questions }}
-                </div>
-
-                {% if score %}
-                <div class="score">Current Score: {{ score }}</div>
-                {% endif %}
+            <div class="quiz-submit">
+                <a href="{% url 'home' %}" class="btn btn-ghost">← Exit Quiz</a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    {% if current_question_number == total_questions %}
+                        Finish Quiz ✓
+                    {% else %}
+                        Next Question →
+                    {% endif %}
+                </button>
             </div>
+        </form>
+    </div>
 
-            <div class="return-home">
-                <a class="btn" href="{% url 'home' %}">Return to Home</a>
-            </div>
-        </div>
-    </main>
+    <div style="text-align:center;font-size:0.8rem;color:var(--text-muted);">
+        ⚡ +50 BrainPoints per correct answer
+    </div>
 
-</body>
-</html>
+</div>
+{% endblock %}

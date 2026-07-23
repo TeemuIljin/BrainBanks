@@ -1,71 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <title>{{ course.title }} Quiz Complete</title>
-    <style>
-        :root { --bg-start:#0a0a40; --bg-end:#161658; --card-bg:rgba(255,255,255,0.06); --text:#f5f7ff; --muted:#c6c9ff; --accent:#7aa2ff; --accent-2:#62e0d9; --border:rgba(255,255,255,0.12); --shadow:rgba(0,0,0,0.35); }
-        body { background: radial-gradient(1000px 600px at 20% 0%, var(--bg-end), transparent 60%), radial-gradient(900px 600px at 80% 0%, #0f2a80, transparent 55%), linear-gradient(180deg, var(--bg-start), #0b0b2e 65%); color: var(--text); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; min-height:100vh; display:flex; flex-direction:column; }
-        .top-bar { display:flex; justify-content:space-between; align-items:center; padding:16px 28px; background:rgba(7,7,53,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
-        .brand { display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:0.4px; }
-        .brand-badge { width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 6px 14px var(--shadow); }
-        .auth-actions { display:flex; gap:12px; }
-        .btn { appearance:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 16px; border-radius:10px; border:1px solid var(--border); color:var(--text); text-decoration:none; font-size:0.95rem; line-height:1; transition:transform .1s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); box-shadow:0 6px 14px -8px var(--shadow); }
-        .btn:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.25); }
-        .btn-primary { background:linear-gradient(135deg, rgba(122,162,255,0.25), rgba(98,224,217,0.18)); border-color:rgba(122,162,255,0.35); }
-        .main-content { flex:1; display:flex; align-items:center; justify-content:center; padding:48px 20px 56px; }
-        .card { width:min(900px,92%); background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:28px 24px; box-shadow:0 18px 40px -22px var(--shadow); text-align:center; }
-        h1 { font-size:clamp(2rem,3.6vw,3rem); margin:0 0 12px; }
-        .score, .points-earned { font-size:1.4rem; margin:14px 0; }
-        .points-earned { color:#7CFC00; font-weight:700; }
-        .button-group { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <div class="top-bar">
-        <div class="brand">
-            <div class="brand-badge"></div>
-            BrainBank
-            {% if active_effects %}
-                <span class="active-effects-display">
-                    {% for effect in active_effects %}{{ effect }}{% endfor %}
-                </span>
-            {% endif %}
+{% block title %}Quiz Complete! — BrainBank{% endblock %}
+{% block page_title %}Quiz Complete{% endblock %}
+
+{% block extra_head %}
+<style>
+    .complete-wrap {
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .complete-icon {
+        width: 90px; height: 90px;
+        background: linear-gradient(135deg, rgba(74,222,128,0.2), rgba(34,211,238,0.15));
+        border: 1px solid rgba(74,222,128,0.3);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2.5rem;
+        margin: 0 auto 24px;
+        box-shadow: 0 0 32px rgba(74,222,128,0.15);
+    }
+
+    .complete-title {
+        font-size: 2rem; font-weight: 800; margin-bottom: 8px;
+        background: linear-gradient(90deg, #fff 30%, var(--accent-green));
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .complete-sub {
+        font-size: 0.95rem; color: var(--text-dim); margin-bottom: 32px;
+    }
+    .complete-sub strong { color: var(--text); }
+
+    .score-display {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 32px;
+        margin-bottom: 24px;
+        display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    }
+
+    .score-metric {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 20px;
+    }
+    .score-metric-label {
+        font-size: 0.72rem; font-weight: 600; text-transform: uppercase;
+        letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px;
+    }
+    .score-metric-value {
+        font-size: 2rem; font-weight: 800;
+    }
+    .score-metric-value.green { color: var(--accent-green); }
+    .score-metric-value.yellow { color: var(--accent-yellow); }
+
+    .complete-actions {
+        display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="complete-wrap">
+
+    <div class="complete-icon">🎉</div>
+
+    <h1 class="complete-title">Quiz Complete!</h1>
+    <p class="complete-sub">
+        You've finished the quiz for <strong>{{ course.title }}</strong>.
+        {% if score %}Great work!{% endif %}
+    </p>
+
+    {% if score %}
+    <div class="score-display">
+        <div class="score-metric">
+            <div class="score-metric-label">Final Score</div>
+            <div class="score-metric-value green">{{ score }}<span style="font-size:1rem;font-weight:500;color:var(--text-muted);">/{{ total_questions }}</span></div>
         </div>
-        <div class="auth-actions">
-            {% if user.is_authenticated %}
-                <a class="btn btn-primary" href="{% url 'view_profile' user.username %}">View Profile</a>
-            {% else %}
-                <a class="btn" href="{% url 'sign_in' %}">Sign In</a>
-            {% endif %}
+        <div class="score-metric">
+            <div class="score-metric-label">Points Earned</div>
+            <div class="score-metric-value yellow">+{{ gained_points }}<span style="font-size:1rem;font-weight:500;color:var(--text-muted);"> ⚡</span></div>
         </div>
     </div>
+    {% else %}
+    <div class="card" style="margin-bottom:24px;padding:28px;">
+        <p style="color:var(--text-muted);">You completed the quiz! Answer questions correctly next time to earn BrainPoints. ⚡</p>
+    </div>
+    {% endif %}
 
-    <div class="main-content">
-        <div class="card">
-            <h1>Quiz Complete!</h1>
-            <p>Well done — you’ve finished the quiz for <strong>{{ course.title }}</strong>.</p>
-
-            {% if score %}
-                <div class="score">Your final score: {{ score }} / {{ total_questions }}</div>
-                <div class="points-earned">Points earned: {{ gained_points }}</div>
-            {% endif %}
-
-            <div class="button-group">
-                {% if player_profile %}
-                    <span class="btn" style="cursor:default;">🔥 Streak: {{ player_profile.current_streak }} (Best {{ player_profile.longest_streak }})</span>
-                {% endif %}
-                <a class="btn" href="{% url 'home' %}">Return to Home</a>
-                <a class="btn" href="{% url 'course_list' %}">View All Courses</a>
-                <a class="btn btn-primary" href="{% url 'quiz' course.id 1 %}">Retake Quiz</a>
-            </div>
-        </div>
+    <div class="complete-actions">
+        <a href="{% url 'home' %}" class="btn btn-ghost">🏠 Home</a>
+        <a href="{% url 'course_list' %}" class="btn btn-ghost">📚 All Courses</a>
+        <a href="{% url 'quiz' course.id 1 %}" class="btn btn-primary">🔄 Retake Quiz</a>
     </div>
 
-    <footer style="background:rgba(7,7,53,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); padding:16px 28px; text-align:center; font-style:italic; font-size:0.98rem; border-top:1px solid var(--border); color:var(--muted);">
-        💡 Fun Fact: Did you know BrainBank is constantly evolving? New challenges and events are just around the corner!
-    </footer>
-
-</body>
-</html>
+</div>
+{% endblock %}

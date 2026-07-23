@@ -6,85 +6,225 @@
 
 {% block extra_head %}
 <style>
-    /* ── HERO BANNER ────────────────────────────── */
+    /* ── HERO ─────────────────────────────────────── */
     .hero {
         position: relative;
-        background: linear-gradient(135deg, rgba(124,92,252,0.18) 0%, rgba(79,138,255,0.10) 60%, transparent 100%);
-        border: 1px solid rgba(124,92,252,0.2);
-        border-radius: 20px;
-        padding: 40px 48px;
-        margin-bottom: 32px;
+        background: linear-gradient(135deg,
+            rgba(124,92,252,0.22) 0%,
+            rgba(79,138,255,0.14) 50%,
+            rgba(34,211,238,0.06) 100%);
+        border: 1px solid rgba(124,92,252,0.25);
+        border-radius: 24px;
+        padding: 44px 52px;
+        margin-bottom: 24px;
         overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 24px;
     }
+
+    /* Background glow blobs */
     .hero::before {
         content: '';
         position: absolute;
-        top: -60px; right: -60px;
-        width: 280px; height: 280px;
-        background: radial-gradient(circle, rgba(124,92,252,0.15) 0%, transparent 70%);
+        top: -80px; right: -80px;
+        width: 340px; height: 340px;
+        background: radial-gradient(circle, rgba(124,92,252,0.18) 0%, transparent 65%);
         pointer-events: none;
     }
-    .hero-content { position: relative; z-index: 1; }
-    .hero-eyebrow {
-        font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
-        text-transform: uppercase; color: var(--primary-light);
-        margin-bottom: 10px;
-    }
-    .hero-title {
-        font-size: 2rem; font-weight: 800; line-height: 1.1;
-        margin-bottom: 8px;
-        background: linear-gradient(90deg, #fff 40%, var(--primary-light));
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    .hero-sub { font-size: 0.95rem; color: var(--text-dim); margin-bottom: 24px; }
-    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-    .hero-emoji {
-        font-size: 6rem; opacity: 0.6;
-        position: relative; z-index: 1;
-        line-height: 1;
-        flex-shrink: 0;
+    .hero::after {
+        content: '';
+        position: absolute;
+        bottom: -60px; left: 30%;
+        width: 260px; height: 260px;
+        background: radial-gradient(circle, rgba(79,138,255,0.10) 0%, transparent 65%);
+        pointer-events: none;
     }
 
-    /* ── STATS ROW ──────────────────────────────── */
+    /* Decorative dots grid */
+    .hero-dots {
+        position: absolute;
+        top: 0; right: 0; bottom: 0;
+        width: 45%;
+        opacity: 0.18;
+        background-image:
+            radial-gradient(circle, rgba(255,255,255,0.7) 1px, transparent 1px);
+        background-size: 28px 28px;
+        pointer-events: none;
+    }
+
+    .hero-content { position: relative; z-index: 2; max-width: 520px; }
+
+    .hero-eyebrow {
+        display: inline-flex; align-items: center; gap: 8px;
+        font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--primary-light);
+        background: rgba(124,92,252,0.15);
+        border: 1px solid rgba(124,92,252,0.25);
+        padding: 5px 14px; border-radius: 20px;
+        margin-bottom: 18px;
+    }
+
+    .hero-title {
+        font-size: 2.6rem; font-weight: 900; line-height: 1.05;
+        margin-bottom: 12px;
+        background: linear-gradient(120deg, #ffffff 30%, #c4b5fd 70%, #93c5fd);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.02em;
+    }
+
+    .hero-sub {
+        font-size: 1rem; color: rgba(232,232,255,0.6);
+        margin-bottom: 28px; line-height: 1.6;
+    }
+
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .hero-visual {
+        position: relative; z-index: 2;
+        flex-shrink: 0; text-align: center;
+    }
+
+    .hero-brain-wrap {
+        position: relative;
+        width: 180px; height: 180px;
+        display: flex; align-items: center; justify-content: center;
+    }
+
+    .hero-brain-glow {
+        position: absolute; inset: 0;
+        background: radial-gradient(circle, rgba(124,92,252,0.35) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.08); opacity: 0.7; }
+    }
+
+    .hero-brain-emoji {
+        font-size: 5.5rem;
+        position: relative; z-index: 1;
+        filter: drop-shadow(0 0 20px rgba(124,92,252,0.5));
+        animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+
+    /* Orbit rings */
+    .orbit-ring {
+        position: absolute;
+        border: 1px solid rgba(124,92,252,0.2);
+        border-radius: 50%;
+        animation: spin linear infinite;
+    }
+    .orbit-1 { width: 130px; height: 130px; top:25px; left:25px; animation-duration: 10s; }
+    .orbit-2 { width: 170px; height: 170px; top:5px; left:5px; animation-duration: 16s; animation-direction: reverse; border-color: rgba(79,138,255,0.15); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .orbit-dot {
+        width: 7px; height: 7px;
+        background: var(--primary);
+        border-radius: 50%;
+        position: absolute;
+        top: -3.5px; left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 0 8px var(--primary);
+    }
+
+    /* ── STATS ROW ──────────────────────────────────── */
     .stats-row {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-        margin-bottom: 32px;
+        gap: 14px;
+        margin-bottom: 24px;
     }
+
     .stat-card {
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--radius-md);
         padding: 18px 20px;
         display: flex; align-items: center; gap: 14px;
-        transition: border-color 0.2s;
+        transition: all 0.2s;
+        position: relative; overflow: hidden;
     }
-    .stat-card:hover { border-color: rgba(124,92,252,0.3); }
+    .stat-card::after {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; height: 2px;
+        opacity: 0; transition: opacity 0.2s;
+    }
+    .stat-card.s-orange::after { background: linear-gradient(90deg, var(--accent-orange), #fbbf24); }
+    .stat-card.s-purple::after { background: linear-gradient(90deg, var(--primary), var(--primary-light)); }
+    .stat-card.s-blue::after   { background: linear-gradient(90deg, var(--secondary), #22d3ee); }
+    .stat-card.s-green::after  { background: linear-gradient(90deg, var(--accent-green), #22d3ee); }
+    .stat-card:hover { border-color: rgba(124,92,252,0.3); transform: translateY(-2px); }
+    .stat-card:hover::after { opacity: 1; }
+
     .stat-icon {
-        width: 42px; height: 42px;
-        border-radius: 10px;
+        width: 44px; height: 44px;
+        border-radius: 12px;
         display: flex; align-items: center; justify-content: center;
         font-size: 1.2rem; flex-shrink: 0;
     }
+    .stat-icon.orange { background: rgba(255,140,66,0.18); }
     .stat-icon.purple { background: rgba(124,92,252,0.18); }
     .stat-icon.blue   { background: rgba(79,138,255,0.18); }
-    .stat-icon.orange { background: rgba(255,140,66,0.18); }
     .stat-icon.green  { background: rgba(74,222,128,0.18); }
-    .stat-num { font-size: 1.4rem; font-weight: 800; line-height: 1; }
-    .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
 
-    /* ── COURSE CARDS ───────────────────────────── */
+    .stat-num { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+    .stat-label { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+
+    /* ── CHALLENGE BANNER ───────────────────────────── */
+    .challenge-banner {
+        background: linear-gradient(135deg,
+            rgba(251,191,36,0.12) 0%,
+            rgba(251,146,60,0.08) 50%,
+            rgba(124,92,252,0.05) 100%);
+        border: 1px solid rgba(251,191,36,0.2);
+        border-radius: var(--radius-lg);
+        padding: 22px 28px;
+        display: flex; align-items: center; justify-content: space-between; gap: 20px;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        position: relative; overflow: hidden;
+    }
+    .challenge-banner::before {
+        content: '';
+        position: absolute; top: 0; left: 0; right: 0; height: 2px;
+        background: linear-gradient(90deg, var(--accent-yellow), var(--accent-orange), transparent);
+    }
+    .challenge-left { display: flex; align-items: center; gap: 16px; }
+    .challenge-icon {
+        width: 48px; height: 48px;
+        background: rgba(251,191,36,0.18);
+        border: 1px solid rgba(251,191,36,0.25);
+        border-radius: 13px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.4rem; flex-shrink: 0;
+    }
+    .challenge-tag {
+        font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+        text-transform: uppercase; color: var(--accent-yellow);
+        margin-bottom: 4px;
+    }
+    .challenge-name { font-size: 1rem; font-weight: 700; }
+    .challenge-desc { font-size: 0.8rem; color: var(--text-dim); margin-top: 3px; }
+
+    /* ── COURSE GRID ────────────────────────────────── */
     .course-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-        gap: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 14px;
     }
+
     .course-card {
         background: var(--surface);
         border: 1px solid var(--border);
@@ -93,78 +233,54 @@
         text-decoration: none; color: var(--text);
         display: flex; flex-direction: column; gap: 12px;
         transition: all 0.2s ease;
-        position: relative;
-        overflow: hidden;
+        position: relative; overflow: hidden;
     }
+
+    /* Top accent strip using CSS variable set inline */
     .course-card::before {
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0; height: 3px;
-        background: linear-gradient(90deg, var(--primary), var(--secondary));
-        opacity: 0;
+        background: var(--card-accent, linear-gradient(90deg, var(--primary), var(--secondary)));
+        opacity: 0.7;
         transition: opacity 0.2s;
     }
     .course-card:hover {
-        border-color: rgba(124,92,252,0.3);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        border-color: rgba(124,92,252,0.35);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 32px rgba(0,0,0,0.3);
     }
     .course-card:hover::before { opacity: 1; }
 
     .course-icon {
-        width: 48px; height: 48px;
+        width: 46px; height: 46px;
         border-radius: 12px;
-        background: linear-gradient(135deg, rgba(124,92,252,0.2), rgba(79,138,255,0.15));
         display: flex; align-items: center; justify-content: center;
-        font-size: 1.4rem;
+        font-size: 1.3rem;
     }
-    .course-title { font-size: 0.9rem; font-weight: 700; line-height: 1.3; }
-    .course-meta { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 12px; }
+    .course-icon.c0 { background: linear-gradient(135deg, rgba(124,92,252,0.25), rgba(79,138,255,0.15)); }
+    .course-icon.c1 { background: linear-gradient(135deg, rgba(34,211,238,0.25), rgba(79,138,255,0.15)); }
+    .course-icon.c2 { background: linear-gradient(135deg, rgba(74,222,128,0.25), rgba(34,211,238,0.15)); }
+    .course-icon.c3 { background: linear-gradient(135deg, rgba(251,191,36,0.25), rgba(251,146,60,0.15)); }
+    .course-icon.c4 { background: linear-gradient(135deg, rgba(251,146,60,0.25), rgba(239,68,68,0.15)); }
+    .course-icon.c5 { background: linear-gradient(135deg, rgba(167,139,250,0.25), rgba(124,92,252,0.15)); }
+
+    .course-title { font-size: 0.88rem; font-weight: 700; line-height: 1.3; }
+    .course-meta { font-size: 0.72rem; color: var(--text-muted); display: flex; gap: 10px; }
     .course-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
 
     .completed-badge {
         display: flex; align-items: center; gap: 4px;
-        font-size: 0.7rem; font-weight: 600;
-        color: var(--accent-green);
-        background: rgba(74,222,128,0.12);
-        padding: 3px 8px; border-radius: 20px;
+        font-size: 0.68rem; font-weight: 600; color: var(--accent-green);
+        background: rgba(74,222,128,0.12); padding: 3px 8px; border-radius: 20px;
         border: 1px solid rgba(74,222,128,0.2);
     }
 
-    /* ── CHALLENGE BANNER ───────────────────────── */
-    .challenge-banner {
-        background: linear-gradient(135deg, rgba(251,191,36,0.15) 0%, rgba(251,146,60,0.10) 100%);
-        border: 1px solid rgba(251,191,36,0.25);
-        border-radius: var(--radius-lg);
-        padding: 24px 28px;
-        display: flex; align-items: center; justify-content: space-between; gap: 20px;
-        margin-bottom: 32px;
-        flex-wrap: wrap;
-    }
-    .challenge-left { display: flex; align-items: center; gap: 16px; }
-    .challenge-icon {
-        width: 48px; height: 48px;
-        background: rgba(251,191,36,0.2);
-        border-radius: 12px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.4rem;
-    }
-    .challenge-tag {
-        font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
-        text-transform: uppercase; color: var(--accent-yellow);
-        margin-bottom: 4px;
-    }
-    .challenge-name { font-size: 1rem; font-weight: 700; }
-    .challenge-desc { font-size: 0.8rem; color: var(--text-dim); margin-top: 2px; }
-    .challenge-right { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
-
-    @media (max-width: 960px) {
-        .stats-row { grid-template-columns: repeat(2, 1fr); }
-    }
+    @media (max-width: 960px) { .stats-row { grid-template-columns: repeat(2,1fr); } }
     @media (max-width: 600px) {
         .hero { padding: 28px 24px; }
-        .hero-emoji { display: none; }
-        .stats-row { grid-template-columns: repeat(2, 1fr); }
+        .hero-visual { display: none; }
+        .stats-row { grid-template-columns: repeat(2,1fr); }
     }
 </style>
 {% endblock %}
@@ -173,10 +289,13 @@
 
     <!-- HERO -->
     <div class="hero">
+        <div class="hero-dots"></div>
         <div class="hero-content">
-            <div class="hero-eyebrow">Welcome back{% if user.is_authenticated %}, {{ user.username }}{% endif %} 👋</div>
+            <div class="hero-eyebrow">
+                ✦ &nbsp;{% if user.is_authenticated %}Welcome back, {{ user.username }}{% else %}Gamified STEM Learning{% endif %} 👋
+            </div>
             <h1 class="hero-title">Master STEM.<br>Build the future.</h1>
-            <p class="hero-sub">Explore courses, take quizzes, and earn BrainPoints.</p>
+            <p class="hero-sub">Explore courses, take quizzes, and earn BrainPoints.<br>Build streaks, climb the leaderboard.</p>
             <div class="hero-actions">
                 <a href="{% url 'course_list' %}" class="btn btn-primary btn-lg">📚 Browse Courses</a>
                 {% if not user.is_authenticated %}
@@ -184,33 +303,40 @@
                 {% endif %}
             </div>
         </div>
-        <div class="hero-emoji">🧠</div>
+        <div class="hero-visual">
+            <div class="hero-brain-wrap">
+                <div class="hero-brain-glow"></div>
+                <div class="orbit-ring orbit-1"><div class="orbit-dot"></div></div>
+                <div class="orbit-ring orbit-2"><div class="orbit-dot" style="background:var(--secondary);box-shadow:0 0 8px var(--secondary);top:auto;bottom:-3.5px;"></div></div>
+                <span class="hero-brain-emoji">🧠</span>
+            </div>
+        </div>
     </div>
 
     <!-- STATS -->
     <div class="stats-row">
-        <div class="stat-card">
+        <div class="stat-card s-orange">
             <div class="stat-icon orange">🔥</div>
             <div>
                 <div class="stat-num">{% if player_profile %}{{ player_profile.current_streak }}{% else %}<span style="font-size:1rem;color:var(--text-muted)">—</span>{% endif %}</div>
                 <div class="stat-label">Day Streak</div>
             </div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card s-purple">
             <div class="stat-icon purple">⚡</div>
             <div>
                 <div class="stat-num">{% if player_profile %}{{ player_profile.points }}{% else %}<span style="font-size:1rem;color:var(--text-muted)">—</span>{% endif %}</div>
                 <div class="stat-label">BrainPoints</div>
             </div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card s-blue">
             <div class="stat-icon blue">📖</div>
             <div>
                 <div class="stat-num">{{ courses|length }}</div>
                 <div class="stat-label">Courses Available</div>
             </div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card s-green">
             <div class="stat-icon green">✅</div>
             <div>
                 <div class="stat-num">{{ completed_courses|length }}</div>
@@ -219,7 +345,7 @@
         </div>
     </div>
 
-    <!-- WEEKLY CHALLENGE -->
+    <!-- CHALLENGE -->
     <div class="challenge-banner">
         <div class="challenge-left">
             <div class="challenge-icon">🏆</div>
@@ -229,9 +355,7 @@
                 <div class="challenge-desc">Complete 3 quizzes this week and climb the leaderboard!</div>
             </div>
         </div>
-        <div class="challenge-right">
-            <a href="{% url 'leaderboard' %}" class="btn btn-primary">View Leaderboard →</a>
-        </div>
+        <a href="{% url 'leaderboard' %}" class="btn btn-primary">View Leaderboard →</a>
     </div>
 
     <!-- COURSES -->
@@ -240,10 +364,11 @@
         <a href="{% url 'course_list' %}" class="section-link">View all →</a>
     </div>
 
+    {% with accent_colors="linear-gradient(90deg,#7c5cfc,#4f8aff)|linear-gradient(90deg,#22d3ee,#4f8aff)|linear-gradient(90deg,#4ade80,#22d3ee)|linear-gradient(90deg,#fbbf24,#fb923c)|linear-gradient(90deg,#fb923c,#ef4444)|linear-gradient(90deg,#a78bfa,#7c5cfc)" %}
     <div class="course-grid">
         {% for course in courses %}
         <a href="{% url 'course_detail' course.pk %}" class="course-card">
-            <div class="course-icon">
+            <div class="course-icon c{{ forloop.counter0|divisibleby:6|yesno:"0,"|add:forloop.counter0 }}">
                 {% if course.level == "Advanced" %}🔬
                 {% elif course.level == "Intermediate" %}⚛️
                 {% else %}📖{% endif %}
@@ -270,10 +395,11 @@
             </div>
         </a>
         {% empty %}
-        <div class="card" style="grid-column:1/-1; text-align:center; color:var(--text-muted);">
-            No courses available yet. Check back soon!
+        <div class="card" style="grid-column:1/-1;text-align:center;color:var(--text-muted);">
+            No courses available yet.
         </div>
         {% endfor %}
     </div>
+    {% endwith %}
 
 {% endblock %}
